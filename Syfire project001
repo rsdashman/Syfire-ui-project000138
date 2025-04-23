@@ -1,0 +1,3975 @@
+
+--[[
+ ██╗  ██╗██████╗ 
+ ██║  ██║██╔══██╗
+ ███████║██████╔╝
+ ██╔══██║██╔═══╝ 
+ ██║  ██║██║     
+ ╚═╝  ╚═╝╚═╝     
+]]--
+
+
+local uiLoader = loadstring(game:HttpGet('https://raw.githubusercontent.com/topitbopit/dollarware/main/library.lua'))
+-- Because of the way the library loads, settings are handled on the loadstring call
+local ui = uiLoader({
+    rounding = false, -- Whether certain features get rounded 
+    theme = 'grape', -- The theme. Available themes are: cherry, orange, lemon, lime, raspberry, blueberry, grape, watermelon
+    smoothDragging = true -- Smooth dragging
+})
+
+ui.autoDisableToggles = true -- All toggles will automatically be disabled when the ui is destroyed (window is closed)
+-- so you don't have to manually handle everything. This defaults to true!
+
+-- Make a window, which houses all the stuff for the gui
+-- Technically multiple windows can be made, but there is no (and likely wont ever be) official support for them
+-- since its a lot of work for such a minute use
+local window = ui.newWindow({
+    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.75.0💎', -- fixed fatal error 
+    resize = true, -- Ability to resize
+    size = Vector2.new(429, 260), -- Window size, accepts UDim2s and Vector2s
+    position = nil -- Custom position, defaults to roughly the bottom right corner
+})
+
+local menu = window:addMenu({
+    text = '💎Player' -- Title of menu
+})
+do 
+end
+    -- Menus have sections which house all the controls    
+    local section = menu:addSection({
+        text = 'section 1', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+    
+    do 
+        section:addLabel({
+            text = 'Some player scripts' -- Self explanatory
+        })
+        
+        section:addButton({
+            text = 'Dash', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/e72e4ec90ec94acfa5a5ef86ab2808b2/raw/59d95a779b2a26a62bb37e375ff827df4bf87f01/dash", true))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('Press [Q]')
+	
+        
+        section:addButton({
+            text = 'Fly UniVersal(🔝)by me', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
+
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('this is a large button')
+	
+	
+	        section:addButton({
+            text = 'InfJumpControl(🔝)[ C ]', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+
+
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local infiniteJumpEnabled = false
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.C then
+        infiniteJumpEnabled = not infiniteJumpEnabled
+    end
+end)
+
+UserInputService.JumpRequest:Connect(function()
+    if infiniteJumpEnabled then
+        player.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)
+
+print("Executed")
+
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('this is a large button')
+	
+	
+			        section:addButton({
+            text = 'NOCLIP SYSTEM(🔝)(N)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+   
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local noclip = false
+local starterGui = game:GetService("StarterGui")
+
+local function toggleNoclip()
+	noclip = not noclip
+	if noclip then
+		for _, part in ipairs(character:GetDescendants()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = false
+			end
+		end
+		starterGui:SetCore("SendNotification", {
+			Title = "Noclip Activated";
+			Text = "You can pass through objects.";
+			Duration = 2;
+		})
+	else
+		for _, part in ipairs(character:GetDescendants()) do
+			if part:IsA("BasePart") then
+				if part.Name == "Head" or part.Name == "Torso" or part.Name == "UpperTorso" or part.Name == "LowerTorso" then
+					part.CanCollide = true
+				else
+					part.CanCollide = false
+				end
+			end
+		end
+		starterGui:SetCore("SendNotification", {
+			Title = "Clip Activated";
+			Text = "You will only collide with the head and torso.";
+			Duration = 2;
+		})
+	end
+end
+
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+	if not gameProcessedEvent and input.KeyCode == Enum.KeyCode.N then
+		toggleNoclip()
+	end
+end)
+
+humanoid.Died:Connect(function()
+	noclip = false
+	for _, part in ipairs(character:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.CanCollide = true
+		end
+	end
+end)
+
+player.CharacterAdded:Connect(function(newCharacter)
+	character = newCharacter
+	humanoid = character:WaitForChild("Humanoid")
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+	if noclip then
+		for _, part in ipairs(character:GetDescendants()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = false
+			end
+		end
+	end
+end)
+
+            ui.notify({
+                title = 'OP NOCLIP!',
+                message = 'Press N toggle!',
+                duration = 3
+            })
+        end):setTooltip('press (N)')
+	
+	
+	
+	        section:addButton({
+            text = 'FE JerkOff', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+	
+	
+		        section:addButton({
+            text = 'Clock', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/Clock%20not%20mine"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+	
+			        section:addButton({
+            text = 'Free cam', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+			loadstring(game:HttpGet("https://pastebin.com/raw/GX6MytJm"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+
+
+	
+			        section:addButton({
+            text = 'TP Ctrl+MB1', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		
+if _G.WRDClickTeleport == nil then
+	_G.WRDClickTeleport = true
+	
+	local player = game:GetService("Players").LocalPlayer
+	local UserInputService = game:GetService("UserInputService")
+	 --Wanted to avoid using mouse instance, but UIS^ is very tedious to get mouse hit position
+	local mouse = player:GetMouse()
+
+	--Waits until the player's mouse is found
+	repeat wait() until mouse
+	
+	UserInputService.InputBegan:Connect(function(input, gameProcessed)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			--Only click teleport if the toggle is enabled
+			if _G.WRDClickTeleport and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+				player.Character:MoveTo(Vector3.new(mouse.Hit.x, mouse.Hit.y, mouse.Hit.z)) 
+			end
+		end
+	end)
+--Just toggle instead of re-executing the script
+else
+	_G.WRDClickTeleport = not _G.WRDClickTeleport
+	--Notify
+	if _G.WRDClickTeleport then
+		game.StarterGui:SetCore("SendNotification", {Title="WeAreDevs.net"; Text="Click teleport enabled"; Duration=5;})
+	else
+		game.StarterGui:SetCore("SendNotification", {Title="WeAreDevs.net"; Text="Click teleport disabled"; Duration=5;})
+	end
+end
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+	
+			        section:addButton({
+            text = '---Exec-Info---', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		if getexecutorname then -- executor name
+	print("[✅] Executor Name: ".. getexecutorname())
+	else
+		warn("[⛔] Executor Name: Unable to get Executor Name")
+end
+
+wait(0.5)
+if getexecutorversion then -- executor version
+	print("[✅] Executor Version: ".. getexecutorversion())
+	else
+		warn("[⛔] Executor Version: Unable to get Executor Version")
+end
+
+wait(0.5)
+if printidentity then -- executor name
+	printidentity("[✅] Executor Identity:")
+	else
+		warn("[⛔] Executor Identity: Unable to get Executor Identity")
+end
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+        
+    
+    local section = menu:addSection({
+        text = 'LocalPlayer',
+        side = 'right',
+        showMinButton = false
+    })
+    do 
+        section:addSlider({
+            text = 'walkspeed',
+            min = 16,
+            max = 300,
+            step = 1.00,
+            val = 50
+        }, function(newValue) 
+
+local character = game.Players.LocalPlayer.Character
+local walkSpeed = newValue 
+
+character.Humanoid.WalkSpeed = walkSpeed
+
+        end):setTooltip('Heres a slider!')
+
+        section:addSlider({
+            text = 'JumpPower',
+            min = 50,
+            max = 750,
+            step = 1.00,
+            val = 50
+        }, function(newValue) 
+
+   local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+humanoid.JumpPower = newValue
+
+
+        end):setTooltip('Heres a slider!')
+
+        
+	        section:addSlider({
+            text = 'Gravit(196.2)',
+            min = 0,
+            max = 1000,
+            step = 0.2,
+            val = 196.2
+        }, function(newValue) 
+
+-- Gravity Script for Roblox
+
+-- Define the new gravity value
+local newGravity = newValue -- Default Roblox gravity is 196.2, you can change this value
+
+-- Function to change gravity
+local function changeGravity()
+    game.Workspace.Gravity = newGravity
+    print("Gravity has been set to " .. newGravity)
+end
+
+-- Call the function to change gravity
+changeGravity()
+
+
+
+        end):setTooltip('Heres a slider!')
+	
+	
+	
+        section:addTextbox({
+            text = 'textbox'
+        }):bindToEvent('onFocusLost', function(text) 
+            ui.notify({
+                title = 'textbox',
+                message = text,
+                duration = 4
+            })
+        end)
+    end
+    
+            section:addButton({
+            text = 'Get HipHeight gui', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://pastefy.app/irPz9mgg/raw"))()
+-- you don't have to always use bindToEvent, just passing a callback normally works fine
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('this is a large button')
+	
+	            section:addButton({
+            text = 'Reset(gravit,jumpower,speedhakc)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+game.Workspace.Gravity = 196.2
+if humanoid then
+    humanoid.JumpPower = 50
+    humanoid.WalkSpeed = 16
+end
+            ui.notify({
+                title = 'reseted',
+                message = 'ty to use it!',
+                duration = 3
+            })
+        end):setTooltip('reset')
+	
+	
+	    local section = menu:addSection({
+        text = 'Dices', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+    
+    do 
+        section:addLabel({
+            text = 'idk' -- Self explanatory
+        })
+	
+	
+	        section:addButton({
+            text = 'Dice 1-6(Printed)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+local function gerarNumeroAleatorio()
+    local numero = math.random(1, 6)  
+    print("Your Number: " .. numero)  
+end
+
+gerarNumeroAleatorio()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('this is a large button')
+	
+	
+	
+		        section:addButton({
+            text = 'Dice 1-100', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+local function gerarNumeroAleatorio()
+    local numero = math.random(1, 100)  
+    print("Your Number: " .. numero)  
+end
+
+gerarNumeroAleatorio()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('this is a large button')
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	   local section = menu:addSection({
+        text = 'antilag and boostfps!', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+	------------------------------------------------------
+	
+
+		    		        section:addButton({
+            text = 'Remove shadow', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+	
+
+game:GetService("Lighting").GlobalShadows = false
+
+for _, obj in pairs(workspace:GetDescendants()) do
+    if obj:IsA("BasePart") then
+        obj.CastShadow = false
+    end
+end
+
+	
+            ui.notify({
+                title = 'Opens nameless adm',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('NSAD')
+	
+	
+	
+
+	
+	
+	
+	            section:addButton({
+            text = 'Antilag! working!', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+        local Terrain = workspace.Terrain
+local Lighting = game:GetService("Lighting")
+
+
+Terrain.WaterWaveSize = 0
+Terrain.WaterWaveSpeed = 0
+Terrain.WaterReflectance = 0
+Terrain.WaterTransparency = 0
+
+Lighting.GlobalShadows = false
+Lighting.FogEnd = 1000 -- Menor valor de névoa (ajuste conforme necessário)
+Lighting.Brightness = 2 -- Ajuste para um brilho mais alto, em vez de 0
+
+
+for _, child in pairs(workspace:GetDescendants()) do
+    if child:IsA("BasePart") and child.Name ~= "Terrain" then
+        child.Material = Enum.Material.Plastic
+        child.Reflectance = 0
+    elseif child:IsA("Decal") or child:IsA("Texture") then
+        child:Destroy()
+    elseif child:IsA("ParticleEmitter") or child:IsA("Fire") or child:IsA("Smoke") then
+        child.Enabled = false
+    elseif child:IsA("Explosion") then
+        child.Visible = false
+    end
+end
+
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('this is a large button')
+	
+	
+	
+	            section:addButton({
+            text = 'AntiLagV2', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+     local Lighting = game:GetService("Lighting")
+local workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- Função para desativar efeitos visuais pesados de maneira menos agressiva
+local function disableHeavyVisualEffects()
+    for _, child in pairs(workspace:GetDescendants()) do
+        if child:IsA("ParticleEmitter") or child:IsA("Fire") or child:IsA("Smoke") then
+            -- Desativa, mas não destrói para garantir que seja fácil de reabilitar se necessário
+            child.Enabled = false
+        end
+    end
+end
+
+-- Função para otimizar materiais de objetos de forma mais leve
+local function optimizeMaterials()
+    for _, child in pairs(workspace:GetDescendants()) do
+        -- Não afeta objetos do jogador
+        if child:IsA("BasePart") and not child:IsDescendantOf(Players.LocalPlayer.Character) then
+            -- Substitui materiais pesados como madeira e metal por plástico (evitando materiais pesados)
+            child.Material = Enum.Material.Plastic
+            child.Reflectance = 0
+        end
+    end
+end
+
+-- Função para otimizar a iluminação sem afetar a jogabilidade
+local function optimizeLighting()
+    Lighting.GlobalShadows = false  -- Desativa sombras globais (afeta a performance)
+    Lighting.FogEnd = 500  -- Ajusta o alcance da névoa para uma distância mais curta
+    Lighting.Brightness = 2  -- Ajuste no brilho geral da cena para reduzir o esforço de renderização
+    Lighting.Ambient = Color3.fromRGB(180, 180, 180)  -- Cor ambiente mais suave para aliviar o cálculo de luz
+end
+
+-- Função para otimizar a física sem afetar o jogador
+local function optimizePhysics()
+    for _, child in pairs(workspace:GetDescendants()) do
+        -- Desativa colisão e limpa objetos de física pesados sem afetar o jogador
+        if child:IsA("BasePart") and not child:IsDescendantOf(Players.LocalPlayer.Character) then
+            -- Desativa colisões para objetos fora do jogador
+            child.CanCollide = true
+        end
+    end
+end
+
+-- Função para desativar a renderização de objetos invisíveis ou não necessários
+local function optimizeRendering()
+    for _, child in pairs(workspace:GetDescendants()) do
+        if child:IsA("BasePart") and not child:IsDescendantOf(Players.LocalPlayer.Character) then
+            -- Destruir ou simplificar objetos fora da linha de visão
+            if not child.Parent or (child.Parent and not child.Parent.Parent) then
+                child:Destroy()  -- Remove objetos invisíveis ou fora do campo de visão
+            end
+        end
+    end
+end
+
+-- Função principal que aplica as otimizações no jogo
+local function applyAntiLagOptimizations()
+    -- Desabilita efeitos visuais pesados de forma não destrutiva
+    disableHeavyVisualEffects()
+
+    -- Otimiza materiais e remove texturas pesadas (mas sem destruição)
+    optimizeMaterials()
+
+    -- Ajusta a iluminação para melhorar o FPS
+    optimizeLighting()
+
+    -- Desativa colisões e simplifica física para melhorar o desempenho
+    optimizePhysics()
+
+    -- Limita a renderização de objetos desnecessários ou invisíveis
+    optimizeRendering()
+end
+
+-- Aplica as otimizações no início
+applyAntiLagOptimizations()
+
+-- Usa o Heartbeat para reaplicar as otimizações durante o jogo
+RunService.Heartbeat:Connect(function()
+    -- Reaplica as otimizações em cada frame para garantir o desempenho constante
+    applyAntiLagOptimizations()
+end)
+
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('this is a large button')
+	
+	
+	
+	
+		    		        section:addButton({
+            text = 'Brighness', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+local lighting = game:GetService("Lighting")
+lighting.Brightness = 5 
+lighting.GlobalShadows = false 
+lighting.OutdoorAmbient = Color3.new(1, 1, 1) 
+
+
+for _, obj in pairs(workspace:GetDescendants()) do
+    if obj:IsA("BasePart") then
+        obj.CastShadow = false
+    end
+end
+
+
+            ui.notify({
+                title = 'Opens nameless adm',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('NSAD')
+	
+	
+		    		        section:addButton({
+            text = '+0.1 saturation', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+local Lighting = game:GetService("Lighting")
+local ColorCorrection = Instance.new("ColorCorrectionEffect")
+ColorCorrection.Parent = Lighting
+ColorCorrection.Saturation = 0.1 
+            ui.notify({
+                title = 'Opens nameless adm',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('NSAD')
+	
+	
+		    		        section:addButton({
+            text = '-0.1 saturation', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+local Lighting = game:GetService("Lighting")
+local ColorCorrection = Instance.new("ColorCorrectionEffect")
+ColorCorrection.Parent = Lighting
+ColorCorrection.Saturation = -0.1 -- Defina o nível de saturação desejado (exemplo: 7)
+
+            ui.notify({
+                title = 'Opens nameless adm',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('NSAD')
+	
+	
+	
+			    		        section:addButton({
+            text = 'Depression', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+local Lighting = game:GetService("Lighting")
+local ColorCorrection = Instance.new("ColorCorrectionEffect")
+ColorCorrection.Parent = Lighting
+ColorCorrection.Saturation = -1 
+            ui.notify({
+                title = 'Opens nameless adm',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('NSAD')
+	
+	
+		    		        section:addButton({
+            text = 'Reset saturation', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+local Lighting = game:GetService("Lighting")
+
+for _, effect in pairs(Lighting:GetChildren()) do
+    if effect:IsA("ColorCorrectionEffect") then
+        effect:Destroy() 
+    end
+end
+
+
+            ui.notify({
+                title = 'Opens nameless adm',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('NSAD')
+	
+	
+	
+		    		        section:addButton({
+            text = 'reset others', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+local lighting = game:GetService("Lighting")
+lighting.Brightness = 5 
+lighting.GlobalShadows = false 
+lighting.OutdoorAmbient = Color3.new(1, 1, 1) 
+lighting.ColorShift_Top = Color3.new(1, 0.5, 0.5) 
+lighting.ColorShift_Bottom = Color3.new(1, 0.5, 0.5) 
+
+for _, obj in pairs(workspace:GetDescendants()) do
+    if obj:IsA("BasePart") then
+        obj.CastShadow = false
+    end
+end
+
+            ui.notify({
+                title = 'Opens nameless adm',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('NSAD')
+	
+
+end
+
+	
+	
+	
+	
+	    local section = menu:addSection({
+        text = 'Perfect!',
+        side = 'left',
+        showMinButton = true
+    })
+    do 
+	
+	        section:addLabel({
+            text = 'Admin scripts' -- Self explanatory
+        })
+	
+	
+	    		        section:addButton({
+            text = 'NalessAdmin', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source'))()
+            ui.notify({
+                title = 'Opens nameless adm',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('NSAD')
+	
+	
+	
+	
+		    		        section:addButton({
+            text = 'IY', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+            ui.notify({
+                title = 'Opens infinite yield',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('y')
+	
+			    		        section:addButton({
+            text = 'AKAdmin|key:1234', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/AK%20Admin%20%7C%20Key%3A%20%221234%22"))()
+            ui.notify({
+                title = 'Opens infinite yield',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('1234')
+	
+	        section:addLabel({
+            text = 'Esp and Aimbots' -- Self explanatory
+        })
+	
+    
+    
+            section:addButton({
+            text = 'Simple aimbot and esp', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/Universal%20esp%20and%20Aimbot", true))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('wait!')
+    
+    
+        section:addButton({
+            text = 'Omg open aimbot,spinbot and more!!!', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ttwizz/Open-Aimbot/master/source.lua", true))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('wait!')
+    
+    
+            section:addButton({
+            text = 'Aimbot arena', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/aimbot%20Arena%20%5Bnot%20mine%5D", true))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('wait!')
+
+    
+    
+    
+    
+    
+    
+    
+    end
+    
+    
+    local menu = window:addMenu({
+    text = '✨Cool tools' -- Title of menu
+})
+
+    -- Menus have sections which house all the controls    
+    local section = menu:addSection({
+        text = 'Tools', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = false, -- Ability to minimize this section. Defaults to true
+    })
+    
+    do 
+    
+    
+    
+    
+        		        section:addButton({
+            text = '🔴Equip all tolls🔴', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+        
+	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local backpack = player:FindFirstChild("Backpack")
+
+if backpack then
+    for _, tool in ipairs(backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = character  
+        end
+    end
+end
+
+	
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('!!!')
+    
+    
+    
+    
+
+    
+    
+
+    
+        		        section:addButton({
+            text = 'TPTOOL', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/8def4101f93a3bb65779346593442026/raw/fef58863e216ebb3686dcc983a8dd5737bf0fe59/gistfile1.txt"))()
+
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('TPTOOL')
+    
+            		        section:addButton({
+            text = 'Safety tool', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/Safety"))()
+
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('TPTOOL')
+
+        		        section:addButton({
+            text = 'SPEEDTOOL', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+local tool = Instance.new("Tool")  
+tool.Name = "SpeedTool"
+tool.RequiresHandle = false
+tool.Parent = game.Players.LocalPlayer.Backpack  
+
+local defaultSpeed = 16  -- Velocidade normal
+local speedBoost = 200   -- Velocidade quando equipado
+
+local function setSpeed(speed)
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    humanoid.WalkSpeed = speed
+end
+
+tool.Equipped:Connect(function()
+    setSpeed(speedBoost)
+end)
+
+tool.Unequipped:Connect(function()
+    setSpeed(defaultSpeed)
+end)
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('TPTOOL')
+
+
+
+        		        section:addButton({
+            text = 'Btools', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/BTools.txt"))()
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('TPTOOL')
+
+
+        		        section:addButton({
+            text = 'F3X', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)()
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('TPTOOL')
+
+
+        		        section:addButton({
+            text = 'Float tool', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+local floatTool = Instance.new("Tool")
+floatTool.Name = "Float tool"
+floatTool.ToolTip = "SKIDED, BIG SORRY :("
+floatTool.RequiresHandle = false
+floatTool.Parent = game.Players.LocalPlayer.Backpack  -- Assuming the tool goes to the player's backpack
+
+local floatConn, floatBP, floatBG
+local baseY = 0
+local floatStartTime = 0
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local HRP = character:WaitForChild("HumanoidRootPart")
+local RunService = game:GetService("RunService")
+
+floatTool.Equipped:Connect(function(mouse)
+    -- Float tool does not force PlatformStand, so movement remains normal.
+    baseY = HRP.Position.Y
+    floatStartTime = tick()
+
+    floatBP = Instance.new("BodyPosition")
+    floatBP.MaxForce = Vector3.new(0, 1e5, 0)
+    floatBP.P = 1e4
+    floatBP.D = 100
+    floatBP.Parent = HRP
+
+    floatBG = Instance.new("BodyGyro")
+    floatBG.MaxTorque = Vector3.new(0, 0, 1e5)
+    floatBG.P = 1e4
+    floatBG.D = 100
+    floatBG.Parent = HRP
+
+    floatConn = RunService.RenderStepped:Connect(function(dt)
+        local t = tick() - floatStartTime
+        local offsetY = math.sin(t * 1) * 2  -- Vertical bobbing
+        floatBP.Position = Vector3.new(HRP.Position.X, baseY + offsetY, HRP.Position.Z)
+
+        local rollOsc = math.sin(t * 1) * math.rad(10)  -- Tilt (roll) oscillation
+        local _, currentYaw, _ = HRP.CFrame:ToEulerAnglesYXZ()
+        floatBG.CFrame = CFrame.Angles(0, currentYaw, rollOsc)
+    end)
+end)
+
+floatTool.Unequipped:Connect(function()
+    if floatConn then
+        floatConn:Disconnect()
+        floatConn = nil
+    end
+    if floatBP then
+        floatBP:Destroy()
+        floatBP = nil
+    end
+    if floatBG then
+        floatBG:Destroy()
+        floatBG = nil
+    end
+    HRP.Velocity = Vector3.new(0, 0, 0)
+    HRP.RotVelocity = Vector3.new(0, 0, 0)
+end)
+
+
+
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('TPTOOL')
+
+
+
+           		        section:addButton({
+            text = 'Minecraft tools', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Ahma174/Tool/refs/heads/main/Minecraft%20Tools"))()
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Minecraft tools')
+
+
+        		    		        section:addButton({
+            text = 'Bang tool', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Backpack = LocalPlayer.Backpack
+
+local bangTool = Instance.new("Tool")
+bangTool.Name = "Bang"
+bangTool.ToolTip = "Winter arc of palace fr"
+bangTool.RequiresHandle = false
+bangTool.Parent = Backpack
+
+local bangOrbiting = false
+local bangConn, bangBP, bangBG, bangClickConn
+local bangTime = 0
+local distanceBehind = 1.2  -- Distance behind target is now 1.2 studs
+
+bangTool.Equipped:Connect(function(mouse)
+    -- Enable PlatformStand for Bang tool
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local HRP = character:WaitForChild("HumanoidRootPart")
+    
+    humanoid.PlatformStand = true
+    
+    bangClickConn = mouse.Button1Down:Connect(function()
+        if bangOrbiting then return end
+        local targetPart = mouse.Target
+        if targetPart then
+            local targetChar = targetPart:FindFirstAncestorOfClass("Model")
+            local targetPlayer = targetChar and Players:GetPlayerFromCharacter(targetChar)
+            if targetPlayer and targetPlayer ~= LocalPlayer then
+                local targetHRP = targetChar:FindFirstChild("HumanoidRootPart") or targetChar:FindFirstChild("Torso")
+                if targetHRP then
+                    bangOrbiting = true
+                    bangTime = 0
+
+                    bangBP = Instance.new("BodyPosition")
+                    bangBP.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+                    bangBP.P = 1e4
+                    bangBP.D = 100
+                    bangBP.Parent = HRP
+
+                    bangBG = Instance.new("BodyGyro")
+                    bangBG.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
+                    bangBG.P = 1e4
+                    bangBG.D = 100
+                    bangBG.Parent = HRP
+
+                    bangConn = RunService.RenderStepped:Connect(function(dt)
+                        if not (targetHRP and targetHRP.Parent) then
+                            bangConn:Disconnect()
+                            bangOrbiting = false
+                            if bangBP then bangBP:Destroy() bangBP = nil end
+                            if bangBG then bangBG:Destroy() bangBG = nil end
+                            return
+                        end
+
+                        bangTime = bangTime + dt
+                        local targetPos = targetHRP.Position
+                        local targetLook = targetHRP.CFrame.LookVector
+                        local desiredPos = targetPos - (targetLook * distanceBehind)
+                        bangBP.Position = desiredPos
+
+                        -- More intense oscillation: frequency increased to 8 and amplitude increased to 40°.
+                        local frequency = 8
+                        local amplitude = math.rad(40)
+                        local pitchOsc = math.sin(bangTime * frequency) * amplitude
+                        local baseCFrame = CFrame.new(desiredPos, desiredPos + targetLook)
+                        bangBG.CFrame = baseCFrame * CFrame.Angles(pitchOsc, 0, 0)
+                    end)
+                end
+            end
+        end
+    end)
+end)
+
+bangTool.Unequipped:Connect(function()
+    if bangClickConn then
+        bangClickConn:Disconnect()
+        bangClickConn = nil
+    end
+    if bangConn then
+        bangConn:Disconnect()
+        bangConn = nil
+    end
+    if bangBP then
+        bangBP:Destroy()
+        bangBP = nil
+    end
+    if bangBG then
+        bangBG:Destroy()
+        bangBG = nil
+    end
+    bangOrbiting = false
+
+    -- Properly reference the Humanoid and HRP when Unequipped
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local HRP = character:WaitForChild("HumanoidRootPart")
+    
+    humanoid.PlatformStand = false
+    HRP.Velocity = Vector3.new(0, 0, 0)
+    HRP.RotVelocity = Vector3.new(0, 0, 0)
+end)
+
+
+            ui.notify({
+                title = '',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('bang')
+
+
+        		    		        section:addButton({
+            text = 'FE TeleknesisV5 tool', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty11.lua"))()
+            ui.notify({
+                title = 'Opens bypasser--->',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('teleknesis tool')
+
+
+
+           		        section:addButton({
+            text = 'Spawn balls tool', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+    
+    
+    local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+
+local tool = Instance.new("Tool")
+tool.Name = "Ball Spawner"
+tool.RequiresHandle = false
+
+tool.Activated:Connect(function()
+    if not mouse.Target then return end
+    
+    
+    local ball = Instance.new("Part")
+    ball.Shape = Enum.PartType.Ball
+    ball.Size = Vector3.new(5, 5, 5)
+    ball.Position = mouse.Hit.p
+    ball.Material = Enum.Material.SmoothPlastic
+    ball.Color = Color3.fromRGB(255, 0, 0) -- Vermelho
+    ball.Anchored = false
+    ball.CanCollide = true
+    ball.Parent = game.Workspace
+    
+    
+    local bodyForce = Instance.new("BodyVelocity")
+    bodyForce.Velocity = Vector3.new(0, 20, 0) -- Dar um impulso inicial para cima
+    bodyForce.MaxForce = Vector3.new(4000, 4000, 4000)
+    bodyForce.Parent = ball
+    
+    
+    task.delay(0.5, function()
+        bodyForce:Destroy()
+    end)
+end)
+
+tool.Parent = player.Backpack
+
+    
+    
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('balls')
+
+
+
+		        section:addButton({
+            text = 'FE JerkOff [r6]', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+            ui.notify({
+                title = 'Open!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('jerk!')
+
+
+
+
+        		        section:addButton({
+            text = 'Bang all', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastebin.com/raw/FWwdST5Y"))()
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('TPTOOL')
+
+
+
+
+
+
+
+        		        section:addButton({
+            text = 'Grab sworld', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-knife-v4-24753"))()
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Grab')
+
+        		        section:addButton({
+            text = 'PartCheck(OPPP)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/dd87c15041315abf3227c395e6582c89/raw/ac827b220edc19625590113698149f0faecf06dc/gistfile1.txt"))()
+            ui.notify({
+                title = 'get parts check',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('check')
+
+
+    local section = menu:addSection({
+        text = 'Games! and Universals', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+
+        		        section:addButton({
+            text = 'xvchub(FIXED)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/XVC-Universal%20script%5Bnot%20mine%5D"))()
+            ui.notify({
+                title = 'universal script',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('xvc universal hub')
+	
+	
+	        		        section:addButton({
+            text = 'Rivals(KEYLESS)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Patheticcs/RivalsScript/refs/heads/main/main.lua",true))()
+            ui.notify({
+                title = 'script',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('dont press the button')
+
+	        		        section:addButton({
+            text = 'Deadrails(KEYLESS)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/badass1ia/Merciful/refs/heads/main/Absurdity"))()
+            ui.notify({
+                title = 'script',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('dont press the button')
+
+	        		        section:addButton({
+            text = 'Energize OP', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet(('https://pastebin.com/raw/1p6xnBNf'),true))()
+            ui.notify({
+                title = 'script',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('brookhaven')
+
+
+
+
+        		        section:addButton({
+            text = 'Aqua matrix(Anim)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ExploitFin/AquaMatrix/refs/heads/AquaMatrix/AquaMatrix"))()
+            ui.notify({
+                title = 'Soon bro!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Best Animations')
+
+
+
+        		        section:addButton({
+            text = 'Universal scripts games v1.3', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/d6410461dd68f506ff533af886da8546/raw/55fab961d808f618deb3a832113ca53c3f1ee606/gistfile1.txt"))()
+            ui.notify({
+                title = 'ok!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('some scripts')
+
+
+    local section = menu:addSection({
+        text = 'Others tools', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+
+        		        section:addButton({
+            text = 'Server finder', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MaxproGlitcher/Finds-Servers/refs/heads/main/Finds%20Servers%20Code"))()
+            ui.notify({
+                title = 'ok!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('server')
+	
+	        		        section:addButton({
+            text = 'Server finderV1', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Isnotalwi/Roblox-Script/refs/heads/main/Finder%20Server%20Beta.lua"))()
+            ui.notify({
+                title = 'ok!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('server')
+
+
+        		        section:addButton({
+            text = 'Server ID Join', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/982aa3b30de4a231d883ddb9d49b831b/raw/21e15af86b8e8a4ff318e281dd0acde65e4b72cb/join-server-iidddd"))()
+            ui.notify({
+                title = 'ok!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('server')
+
+        		        section:addButton({
+            text = 'Server ID Copy', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/0881a53250d34f9a0e5588e66e9901eb/raw/dc7cb68d2aae89caee8cc97aa8b4e49ce0bc8e74/gistfile1.txt"))()
+            ui.notify({
+                title = 'ok!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('server')
+
+
+        		        section:addButton({
+            text = 'Print playerAge', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/6af90a5ac23cdb44065f6ead4c2df31b/raw/f6a3e4e458f5b8d200baf90b3988938d31db3f5a/AGE"))()
+            ui.notify({
+                title = 'ok!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('server')
+
+        		        section:addButton({
+            text = 'Display Position', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/PositionShower"))()
+            ui.notify({
+                title = 'ok!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('server')
+
+
+        local hotkey = section:addHotkey({
+            text = 'hotkey'
+        })
+        hotkey:setHotkey(Enum.KeyCode.G)
+        hotkey:setTooltip('This is a hotkey linked to the toggle!')
+        hotkey:linkToControl(toggle)
+    end
+
+
+
+	                                                                        section:addButton({
+	            text = 'SLEEP', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+
+local tool = Instance.new("Tool")
+tool.Name = "sleep tool"
+tool.RequiresHandle = false
+tool.CanBeDropped = false
+tool.Parent = game.Players.LocalPlayer.Backpack
+
+tool.Equipped:Connect(function()
+    local character = game.Players.LocalPlayer.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.PlatformStand = true 
+
+            
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = rootPart.CFrame * CFrame.Angles(math.rad(90), 0, 0) -- Gira o personagem 90 graus
+            end
+        end
+    end
+end)
+
+tool.Unequipped:Connect(function()
+    local character = game.Players.LocalPlayer.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.PlatformStand = false 
+
+            local rootPart = character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(rootPart.Position) 
+            end
+        end
+    end
+end)
+
+
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('just sleep')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    local section = menu:addSection({
+        text = 'Tools 2a Edition', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+        		        section:addButton({
+            text = 'OmgV1(Spinner)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+local tool = Instance.new("Tool")
+tool.Name = "OmgV1"
+tool.RequiresHandle = false
+tool.Parent = game.Players.LocalPlayer.Backpack
+
+local RunService = game:GetService("RunService")
+local spinning = false
+local originalWalkSpeed = 16 
+local floating = false 
+
+local function spinAndFloatPlayer(character)
+    local humanoid = character:FindFirstChild("Humanoid")
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if humanoid and rootPart then
+        spinning = true
+        floating = true
+        humanoid.WalkSpeed = 35 
+
+        local basePositionY = rootPart.Position.Y 
+
+        RunService.RenderStepped:Connect(function()
+            if spinning then
+                local randomRotation = CFrame.Angles(
+                    math.rad(math.random(-10, 10)), 
+                    math.rad(math.random(-720, 720)), 
+                    math.rad(math.random(-10, 10)) 
+                )
+                rootPart.CFrame = rootPart.CFrame * randomRotation
+            end
+
+            if floating then
+                
+                local floatOffset = math.sin(tick() * 5) * 0.2 -- Frequência e amplitude (ajustável)
+                rootPart.CFrame = CFrame.new(rootPart.Position.X, basePositionY + floatOffset, rootPart.Position.Z) * rootPart.CFrame.Rotation
+            end
+        end)
+    end
+end
+
+tool.Activated:Connect(function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    spinAndFloatPlayer(character)
+end)
+
+tool.Deactivated:Connect(function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = originalWalkSpeed
+        spinning = false
+        floating = false
+    end
+end)
+
+            ui.notify({
+                title = 'ok!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('server')
+
+
+
+        		        section:addButton({
+            text = 'Subpress(x)[useFloatTool]', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+local UserInputService = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local rootPart = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
+local flying = false
+
+local originalGravity = workspace.Gravity 
+local extremeGravity = 1000 
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+
+    if input.KeyCode == Enum.KeyCode.X then
+        if not flying then
+            flying = true
+            
+
+            local bodyVelocityUp = Instance.new("BodyVelocity")
+            bodyVelocityUp.Name = "FlyUp"
+            bodyVelocityUp.Velocity = Vector3.new(0, 1000, 0) 
+            bodyVelocityUp.MaxForce = Vector3.new(0, math.huge, 0) 
+            bodyVelocityUp.Parent = rootPart
+
+            task.wait(0.1)
+            bodyVelocityUp:Destroy() 
+
+            workspace.Gravity = extremeGravity
+
+            local bodyVelocityDown = Instance.new("BodyVelocity")
+            bodyVelocityDown.Name = "FallDown"
+            bodyVelocityDown.Velocity = Vector3.new(0, -2000, 0) 
+            bodyVelocityDown.MaxForce = Vector3.new(0, math.huge, 0) 
+            bodyVelocityDown.Parent = rootPart
+
+            local function onTouched(hit)
+                if humanoid.FloorMaterial ~= Enum.Material.Air then
+                    bodyVelocityDown:Destroy() 
+
+                    workspace.Gravity = originalGravity
+
+                    rootPart.Velocity = Vector3.new(0, 0, 0)
+                end
+            end
+
+            rootPart.Touched:Connect(onTouched)
+
+            task.wait(0.04)
+            if bodyVelocityDown and bodyVelocityDown.Parent then
+                bodyVelocityDown:Destroy()
+                workspace.Gravity = originalGravity 
+                rootPart.Velocity = Vector3.new(0, -10, 0)
+            end
+
+            flying = false
+        end
+    end
+end)
+
+
+
+            ui.notify({
+                title = 'opens FE Sub',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Sub')
+
+
+        		        section:addButton({
+            text = 'AirTools', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local airWalking = false
+local velocityY = 0
+local fixedYPosition = nil 
+
+local tool = Instance.new("Tool")
+tool.Name = "AIRTool"
+tool.RequiresHandle = false
+tool.Parent = player.Backpack
+
+tool.Equipped:Connect(function()
+    airWalking = true
+    fixedYPosition = humanoidRootPart.Position.Y 
+end)
+
+tool.Unequipped:Connect(function()
+    airWalking = false
+    velocityY = 0
+    fixedYPosition = nil 
+end)
+
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and airWalking then
+        if input.KeyCode == Enum.KeyCode.Space then
+            velocityY = 30 
+        elseif input.KeyCode == Enum.KeyCode.LeftControl then
+            velocityY = -20 
+        end
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if airWalking and (input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.LeftControl) then
+        velocityY = 0 
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if airWalking then
+        local targetY = fixedYPosition or humanoidRootPart.Position.Y
+        if velocityY ~= 0 then
+            targetY = humanoidRootPart.Position.Y + velocityY * RunService.RenderStepped:Wait()
+            fixedYPosition = targetY -- Atualizar a posição fixa ao subir ou descer
+        end
+        humanoidRootPart.Velocity = Vector3.new(humanoidRootPart.Velocity.X, 0, humanoidRootPart.Velocity.Z)
+        humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, targetY, humanoidRootPart.Position.Z)
+    end
+end)
+--------------------------------------------------->     L    <--------- z ------
+--- -   --       -script 2-     --            - --->    O   (------- z --Z--- z -----
+--------------------------------------------------->     L     <-------- z ------
+
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local airWalking = false
+local velocityY = 0
+
+local tool = Instance.new("Tool")
+tool.Name = "AEROFLOAT"
+tool.RequiresHandle = false
+tool.Parent = player.Backpack
+
+tool.Equipped:Connect(function()
+    airWalking = true
+end)
+
+tool.Unequipped:Connect(function()
+    airWalking = false
+    velocityY = 0 
+end)
+
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and airWalking then
+        if input.KeyCode == Enum.KeyCode.Space then
+            velocityY = 30 
+        elseif input.KeyCode == Enum.KeyCode.LeftControl then
+            velocityY = -30
+        end
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if airWalking and (input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.LeftControl) then
+        velocityY = 0 
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if airWalking then
+        humanoidRootPart.Velocity = Vector3.new(humanoidRootPart.Velocity.X, velocityY, humanoidRootPart.Velocity.Z)
+    end
+end)
+
+
+
+
+
+
+
+            ui.notify({
+                title = 'only aerotools',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('aerotools')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------
+----------------------------------
+-----------------------------------------------------------------------
+--------------
+----------------------------------------
+-----------------------------------------------------------------
+    local section = menu:addSection({
+        text = 'Dev scripts', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+
+
+
+        		        section:addButton({
+            text = 'DexV3', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/BypassedDarkDexV3.lua", true))()
+            ui.notify({
+                title = 'opens ',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('DexV3!')
+
+
+
+
+        		        section:addButton({
+            text = 'Display Position', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/PositionShower"))()
+            ui.notify({
+                title = 'ok!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Pos')
+
+
+        		        section:addButton({
+            text = 'SimpleSpy(Original)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))()
+            ui.notify({
+                title = 'opens rspy',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('rspy')
+
+
+	
+	        		        section:addButton({
+            text = 'Saveinstance()', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+saveinstance()
+            ui.notify({
+                title = 'opens dex',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Saveinstances! look in worksplace file')
+
+
+end
+
+
+
+
+local menu = window:addMenu({
+    text = '✅FE Scripts' -- Title of menu
+})
+
+    -- Menus have sections which house all the controls    
+    local section = menu:addSection({
+        text = 'HUBS/Universals', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+    
+    do 
+    
+    
+    
+    
+    		        section:addButton({
+            text = '!!SearchScripts!!', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/FilteringEnabled/FE/main/ScriptHub"))()
+            ui.notify({
+                title = 'Opens infinite yield',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Search scripts!')
+    
+    
+    
+    
+    
+        section:addLabel({
+            text = 'Choose a hub' -- Self explanatory
+        })
+		        section:addButton({
+            text = 'Wisl hub', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/wisl884/wisl-i-Universal-Project1/refs/heads/main/Wisl'i%20Universal%20Project%20new%20UI.lua", true))()
+            ui.notify({
+                title = 'Wisl',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('wisl hub')
+
+
+			    		        section:addButton({
+            text = 'AKAdmin|key:1234', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/AK%20Admin%20%7C%20Key%3A%20%221234%22"))()
+            ui.notify({
+                title = 'Opens infinite yield',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('1234')
+
+		        section:addButton({
+            text = 'Warius universal', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/stopbnnmeples/my-hobby/refs/heads/main/WariusV08.txt'))()
+            ui.notify({
+                title = 'simple hub',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('simple hub')
+
+
+
+
+				        section:addButton({
+            text = 'OrcaHub', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()	
+loadstring(game:HttpGet("https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua"))()
+            ui.notify({
+                title = 'Orca is',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Orca Hub')
+
+
+
+
+				        section:addButton({
+            text = 'Sirius', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://sirius.menu/sirius'))()
+            ui.notify({
+                title = 'Sirios is',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Sirius')
+
+
+
+
+
+
+
+
+
+
+
+		        section:addButton({
+            text = 'IY', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+            ui.notify({
+                title = 'Opens infinite yield',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('iy')
+
+
+
+
+
+		        section:addButton({
+            text = 'NADM', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source'))()
+            ui.notify({
+                title = 'Opens  nameless admin',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('nameless adm')
+
+
+		        section:addButton({
+            text = 'NovaHub |Key:RebordRDIB', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/NovaHub/script%20up'))()
+            ui.notify({
+                title = 'Opens  nameless admin',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Key on console')
+
+
+
+
+    local section = menu:addSection({
+        text = 'FE Scripts!', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+		        section:addButton({
+            text = 'FE JerkOff [r6]', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+            ui.notify({
+                title = 'Open!',
+                message = 'Open!',
+                duration = 3
+            })
+
+        end):setTooltip('FE super ring OP')
+				        section:addButton({
+            text = 'SuperRing', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-ring-parts-V6-Open-source-No-chat-26899"))()
+            ui.notify({
+                title = 'open!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Super ring parts')
+
+				        section:addButton({
+            text = 'FE Fight', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+local Sense = loadstring(game:HttpGet("https://pastefy.app/wxVAgZpT/raw"))()
+            ui.notify({
+                title = '',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('fight!')
+				        section:addButton({
+            text = 'FE Huger', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JSFKGBASDJKHIOAFHDGHIUODSGBJKLFGDKSB/fe/refs/heads/main/FEHUGG"))()
+            ui.notify({
+                title = 'hug',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('hug others...')
+				        section:addButton({
+            text = 'FE Copy avatars', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Copy%20Avatar'))()
+            ui.notify({
+                title = '',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('copy others avatars')
+				        section:addButton({
+            text = 'FE SeraphicBlade!', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Touch-fling-10457"))() 
+loadstring(game:HttpGet("https://pastefy.app/59mJGQGe/raw"))()
+            ui.notify({
+                title = '',
+                message = 'Open!',
+                duration = 3
+            })
+
+        end):setTooltip('seraphic blade FE script!')
+				        section:addButton({
+            text = 'FE BANG KIT', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/drfwedes23/abc025c561566876eff561b578f73ca2/raw/4df690531a08261e3f9575686d7eee4fcacc1732/gistfile1.txt"))()
+            ui.notify({
+                title = 'Open!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Bang peoples')
+
+				        section:addButton({
+            text = 'FE Shooter', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/drfwedes23/4756dadc70865a845ce06ea5495e95d0/raw/091c157c5b29b0a907ef3de3ae93aa1744bb36fe/gistfile1.txt"))()
+            ui.notify({
+                title = 'Shoot!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('s')
+				        section:addButton({
+            text = 'FE FUNNY!', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ShutUpJamesTheLoser/freaky/refs/heads/main/fe", true))()
+            ui.notify({
+                title = 'FE! scripts!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('this FE is most for trolling players and thats funny')
+				        section:addButton({
+            text = 'FE Virus', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-virus-infection-26555"))()
+            ui.notify({
+                title = 'cof cof',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('virus')
+				        section:addButton({
+            text = 'FE Hammer', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-hammer-28636"))()
+            ui.notify({
+                title = 'Hammer',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Hammer mods')
+				        section:addButton({
+            text = 'FE Gun R15', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Gun-28741"))()
+            ui.notify({
+                title = 'soon',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('soon')
+				        section:addButton({
+            text = 'FE FACEBANG(FIXED)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
+            ui.notify({
+                title = 'z',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('fuck in face!')
+				        section:addButton({
+            text = 'FE Dash', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastefy.app/ZhKVgCK3/raw"))()
+            ui.notify({
+                title = 'Dash',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('dash button')
+
+
+
+				        section:addButton({
+            text = 'FE Build', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = playerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 192)
+frame.Position = UDim2.new(0.5, -150, 0.5, -96)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.Parent = screenGui
+
+local dragPanel = Instance.new("Frame")
+dragPanel.Size = UDim2.new(1, 0, 0, 30)
+dragPanel.BackgroundColor3 = Color3.fromRGB(0, 128, 0)
+dragPanel.Parent = frame
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -80, 1, 0)
+titleLabel.Text = "Sun Symbol builder FE"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Font = Enum.Font.SourceSans
+titleLabel.TextSize = 14
+titleLabel.Parent = dragPanel
+
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 30, 0, 30)
+closeButton.Position = UDim2.new(1, -30, 0, 0)
+closeButton.Text = "X"
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeButton.Font = Enum.Font.SourceSans
+closeButton.TextSize = 18
+closeButton.BorderSizePixel = 0
+closeButton.Parent = dragPanel
+
+local collapseButton = Instance.new("TextButton")
+collapseButton.Size = UDim2.new(0, 30, 0, 30)
+collapseButton.Position = UDim2.new(1, -60, 0, 0)
+collapseButton.Text = "-"
+collapseButton.BackgroundColor3 = Color3.fromRGB(0, 128, 0)
+collapseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+collapseButton.Font = Enum.Font.SourceSans
+collapseButton.TextSize = 18
+collapseButton.BorderSizePixel = 0
+collapseButton.Parent = dragPanel
+
+local questionButton = Instance.new("TextButton")
+questionButton.Size = UDim2.new(0, 30, 0, 30)
+questionButton.Position = UDim2.new(1, -90, 0, 0)
+questionButton.Text = "?"
+questionButton.BackgroundColor3 = Color3.fromRGB(0, 128, 0)
+questionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+questionButton.Font = Enum.Font.SourceSans
+questionButton.TextSize = 18
+questionButton.BorderSizePixel = 0
+questionButton.Parent = dragPanel
+
+local equipAllButton = Instance.new("TextButton")
+equipAllButton.Size = UDim2.new(0, 100, 0, 30)
+equipAllButton.Position = UDim2.new(0, 0, 0, -30)
+equipAllButton.Text = "Equip All Tools"
+equipAllButton.BackgroundColor3 = Color3.fromRGB(0, 90, 0)
+equipAllButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+equipAllButton.Font = Enum.Font.SourceSans
+equipAllButton.TextSize = 14
+equipAllButton.BorderSizePixel = 0
+equipAllButton.Parent = frame
+
+local isCollapsed = false
+
+collapseButton.MouseButton1Click:Connect(function()
+    if isCollapsed then
+        frame.Size = UDim2.new(0, 300, 0, 192)
+        collapseButton.Text = "-"
+        for _, button in pairs(frame:GetChildren()) do
+            if button:IsA("TextButton") and button.Name:match("^Button") then
+                button.Visible = true
+            end
+        end
+    else
+        frame.Size = UDim2.new(0, 300, 0, 30)
+        collapseButton.Text = "+"
+        for _, button in pairs(frame:GetChildren()) do
+            if button:IsA("TextButton") and button.Name:match("^Button") then
+                button.Visible = false
+            end
+        end
+    end
+    isCollapsed = not isCollapsed
+end)
+
+closeButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+dragPanel.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+    end
+end)
+
+dragPanel.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+dragPanel.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+local buttonPositions = {
+    Vector3.new(6.5, -2, -10), Vector3.new(6.5, -4, -10), Vector3.new(6.5, -6, -10),
+    Vector3.new(6.5, -8, -10), Vector3.new(5, -8, -10), Vector3.new(3.5, -8, -10),
+    Vector3.new(2, -8, -10), Vector3.new(2, -6, -10), Vector3.new(2, -4, -10),
+    Vector3.new(2, -2, -10), Vector3.new(0.5, -2, -10), Vector3.new(-1, -2, -10),
+    Vector3.new(-2.5, -2, -10), Vector3.new(0.5, -8, -10), Vector3.new(-1, -8, -10),
+    Vector3.new(-2.5, -8, -10), Vector3.new(-2.5, -10, -10), Vector3.new(-2.5, -12, -10),
+    Vector3.new(-2.5, -14, -10), Vector3.new(2, -10, -10), Vector3.new(2, -12, -10),
+    Vector3.new(2, -14, -10), Vector3.new(3.5, -14, -10), Vector3.new(5, -14, -10),
+    Vector3.new(6.5, -14, -10)
+}
+
+local rowCount = 5
+local spacing = 5
+local rowSpacing = 5
+local buttonWidth = 50
+local buttonHeight = 25
+
+for i = 1, 25 do
+    local row = math.floor((i - 1) / rowCount)
+    local col = (i - 1) % rowCount
+
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, buttonWidth, 0, buttonHeight)
+    button.Position = UDim2.new(0, col * (buttonWidth + spacing) + 10, 0, row * (buttonHeight + rowSpacing) + 40)
+    button.Text = tostring(i)
+    button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.SourceSans
+    button.TextSize = 14
+    button.BorderSizePixel = 2
+    button.BorderColor3 = Color3.fromRGB(0, 255, 0)
+    button.Name = "Button" .. i
+    button.Parent = frame
+
+    button.MouseButton1Click:Connect(function()
+        local character = player.Character or player.CharacterAdded:Wait()
+        local tool = character:FindFirstChildOfClass("Tool") or player.Backpack:FindFirstChildOfClass("Tool")
+        
+        if tool then
+            tool.GripPos = buttonPositions[i]
+        end
+    end)
+end
+
+local instructionBox = Instance.new("Frame")
+instructionBox.Size = UDim2.new(0, 250, 0, 160)
+instructionBox.Position = UDim2.new(0.5, -125, 0, -170)
+instructionBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+instructionBox.BackgroundTransparency = 0
+instructionBox.Visible = false
+instructionBox.Parent = dragPanel
+
+local instructionText = Instance.new("TextLabel")
+instructionText.Size = UDim2.new(1, 0, 1, 0)
+instructionText.Text = [[
+So first u gonna do, its to have 25 of any tools.
+Next step is while u holding one of your tool press a button, so ur tool position will change.
+Keep it doing till 25, and then enter "equiptools" cmd on IY and there u go.
+- U need to use IY with that script to work!
+- If u don't see ur inventory got troubles with inventory, enter cmd "enable inventory" on IY
+! this script doesnt have any similarity to nazism! I live in asia and this means its sun symbol!
+]]
+instructionText.TextColor3 = Color3.fromRGB(255, 255, 255)
+instructionText.BackgroundTransparency = 1
+instructionText.Font = Enum.Font.SourceSans
+instructionText.TextSize = 14
+instructionText.TextWrapped = true
+instructionText.Parent = instructionBox
+
+questionButton.MouseButton1Click:Connect(function()
+    instructionBox.Visible = not instructionBox.Visible
+end)
+
+equipAllButton.MouseButton1Click:Connect(function()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local tools = player.Backpack:GetChildren()
+
+    for _, tool in pairs(tools) do
+        if tool:IsA("Tool") then
+            tool.Parent = character
+        end
+    end
+end)
+            ui.notify({
+                title = 'build',
+                message = 'Need Yi!',
+                duration = 3
+            })
+        end):setTooltip('NEEDS YI')
+
+
+
+
+
+
+				        section:addButton({
+            text = 'FE invis', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+local offset = 1100 local invisible = game.Players.LocalPlayer local grips = {} local heldTool local gripChanged local handle local weld function setDisplayDistance(distance) for _, player in pairs(game.Players:GetPlayers()) do if player.Character and player.Character:FindFirstChildWhichIsA("Humanoid") then player.Character:FindFirstChildWhichIsA("Humanoid").NameDisplayDistance = distance player.Character:FindFirstChildWhichIsA("Humanoid").HealthDisplayDistance = distance end end end local tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack) tool.Name = "Invisible" tool.RequiresHandle = false tool.CanBeDropped = false tool.Equipped:Connect( function() wait() if not invisible then invisible = true tool.Name = "Enabled Invisible" if handle then handle:Destroy() end if weld then weld:Destroy() end handle = Instance.new("Part", workspace) handle.Name = "Handle" handle.Transparency = 1 handle.CanCollide = false handle.Size = Vector3.new(2, 1, 1) weld = Instance.new("Weld", handle) weld.Part0 = handle weld.Part1 = game.Players.LocalPlayer.Character.HumanoidRootPart weld.C0 = CFrame.new(0, offset - 1.5, 0) setDisplayDistance(offset + 100) workspace.CurrentCamera.CameraSubject = handle game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, offset, 0) game.Players.LocalPlayer.Character.Humanoid.HipHeight = offset game.Players.LocalPlayer.Character.Humanoid:ChangeState(11) for _, child in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do if child:IsA("Tool") and child ~= tool then grips[child] = child.Grip end end elseif invisible then invisible = false tool.Name = "Disabled Invisible" if handle then handle:Destroy() end if weld then weld:Destroy() end for _, child in pairs(game.Players.LocalPlayer.Character:GetChildren()) do if child:IsA("Tool") then child.Parent = game.Players.LocalPlayer.Backpack end end for tool, grip in pairs(grips) do if tool then tool.Grip = grip end end heldTool = nil setDisplayDistance(100) workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, -offset, 0) game.Players.LocalPlayer.Character.Humanoid.HipHeight = 0 end tool.Parent = game.Players.LocalPlayer.Backpack end ) game.Players.LocalPlayer.Character.ChildAdded:Connect( function(child) wait() if invisible and child:IsA("Tool") and child ~= heldTool and child ~= tool then heldTool = child local lastGrip = heldTool.Grip if not grips[heldTool] then grips[heldTool] = lastGrip end for _, track in pairs(game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()) do track:Stop() end game.Players.LocalPlayer.Character.Animate.Disabled = true heldTool.Grip = heldTool.Grip * (CFrame.new(0, offset - 1.5, 1.5) * CFrame.Angles(math.rad(-90), 0, 0)) heldTool.Parent = game.Players.LocalPlayer.Backpack heldTool.Parent = game.Players.LocalPlayer.Character if gripChanged then gripChanged:Disconnect() end gripChanged = heldTool:GetPropertyChangedSignal("Grip"):Connect( function() wait() if not invisible then gripChanged:Disconnect() end if heldTool.Grip ~= lastGrip then lastGrip = heldTool.Grip * (CFrame.new(0, offset - 1.5, 1.5) * CFrame.Angles(math.rad(-90), 0, 0)) heldTool.Grip = lastGrip heldTool.Parent = game.Players.LocalPlayer.Backpack heldTool.Parent = game.Players.LocalPlayer.Character end end ) end end )
+            ui.notify({
+                title = 'Dash',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('dash button')
+
+
+
+
+
+				        section:addButton({
+            text = 'FE LAY GRAVIT', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Underssky/GravityLayScript/refs/heads/main/MainGravityLay.txt"))()
+            ui.notify({
+                title = 'Dash',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('dash button')
+
+
+
+
+
+				        section:addButton({
+            text = 'FE HEADPACK', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Gazer-Ha/Valiant-Ui-Lib-Gazed-/refs/heads/main/Head%20Pack'))()
+            ui.notify({
+                title = 'Dash',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('dash button')
+
+
+
+
+
+
+
+				        section:addButton({
+            text = 'FE TAB GLITCHER', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastebin.com/raw/GsfkyJC5"))()
+            ui.notify({
+                title = 'Dash',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('dash button')
+
+
+
+
+				        section:addButton({
+            text = 'Omg FAKE IP LOGGER WORKING', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastebin.com/raw/cbMJd5SH"))()
+            ui.notify({
+                title = 'look the ip of kids!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Ip logger')
+
+
+
+
+
+
+        		    		        section:addButton({
+            text = 'FE TeleknesisV5', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty11.lua"))()
+            ui.notify({
+                title = 'Opens bypasser--->',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('teleknesis')
+
+
+
+
+
+        		        section:addButton({
+            text = 'Bow and arrow', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastebin.com/raw/zF8505VM",true))()
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('bow')
+
+
+
+        		        section:addButton({
+            text = 'Sussy animation Lmao[FE]', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ShutUpJamesTheLoser/freaky/refs/heads/main/fe", true))()
+            ui.notify({
+                title = 'get tptool',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('OP')
+
+
+
+
+        		        section:addButton({
+            text = 'Hiper fast jerk', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet(('https://gist.githubusercontent.com/rsdashman/021e320200619b9cd41705d5d2f37c82/raw/4e3ec3d93fd74d99bb890cf29ee5dddac0c05b5c/gistfile1.txt'),true))()
+            ui.notify({
+                title = 'get jerkkk!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('OP')
+
+        		        section:addButton({
+            text = 'FreakyPenis', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ShutUpJamesTheLoser/freakyv94/refs/heads/main/freakyv94yes", true))()
+            ui.notify({
+                title = 'get jerkkk!',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('OP')
+
+        		        section:addButton({
+            text = 'FE VEREUS', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/KRNL2/3dx/main/VEREUS"), true))()
+            ui.notify({
+                title = 'FE',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('OP')
+
+        		        section:addButton({
+            text = 'Clientside chaos god sworld', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/KRNL2/sword/main/Chaos%20Deus%20Sword"), true))()
+            ui.notify({
+                title = 'FE',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('OP')
+
+
+        		        section:addButton({
+            text = 'Clientside revengeHands', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/KRNL2/asdasdasd/main/Revenge%20Hands"), true))()
+            ui.notify({
+                title = 'FE',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('OP')
+	
+		        		        section:addButton({
+            text = 'FE BlackHoletool(OPP)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Natural-Disaster-Survival-Blackhole-Tool-Control-Unanc*d-Parts-27791"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('blackhole or superring')
+	
+		        		        section:addButton({
+            text = 'FE Spinner walker', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/UniversalsPrivate/refs/heads/main/FE%20Spinner%5BPrivado%5D?token=GHSAT0AAAAAAC6VAKXL4ARK6CHG27EG45YOZ57ON2Q"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('spinn')
+	
+			        		        section:addButton({
+            text = 'FE GRAVIT INVERTER(NATURAL DISASTER)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastebin.com/raw/96XzjEiK"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('spinn')
+
+
+	
+	
+	
+				        		        section:addButton({
+            text = 'FE PUNCH & SLASH!', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+	-- Fixed and Updated by CheckM8 (Aka Kevin)
+-- Keybinds: F = Punch + C = Slash
+local screen_gui = Instance.new("ScreenGui")
+local main_frame = Instance.new("Frame")
+local title_label = Instance.new("TextLabel")
+local punch_label = Instance.new("TextLabel")
+local slash_label = Instance.new("TextLabel")
+local punch_textbox = Instance.new("TextBox")
+local slash_textbox = Instance.new("TextBox")
+local players = game:GetService("Players")
+local run_service = game:GetService("RunService")
+local player = players.LocalPlayer
+local mouse = player:GetMouse()
+local fling = false
+local fling_running = false
+screen_gui.Parent = game:GetService("CoreGui")
+screen_gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+main_frame.Parent = screen_gui
+main_frame.Active = true
+main_frame.Draggable = true
+main_frame.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+main_frame.BackgroundTransparency = 0.4
+main_frame.BorderColor3 = Color3.new(0, 0, 0)
+main_frame.Position = UDim2.new(0.118, 0, 0.391, 0)
+main_frame.Size = UDim2.new(0, 174, 0, 150)
+title_label.Parent = main_frame
+title_label.BackgroundColor3 = Color3.new(0.7, 0.7, 0.7)
+title_label.BackgroundTransparency = 0.5
+title_label.Size = UDim2.new(0, 175, 0, 34)
+title_label.Font = Enum.Font.SourceSans
+title_label.Text = "Keybinds"
+title_label.TextColor3 = Color3.new(0, 0, 0)
+title_label.TextSize = 14
+punch_label.Parent = main_frame
+punch_label.BackgroundColor3 = Color3.new(0.7, 0.7, 0.7)
+punch_label.BackgroundTransparency = 0.4
+punch_label.Position = UDim2.new(0.073, 0, 0.306, 0)
+punch_label.Size = UDim2.new(0, 71, 0, 33)
+punch_label.Font = Enum.Font.SourceSans
+punch_label.Text = "punch"
+punch_label.TextColor3 = Color3.new(0, 0, 0)
+punch_label.TextSize = 14
+slash_label.Parent = main_frame
+slash_label.BackgroundColor3 = Color3.new(0.7, 0.7, 0.7)
+slash_label.BackgroundTransparency = 0.4
+slash_label.Position = UDim2.new(0.073, 0, 0.628, 0)
+slash_label.Size = UDim2.new(0, 70, 0, 33)
+slash_label.Font = Enum.Font.SourceSans
+slash_label.Text = "slash"
+slash_label.TextColor3 = Color3.new(0, 0, 0)
+slash_label.TextSize = 14
+punch_textbox.Parent = main_frame
+punch_textbox.BackgroundColor3 = Color3.new(0.7, 0.7, 0.7)
+punch_textbox.BackgroundTransparency = 0.4
+punch_textbox.Position = UDim2.new(0.482, 0, 0.306, 0)
+punch_textbox.Size = UDim2.new(0, 70, 0, 33)
+punch_textbox.Font = Enum.Font.SourceSans
+punch_textbox.Text = "f"
+punch_textbox.TextColor3 = Color3.new(0, 0, 0)
+punch_textbox.TextSize = 14
+slash_textbox.Parent = main_frame
+slash_textbox.BackgroundColor3 = Color3.new(0.7, 0.7, 0.7)
+slash_textbox.BackgroundTransparency = 0.4
+slash_textbox.Position = UDim2.new(0.476, 0, 0.626, 0)
+slash_textbox.Size = UDim2.new(0, 70, 0, 33)
+slash_textbox.Font = Enum.Font.SourceSans
+slash_textbox.Text = "c"
+slash_textbox.TextColor3 = Color3.new(0, 0, 0)
+slash_textbox.TextSize = 14
+local function nearest()
+	local nearest = nil
+	local min_dist = math.huge
+	local my_char = player.Character
+	if not my_char or not my_char:FindFirstChild("HumanoidRootPart") then return nil end
+	local my_pos = my_char.HumanoidRootPart.Position
+	local all_players = players:GetPlayers()
+	for i = 1, #all_players do
+		local p = all_players[i]
+		if p == player then continue end
+		if not p.Character then continue end
+		if not p.Character:FindFirstChild("HumanoidRootPart") then continue end
+		local dist = (p.Character.HumanoidRootPart.Position - my_pos).Magnitude
+		if dist < min_dist then
+			min_dist = dist
+			nearest = p
+		end
+	end
+	return nearest
+end
+ 
+local function do_fling()
+	if fling_running then return end
+	fling_running = true
+	local char, hrp, vel, movel = nil, nil, nil, 0.1
+	while fling do
+		run_service.Heartbeat:Wait()
+		char = player.Character
+		if not char then continue end
+		hrp = char:FindFirstChild("HumanoidRootPart")
+		if not hrp then continue end
+		local target = nearest()
+		local fling_dir = Vector3.new(0, 10000, 0)
+		if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+			local target_pos = target.Character.HumanoidRootPart.Position
+			local dir = (target_pos - hrp.Position).Unit
+			fling_dir = dir * 10000
+		end
+ 
+		vel = hrp.Velocity
+		hrp.Velocity = vel * 10000 + fling_dir
+		run_service.RenderStepped:Wait()
+		hrp.Velocity = vel
+		run_service.Stepped:Wait()
+		hrp.Velocity = vel + Vector3.new(0, movel, 0)
+		movel = -movel
+	end
+ 
+	fling_running = false
+end
+ 
+local function perform_animation(anim_id, speed)
+	if player.Character and player.Character:FindFirstChild("Humanoid") then
+		local anim = Instance.new("Animation")
+		anim.AnimationId = "rbxassetid://" .. anim_id
+		local k = player.Character.Humanoid:LoadAnimation(anim)
+		k:Play()
+		if speed then k:AdjustSpeed(speed) end
+		fling = true
+		spawn(do_fling)
+		k.Stopped:Once(function() fling = false end)
+	end
+end
+ 
+mouse.KeyDown:Connect(function(key)
+	if key == punch_textbox.Text then
+		if player.Character and player.Character:FindFirstChild("Humanoid") then
+			if player.Character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+				perform_animation("846744780", 1)
+			else
+				perform_animation("204062532", 1)
+			end
+		end
+	elseif key == slash_textbox.Text then
+		if player.Character and player.Character:FindFirstChild("Humanoid") then
+			if player.Character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+				perform_animation("675025570", 3.4)
+			else
+				perform_animation("218504594", 1)
+			end
+		end
+	end
+end)
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PUCH OTHER')
+
+
+				        		        section:addButton({
+            text = 'FE CHAT DRAW(WORKING)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Chatdraw/refs/heads/main/Chattdraw"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('chat')
+
+				        		        section:addButton({
+            text = 'FE SCP 096(WORKING R6)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastefy.app/YsJgITXR/raw"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('scp-096')
+
+				        		        section:addButton({
+            text = 'FE JK dropkick', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LolnotaKid/JkDropKuck/refs/heads/main/Protected_3923618848403366.txt"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('')
+
+				        		        section:addButton({
+            text = 'FE Control npcs(OP)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty38.lua"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('')
+
+
+				        		        section:addButton({
+            text = 'FE UniversalTouchFling(OPP)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty38.lua"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('WOW')
+	
+	
+	    local section = menu:addSection({
+        text = 'Second edition', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+	
+	
+					        		        section:addButton({
+            text = 'FE Glios Fighter', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/gale", true))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('WOW')
+	
+	
+	
+						        		        section:addButton({
+            text = 'OPPPP TOUCHFLING', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/OP%20TOUCHFLING"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('OP')
+	
+							        		        section:addButton({
+            text = 'OPPPP TOUCHFLING(OLD BUT GOOD)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+	loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Touch-fling-27515"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('OP')
+	
+	
+	
+	                                                                        section:addButton({
+	            text = 'FE BackFlip', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/FE-Backflip"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Key: z,x,c')
+	
+	
+	
+	
+		                                                                        section:addButton({
+	            text = 'FE IDLEFASTT', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+local tool = Instance.new("Tool")
+tool.Name = "FE IDLEFASTT"
+tool.RequiresHandle = false
+tool.CanBeDropped = false
+tool.Parent = game.Players.LocalPlayer.Backpack
+
+tool.Equipped:Connect(function()
+    local character = game.Players.LocalPlayer.Character
+    if character then
+        local rootPart = character:FindFirstChild("HumanoidRootPart")
+        local humanoid = character:FindFirstChild("Humanoid")
+
+        if rootPart and humanoid then
+            humanoid.PlatformStand = true 
+
+            -- Travar a posição Y
+            local bodyPosition = Instance.new("BodyPosition")
+            bodyPosition.MaxForce = Vector3.new(0, math.huge, 0) 
+            bodyPosition.Position = Vector3.new(rootPart.Position.X, rootPart.Position.Y, rootPart.Position.Z)
+            bodyPosition.Parent = rootPart
+
+            local bodyGyro = Instance.new("BodyGyro")
+            bodyGyro.MaxTorque = Vector3.new(math.huge, math.huge, math.huge) 
+            bodyGyro.P = 3000 
+            bodyGyro.CFrame = rootPart.CFrame
+            bodyGyro.Parent = rootPart
+
+            local bodyVelocity = Instance.new("BodyVelocity")
+            bodyVelocity.MaxForce = Vector3.new(math.huge, 0, math.huge) 
+            bodyVelocity.Velocity = Vector3.zero
+            bodyVelocity.Parent = rootPart
+
+          
+            game:GetService("RunService").RenderStepped:Connect(function()
+                if tool.Parent == game.Players.LocalPlayer.Backpack then
+                    return 
+                end
+
+                local moveDirection = humanoid.MoveDirection
+                if moveDirection.Magnitude > 0 then
+                    bodyVelocity.Velocity = moveDirection * 100 
+                    bodyGyro.CFrame = CFrame.new(Vector3.zero, moveDirection) 
+                else
+                    bodyVelocity.Velocity = Vector3.zero 
+                end
+            end)
+
+            tool.Unequipped:Connect(function()
+                humanoid.PlatformStand = false 
+                bodyPosition:Destroy()
+                bodyVelocity:Destroy()
+                bodyGyro:Destroy()
+            end)
+        end
+    end
+end)
+
+
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('cool')
+	
+	
+	
+		                                                                        section:addButton({
+	            text = 'FE HeadPet[Swift]', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty40.lua"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('')
+	
+	
+		        		        section:addButton({
+            text = 'FE Invisible', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Gon900p/script/refs/heads/main/invisible"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+	
+	
+	
+	
+
+	
+	
+					        		        section:addButton({
+            text = 'FE Freeze', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/NovaHub/FE%20Freeze"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Freeze')
+	
+				        section:addButton({
+            text = '[recommend]stalker', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://github.com/TheXploiterYT/scripts/raw/main/stalk%20v3",true))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+
+--------------------------------------
+
+--------------------------------
+
+
+    local menu = window:addMenu({
+    text = '📍Advanced' -- Title of menu
+})
+
+    -- Menus have sections which house all the controls    
+    local section = menu:addSection({
+        text = 'Backdoors & scanners', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = false, -- Ability to minimize this section. Defaults to true
+    })
+    
+    do 
+    
+        		        section:addButton({
+            text = 'Lalol hub[backdoor]', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Its-LALOL/LALOL-Hub/main/Backdoor-Scanner/script'))()
+            ui.notify({
+                title = 'get lalol hub',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('backdoor')
+
+
+        		        section:addButton({
+            text = 'Quircky admin', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+		print("Testing game: https://www.roblox.com/games/7593160773")
+loadstring(game:HttpGet("https://gist.github.com/someunknowndude/38cecea5be9d75cb743eac8b1eaf6758/raw"))()
+
+            ui.notify({
+                title = 'get quircky admin ',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('backdoor')
+
+        		        section:addButton({
+            text = 'Backdoor fast scanner', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastefy.app/GByL73wL/raw"))()
+            ui.notify({
+                title = 'get quircky admin ',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('backdoor')
+
+
+
+        		        section:addButton({
+            text = 'Anti-cheat scanner', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/Universal%20anti%20cheat%20scanner%20%5Bgood%5D"))()
+            ui.notify({
+                title = 'get quircky admin ',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('backdoor')
+
+
+
+
+    local section = menu:addSection({
+        text = 'Chat scripts', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+
+
+
+        		        section:addButton({
+            text = 'ChatBypasser[setViatnamGMLG]', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Gazer-Ha/bruh/refs/heads/main/ImBadd1'))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('chat scripts')
+	
+	        		        section:addButton({
+            text = 'ChatChear[BESTT]', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/ChatScripts/Best%20chat%20scripts'))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('chat scripts')
+	
+	        section:addButton({
+            text = 'FE chat clear op', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://gist.githubusercontent.com/mert134/5e6ab75f62bdfea46d9e52b2bff319b4/raw/1adf469060b5714f275be80fb1ad144dc1d4014b/gistfile1.txt"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+	
+	
+	
+		        section:addButton({
+            text = 'EpicBypasser', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/EpicBypasser%5Bpreserved%5D"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+	
+	    local section = menu:addSection({
+        text = 'classics to troll', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+	
+	        		        section:addButton({
+            text = 'JerkOFF', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('trolls')
+	
+		        		        section:addButton({
+            text = 'FEfaceFucker(Z) to fuck', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+
+
+	        		        section:addButton({
+            text = 'FE Hugger(H) to hug', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JSFKGBASDJKHIOAFHDGHIUODSGBJKLFGDKSB/fe/refs/heads/main/FEHUGG"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+
+	        		        section:addButton({
+            text = 'FE Invisible', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Gon900p/script/refs/heads/main/invisible"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+	
+					        		        section:addButton({
+            text = 'FE Freeze', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/NovaHub/FE%20Freeze"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Freeze')
+
+
+    local section = menu:addSection({
+        text = 'Target', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+	        		        section:addButton({
+            text = 'Fake ip logger', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastebin.com/raw/cbMJd5SH"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+
+	        		        section:addButton({
+            text = 'FEfaceFucker(Z) to fuck', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+
+
+	        		        section:addButton({
+            text = 'FE Hugger(H) to hug', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JSFKGBASDJKHIOAFHDGHIUODSGBJKLFGDKSB/fe/refs/heads/main/FEHUGG"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+
+
+
+	        		        section:addButton({
+            text = 'Bang r6(WORKS)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastebin.com/raw/aPSHMV6K"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+
+	        		        section:addButton({
+            text = 'Bang r15(WORKS)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://pastebin.com/raw/1ePMTt9n"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+
+
+
+	        		        section:addButton({
+            text = 'FE BlackHoletool(OPP)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Natural-Disaster-Survival-Blackhole-Tool-Control-Unanc*d-Parts-27791"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+
+
+	        		        section:addButton({
+            text = 'FE Spinner walker', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+
+
+
+local tool = Instance.new("Tool")
+tool.Name = "FE Spinner"
+tool.RequiresHandle = false
+tool.Parent = game.Players.LocalPlayer.Backpack
+
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+local flying = false
+local speed = 120
+local bodyVelocity
+local RunService = game:GetService("RunService")
+
+local function startFlying()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+    bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000)
+    bodyVelocity.Parent = humanoidRootPart
+
+    RunService.RenderStepped:Connect(function()
+        if flying then
+            local direction = (mouse.Hit.p - humanoidRootPart.Position).unit
+            bodyVelocity.Velocity = Vector3.new(direction.x * speed, 0, direction.z * speed)
+            humanoidRootPart.CFrame = humanoidRootPart.CFrame * CFrame.Angles(0, math.rad(10000), 0)
+        else
+            bodyVelocity:Destroy()
+        end
+    end)
+end
+
+local function toggleFly()
+    flying = not flying
+    local character = player.Character or player.CharacterAdded:Wait()
+
+    if flying then
+        character.Humanoid.PlatformStand = true
+        startFlying()
+    else
+        character.Humanoid.PlatformStand = false
+        if bodyVelocity then
+            bodyVelocity:Destroy() 
+        end
+    end
+end
+
+tool.Activated:Connect(function()
+    toggleFly()
+end)
+
+tool.Unequipped:Connect(function()
+    if flying then
+        toggleFly() 
+    end
+end)
+
+player.CharacterAdded:Connect(function(character)
+    character:WaitForChild("Humanoid").Died:Connect(function()
+        character:Destroy() 
+    end)
+end)
+
+
+
+
+
+
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('spinn')
+
+
+
+
+
+
+
+
+
+	        		        section:addButton({
+            text = 'OWNER BEST FE YEET', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/306f4a527cbaec62bd466c8956a7be1a/raw/d457d472d0bd3a60b4aeff08b31722ff2014e312/gistfile1.txt"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('target')
+
+
+
+				        		        section:addButton({
+            text = 'FE UniversalTouchFling(OPP)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty38.lua"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('WOW')
+
+
+
+
+				        		        section:addButton({
+            text = 'FE Orbit player', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/long191910/all-my-roblox-script/refs/heads/main/orbit.lua"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+
+
+
+				        		        section:addButton({
+            text = 'FE Gravity lay', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Bac0nHck/Scripts/refs/heads/main/zerogravity"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+
+
+				        		        section:addButton({
+            text = 'Spin gui', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/FE%20Spin%20gui"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+	
+	
+				        		        section:addButton({
+            text = 'FreeCam', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/Free%20Cam"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('FREECAM!')
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+---------------------------------------------------------------
+
+
+
+local menu = window:addMenu({
+    text = '🎮Games' -- Title of menu
+})
+
+    -- Menus have sections which house all the controls    
+    local section = menu:addSection({
+        text = 'Deadrails', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+    
+    do 
+
+
+
+				        		        section:addButton({
+            text = 'DeadRails(Tbaohub)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/thaibao/refs/heads/main/TbaoHubDeadRails"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+
+
+
+				        		        section:addButton({
+            text = 'DeadRails(BESTTT)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/dead-rails/Other%20dead%20rails%20script%20op"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+
+
+				        		        section:addButton({
+            text = 'DeadRails(Un-patch|BESTT)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/dead-rails/BEST%20DEADRAILS%20SCRIPT%20%7C%20INSTANT%20WINN'))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+	
+					        		        section:addButton({
+            text = 'DeadRails(TP TO TESLALAB)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/game/refs/heads/main/TbaoHubDeadRailsTp"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+	
+	
+	
+
+	
+	
+
+	
+
+
+   
+    -- Menus have sections which house all the controls    
+    local section = menu:addSection({
+        text = 'dead rails 2', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+						        		        section:addButton({
+            text = 'Autobond!(keysys)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+
+
+					        		        section:addButton({
+            text = 'DeadRails(GET HORSE CLASS!)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+local event1 = game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("RemotePromise"):WaitForChild("Remotes"):WaitForChild("C_BuyClass")
+local event2 = game:GetService("ReplicatedStorage").Shared.RemotePromise.Remotes.C_EquipClass
+
+event1:FireServer("Horse")
+event2:FireServer("Horse")
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+	
+	
+	
+						        		        section:addButton({
+            text = 'FLY SCRIPT (dead rails)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/ScriptAuthorization%20Source"))()Ioad("9186e2ba1e71992722a5060dc6ec9f27")
+	
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+	
+	
+
+
+    -- Menus have sections which house all the controls    
+    local section = menu:addSection({
+        text = 'Rivals', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+
+				        		        section:addButton({
+            text = 'RivalsDUCKHUB(BESTSCRIPT)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/HexFG/duckhub/refs/heads/main/loader.lua'))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('PERFECT!')
+
+
+
+
+
+
+
+
+
+
+
+end
+end
+end
