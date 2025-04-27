@@ -1,0 +1,579 @@
+local Luna = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/main/source.lua", true))()
+local Window = Luna:CreateWindow({
+	Name = "SyFire | Reborn", -- This Is Title Of Your Window
+	Subtitle = nil, -- A Gray Subtitle next To the main title.
+	LogoID = "82795327169782", -- The Asset ID of your logo. Set to nil if you do not have a logo for Luna to use.
+	LoadingEnabled = true, -- Whether to enable the loading animation. Set to false if you do not want the loading screen or have your own custom one.
+	LoadingTitle = "Luna Interface Suite", -- Header for loading screen
+	LoadingSubtitle = "by Nebula Softworks", -- Subtitle for loading screen
+
+	ConfigSettings = {
+		RootFolder = nil, -- The Root Folder Is Only If You Have A Hub With Multiple Game Scripts and u may remove it. DO NOT ADD A SLASH
+		ConfigFolder = "Big Hub" -- The Name Of The Folder Where Luna Will Store Configs For This Script. DO NOT ADD A SLASH
+	},
+
+	KeySystem = false, -- As Of Beta 6, Luna Has officially Implemented A Key System!
+	KeySettings = {
+		Title = "Luna Example Key",
+		Subtitle = "Key System",
+		Note = "Best Key System Ever! Also, Please Use A HWID Keysystem like Pelican, Luarmor etc. that provide key strings based on your HWID since putting a simple string is very easy to bypass",
+		SaveInRoot = false, -- Enabling will save the key in your RootFolder (YOU MUST HAVE ONE BEFORE ENABLING THIS OPTION)
+		SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+		Key = {"#123"}, -- List of keys that will be accepted by the system, please use a system like Pelican or Luarmor that provide key strings based on your HWID since putting a simple string is very easy to bypass
+		SecondAction = {
+			Enabled = true, -- Set to false if you do not want a second action,
+			Type = "Link", -- Link / Discord.
+			Parameter = "" -- If Type is Discord, then put your invite link (DO NOT PUT DISCORD.GG/). Else, put the full link of your key system here.
+		}
+	}
+})
+
+
+Window:CreateHomeTab({
+	SupportedExecutors = {}, -- A Table Of Executors Your Script Supports. Add strings of the executor names for each executor.
+	DiscordInvite = "1234", -- The Discord Invite Link. Do Not Include discord.gg/ | Only Include the code.
+	Icon = 1, -- By Default, The Icon Is The Home Icon. If You would like to change it to dashboard, replace the interger with 2
+})
+
+local Tab = Window:CreateTab({
+	Name = "script",
+	Icon = "code",
+	ImageSource = "Material",
+	ShowTitle = true -- This will determine whether the big header text in the tab will show
+})
+local Label = Tab:CreateLabel({
+	Text = "client scripts!",
+	Style = 1 -- Luna Labels Have 3 Styles : A Basic Label, A Green Information Label and A Red Warning Label. Look At The Following Image For More Details
+})
+local Button = Tab:CreateButton({
+	Name = "Dash Script",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/e72e4ec90ec94acfa5a5ef86ab2808b2/raw/59d95a779b2a26a62bb37e375ff827df4bf87f01/dash", true))()
+	end
+})
+
+-- Fly Universal Script
+local Button = Tab:CreateButton({
+	Name = "Fly Universal",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt", true))()
+	end
+})
+
+-- FE JerkOff Script
+local Button = Tab:CreateButton({
+	Name = "FE JerkOff",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw", true))()
+	end
+})
+--click tp
+local Button = Tab:CreateButton({
+	Name = "click tp",
+	Description = nil,
+	Callback = function()
+		if _G.WRDClickTeleport == nil then
+	_G.WRDClickTeleport = true
+	
+	local player = game:GetService("Players").LocalPlayer
+	local UserInputService = game:GetService("UserInputService")
+	 --Wanted to avoid using mouse instance, but UIS^ is very tedious to get mouse hit position
+	local mouse = player:GetMouse()
+
+	--Waits until the player's mouse is found
+	repeat wait() until mouse
+	
+	UserInputService.InputBegan:Connect(function(input, gameProcessed)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			--Only click teleport if the toggle is enabled
+			if _G.WRDClickTeleport and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+				player.Character:MoveTo(Vector3.new(mouse.Hit.x, mouse.Hit.y, mouse.Hit.z)) 
+			end
+		end
+	end)
+--Just toggle instead of re-executing the script
+else
+	_G.WRDClickTeleport = not _G.WRDClickTeleport
+	--Notify
+	if _G.WRDClickTeleport then
+		game.StarterGui:SetCore("SendNotification", {Title="WeAreDevs.net"; Text="Click teleport enabled"; Duration=5;})
+	else
+		game.StarterGui:SetCore("SendNotification", {Title="WeAreDevs.net"; Text="Click teleport disabled"; Duration=5;})
+	end
+end
+	end
+})
+
+
+local Button = Tab:CreateButton({
+	Name = "NoClip toggle 'N' on/off ",
+	Description = nil,
+	Callback = function()
+		local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local noclip = false
+local starterGui = game:GetService("StarterGui")
+
+local function toggleNoclip()
+	noclip = not noclip
+	if noclip then
+		for _, part in ipairs(character:GetDescendants()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = false
+			end
+		end
+		starterGui:SetCore("SendNotification", {
+			Title = "Noclip Activated";
+			Text = "You can pass through objects.";
+			Duration = 2;
+		})
+	else
+		for _, part in ipairs(character:GetDescendants()) do
+			if part:IsA("BasePart") then
+				if part.Name == "Head" or part.Name == "Torso" or part.Name == "UpperTorso" or part.Name == "LowerTorso" then
+					part.CanCollide = true
+				else
+					part.CanCollide = false
+				end
+			end
+		end
+		starterGui:SetCore("SendNotification", {
+			Title = "Clip Activated";
+			Text = "You will only collide with the head and torso.";
+			Duration = 2;
+		})
+	end
+end
+
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+	if not gameProcessedEvent and input.KeyCode == Enum.KeyCode.N then
+		toggleNoclip()
+	end
+end)
+
+humanoid.Died:Connect(function()
+	noclip = false
+	for _, part in ipairs(character:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.CanCollide = true
+		end
+	end
+end)
+
+player.CharacterAdded:Connect(function(newCharacter)
+	character = newCharacter
+	humanoid = character:WaitForChild("Humanoid")
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+	if noclip then
+		for _, part in ipairs(character:GetDescendants()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = false
+			end
+		end
+	end
+end)
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Inf jump [key toggle: C]",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/e72e4ec90ec94acfa5a5ef86ab2808b2/raw/59d95a779b2a26a62bb37e375ff827df4bf87f01/dash", true))()
+	end
+})
+
+local Label = Tab:CreateLabel({
+	Text = "Others & FEs",
+	Style = 1 -- Luna Labels Have 3 Styles : A Basic Label, A Green Information Label and A Red Warning Label. Look At The Following Image For More Details
+})
+local Button = Tab:CreateButton({
+	Name = "FE invisible",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Gon900p/script/refs/heads/main/invisible"))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "FE Freeze character",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/NovaHub/FE%20Freeze"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Stalker",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://github.com/TheXploiterYT/scripts/raw/main/stalk%20v3",true))()
+	end
+})
+
+local Button = Tab:CreateButton({
+	Name = "Chatclear",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/ChatScripts/Best%20chat%20scripts'))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "chat bypasser",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Gazer-Ha/bruh/refs/heads/main/ImBadd1'))()
+	end
+})
+local Label = Tab:CreateLabel({
+	Text = "BANG",
+	Style = 1 -- Luna Labels Have 3 Styles : A Basic Label, A Green Information Label and A Red Warning Label. Look At The Following Image For More Details
+})
+local Button = Tab:CreateButton({
+	Name = "Bang r6",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://pastebin.com/raw/aPSHMV6K"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "bang r15",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://pastebin.com/raw/1ePMTt9n"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "facebang 'Z' ",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
+	end
+})
+
+
+local Tab = Window:CreateTab({
+	Name = "Local_Player",
+	Icon = "menu",
+	ImageSource = "Material",
+	ShowTitle = true -- This will determine whether the big header text in the tab will show
+})
+
+local Slider = Tab:CreateSlider({
+	Name = "Walkspeed",
+	Range = {16, 250}, -- The Minimum And Maximum Values Respectively
+	Increment = 1, -- Basically The Changing Value/Rounding Off
+	CurrentValue = 16, -- The Starting Value
+    	Callback = function(Value)
+
+			local character = game.Players.LocalPlayer.Character
+			local walkSpeed = Value 
+			
+			character.Humanoid.WalkSpeed = walkSpeed
+
+    	end
+}, "Slider") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+
+local Slider = Tab:CreateSlider({
+	Name = "JumpPower",
+	Range = {16, 250}, -- The Minimum And Maximum Values Respectively
+	Increment = 1, -- Basically The Changing Value/Rounding Off
+	CurrentValue = 16, -- The Starting Value
+    	Callback = function(Value)
+			local player = game.Players.LocalPlayer
+			local character = player.Character or player.CharacterAdded:Wait()
+			local humanoid = character:WaitForChild("Humanoid")
+			
+			humanoid.JumpPower = Value
+			
+    	end
+}, "Slider") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+--//
+
+local Button = Tab:CreateButton({
+	Name = "Hipheigh gui",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://pastefy.app/irPz9mgg/raw"))()
+	end
+})
+
+
+local Button = Tab:CreateButton({
+	Name = "reset",
+	Description = nil,
+	Callback = function()
+		
+		local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+game.Workspace.Gravity = 196.2
+if humanoid then
+    humanoid.JumpPower = 50
+    humanoid.WalkSpeed = 16
+end
+
+
+	end
+})
+
+
+
+
+local Tab = Window:CreateTab({
+	Name = "FE scripts",
+	Icon = "book",
+	ImageSource = "Material",
+	ShowTitle = true -- This will determine whether the big header text in the tab will show
+})
+
+local Label = Tab:CreateLabel({
+	Text = "FE scripts",
+	Style = 1 -- Luna Labels Have 3 Styles : A Basic Label, A Green Information Label and A Red Warning Label. Look At The Following Image For More Details
+})
+
+
+local Button = Tab:CreateButton({
+	Name = "JerkOFF",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Super ring",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-ring-parts-V6-Open-source-No-chat-26899"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Hug | key 'H' ",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/JSFKGBASDJKHIOAFHDGHIUODSGBJKLFGDKSB/fe/refs/heads/main/FEHUGG"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Seraphic blade",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Touch-fling-10457"))() 
+loadstring(game:HttpGet("https://pastefy.app/59mJGQGe/raw"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "!!!!!BANG!!!!!",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://gist.githubusercontent.com/drfwedes23/abc025c561566876eff561b578f73ca2/raw/4df690531a08261e3f9575686d7eee4fcacc1732/gistfile1.txt"))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Crazy anim",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/ShutUpJamesTheLoser/freaky/refs/heads/main/fe", true))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Virus!",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-virus-infection-26555"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Hammer!",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-hammer-28636"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Gun r15!",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Gun-28741"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Face bang | key 'Z' ",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://pastefy.app/irPz9mgg/raw"))()
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Lay gravit",
+	Description = nil,
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Underssky/GravityLayScript/refs/heads/main/MainGravityLay.txt"))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Teleknesis",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty11.lua"))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Client side| Vereus",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/KRNL2/3dx/main/VEREUS"), true))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Client side| chaos god sworld",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/KRNL2/sword/main/Chaos%20Deus%20Sword"), true))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Client side| revenge Hands",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/KRNL2/asdasdasd/main/Revenge%20Hands"), true))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Chat draw",
+	Description = nil,
+	Callback = function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Chatdraw/refs/heads/main/Chattdraw"))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "SCP-096",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://pastefy.app/YsJgITXR/raw"))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "Touchfling",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty38.lua"))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "touchfling 2",
+	Description = nil,
+	Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/OP%20TOUCHFLING"))()
+
+	end
+})
+local Button = Tab:CreateButton({
+	Name = "touchfling old",
+	Description = nil,
+	Callback = function()
+	loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Touch-fling-27515"))()
+
+	end
+})
+
+
+
+local Tab = Window:CreateTab({
+	Name = "games",
+	Icon = "backpack",
+	ImageSource = "Material",
+	ShowTitle = true -- This will determine whether the big header text in the tab will show
+})
+
+
+local Button = Tab:CreateButton({
+	Name = "Universal",
+	Description = nil,
+	Callback = function()
+
+	end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--//
+
+
+
+
+local Tab = Window:CreateTab({
+	Name = "Configurations",
+	Icon = "settings",
+	ImageSource = "Material",
+	ShowTitle = true -- This will determine whether the big header text in the tab will show
+})
+Tab:BuildConfigSection() -- Tab Should be the name of the tab you are adding this section to.
+Tab:BuildThemeSection() -- Tab Should be the name of the tab you are adding this section to.
