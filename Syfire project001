@@ -54,10 +54,89 @@ end
         })
         
         section:addButton({
-            text = 'Dash', 
+            text = 'F to fly', 
             style = 'large' -- style of the button, can be 'large' or 'small'
         }, function() 
-loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/e72e4ec90ec94acfa5a5ef86ab2808b2/raw/59d95a779b2a26a62bb37e375ff827df4bf87f01/dash", true))()
+local plr = game.Players.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+local humanoidRootPart = char:WaitForChild("HumanoidRootPart")
+local humanoid = char:WaitForChild("Humanoid")
+
+local flying = false
+local speed = 200
+
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local control = {f = 0, b = 0, l = 0, r = 0}
+
+local bodyGyro, bodyVelocity
+
+
+local function stopAnimations()
+    for _, track in ipairs(humanoid:GetPlayingAnimationTracks()) do
+        track:Stop()
+    end
+end
+
+UIS.InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.F then
+        flying = not flying
+        
+        if flying then
+            
+            bodyGyro = Instance.new("BodyGyro", humanoidRootPart)
+            bodyGyro.P = 9e4
+            bodyGyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+            bodyGyro.cframe = humanoidRootPart.CFrame
+
+            bodyVelocity = Instance.new("BodyVelocity", humanoidRootPart)
+            bodyVelocity.velocity = Vector3.new(0, 0.1, 0)
+            bodyVelocity.maxForce = Vector3.new(9e9, 9e9, 9e9)
+
+            
+            humanoid.PlatformStand = true
+            stopAnimations()
+
+        else
+            
+            if bodyGyro then bodyGyro:Destroy() end
+            if bodyVelocity then bodyVelocity:Destroy() end
+
+            
+            humanoid.PlatformStand = false
+        end
+    elseif input.KeyCode == Enum.KeyCode.W then
+        control.f = 1
+    elseif input.KeyCode == Enum.KeyCode.S then
+        control.b = -1
+    elseif input.KeyCode == Enum.KeyCode.A then
+        control.l = -1
+    elseif input.KeyCode == Enum.KeyCode.D then
+        control.r = 1
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.W then
+        control.f = 0
+    elseif input.KeyCode == Enum.KeyCode.S then
+        control.b = 0
+    elseif input.KeyCode == Enum.KeyCode.A then
+        control.l = 0
+    elseif input.KeyCode == Enum.KeyCode.D then
+        control.r = 0
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if flying and bodyGyro and bodyVelocity then
+        bodyGyro.cframe = workspace.CurrentCamera.CFrame
+        bodyVelocity.velocity = ((workspace.CurrentCamera.CFrame.lookVector * (control.f + control.b)) + 
+                                (workspace.CurrentCamera.CFrame.rightVector * (control.r + control.l))) * speed
+    end
+end)
+
             ui.notify({
                 title = 'button',
                 message = 'The large button got clicked!',
