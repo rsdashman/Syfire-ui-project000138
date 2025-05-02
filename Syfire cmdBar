@@ -1,0 +1,47 @@
+-- // Visual Command UI Library Example
+local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/VisualRoblox/Roblox/main/UI-Libraries/Visual%20Command%20UI%20Library/Source.lua', true))()
+
+local Window = Library:CreateWindow({
+    Name = 'Syfire CommandBar',
+    IntroText = 'CMDBAR',
+    IntroIcon = 'rbxassetid://10618644218',
+    IntroBlur = true,
+    IntroBlurIntensity = 15,
+    Theme = Library.Themes.dark,
+    Position = 'bottom',
+    Draggable = true,
+    Prefix = 'k'
+})
+
+-- // Commands
+
+Window:AddCommand('SyfireLuna', {}, 'Creates A Notification.', function(Arguments, Speaker)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/Syfire%20Luna"))()
+end)
+
+Window:AddCommand('FLY', {}, 'Creates A Notification.', function(Arguments, Speaker)
+    loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
+
+end)
+
+
+Window:AddCommand('HUB', {}, 'Creates A Notification.', function(Arguments, Speaker)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/Syfire%20project001"))()
+end)
+
+-- // Functions
+Window:AddTheme('test', {
+    BackgroundColor = Color3.fromRGB(0, 255, 255),
+    SecondaryColor = Color3.fromRGB(225, 225, 225),
+    AccentColor = Color3.fromRGB(125, 125, 125),
+    PrimaryTextColor = Color3.fromRGB(0, 0, 0),
+    SecondaryTextColor = Color3.fromRGB(75, 75, 75)
+})
+
+for _, Theme in next, Window:GetThemes(true) do
+    print(Theme)
+end
+
+for Index, Theme in next, Window:GetThemes(false) do
+    print(Index, Theme)
+end
