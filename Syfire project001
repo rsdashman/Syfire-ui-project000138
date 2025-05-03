@@ -30,7 +30,7 @@ ui.autoDisableToggles = true -- All toggles will automatically be disabled when 
 -- Technically multiple windows can be made, but there is no (and likely wont ever be) official support for them
 -- since its a lot of work for such a minute use
 local window = ui.newWindow({
-    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.75.0💎', -- fixed fatal error 
+    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.80.0💎', -- fixed fatal error 
     resize = true, -- Ability to resize
     size = Vector2.new(429, 260), -- Window size, accepts UDim2s and Vector2s
     position = nil -- Custom position, defaults to roughly the bottom right corner
@@ -2315,6 +2315,49 @@ loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-ring-
                 duration = 3
             })
         end):setTooltip('Super ring parts')
+
+		        section:addButton({
+            text = 'FAST ANIMATION WALK', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/yeerma/such/1353808a0cf32da96f1bead94d5980f4cc1cfa84/nickerfackot'))()
+            ui.notify({
+                title = 'Open!',
+                message = 'Open!',
+                duration = 3
+            })
+
+        end):setTooltip('fast anim')
+
+
+
+
+
+
+
+
+		        section:addButton({
+            text = 'FE FAKELAG', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
+            ui.notify({
+                title = 'Open!',
+                message = 'Open!',
+                duration = 3
+            })
+
+        end):setTooltip('FE fakelag')
+
+
+
+
+
+
+
+
+
+
 
 				        section:addButton({
             text = 'FE Fight', 
