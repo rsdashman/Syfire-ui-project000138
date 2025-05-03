@@ -29,6 +29,16 @@ Window:AddCommand('HUB', {}, 'Creates A Notification.', function(Arguments, Spea
     loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/Syfire%20project001"))()
 end)
 
+
+Window:AddCommand('BEST SCRIPT DEADRAILS', {}, 'Creates A Notification.', function(Arguments, Speaker)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/dead-rails/Other%20dead%20rails%20script%20op"))()
+end)
+
+
+
+
+
+
 -- // Functions
 Window:AddTheme('test', {
     BackgroundColor = Color3.fromRGB(0, 255, 255),
