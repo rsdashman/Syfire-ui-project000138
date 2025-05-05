@@ -1,0 +1,294 @@
+local WindUI = loadstring(game:HttpGet("https://tree-hub.vercel.app/api/UI/WindUI"))()
+
+local Window = WindUI:CreateWindow({
+    Title = "SyfireUniversal",
+    Icon = "door-open",
+    Author = "Noctalis Softworks",
+    Folder = "NCloud",
+    Size = UDim2.fromOffset(580, 460),
+    Transparent = false,
+    Theme = "Dark",
+    SideBarWidth = 170,
+    HasOutline = true,
+})
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
+
+-- Player Tab
+local Tab1 = Window:Tab({ Title = "Player", Icon = "user" })
+local SectionMain = Tab1:Section({ Title = "Main", TextXAlignment = "Left", TextSize = 17 })
+
+local InfiniteJumpEnabled = false
+local JumpConnection
+
+Tab1:Toggle({
+    Title = "Infinite Jump",
+    Desc = "Jump infinitely when enabled",
+    Value = false,
+    Callback = function(state)
+        InfiniteJumpEnabled = state
+        if state then
+            JumpConnection = UIS.JumpRequest:Connect(function()
+                local char = LocalPlayer.Character
+                local hum = char and char:FindFirstChildWhichIsA("Humanoid")
+                if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+            end)
+        else
+            if JumpConnection then JumpConnection:Disconnect() JumpConnection = nil end
+        end
+    end,
+})
+
+Tab1:Slider({
+    Title = "WalkSpeed",
+    Step = 1,
+    Value = { Min = 1, Max = 100, Default = 16 },
+    Callback = function(value)
+        local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")
+        if hum then hum.WalkSpeed = value end
+    end
+})
+
+Tab1:Slider({
+    Title = "JumpPower",
+    Step = 1,
+    Value = { Min = 20, Max = 200, Default = 50 },
+    Callback = function(value)
+        local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")
+        if hum then hum.JumpPower = value end
+    end
+})
+
+local SectionOthers = Tab1:Section({ Title = "Others", TextXAlignment = "Left", TextSize = 17 })
+
+local NoclipEnabled = false
+local NoclipConnection
+
+Tab1:Toggle({
+    Title = "Noclip",
+    Desc = "Walk through walls",
+    Value = false,
+    Callback = function(state)
+        NoclipEnabled = state
+        if state then
+            NoclipConnection = RunService.Stepped:Connect(function()
+                local char = LocalPlayer.Character
+                if char then
+                    for _, part in pairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        else
+            if NoclipConnection then
+                NoclipConnection:Disconnect()
+                NoclipConnection = nil
+            end
+        end
+    end,
+})
+
+-- Visual Tab
+local Tab2 = Window:Tab({ Title = "Visual", Icon = "laptop-minimal" })
+Tab2:Section({ Title = "Main", TextXAlignment = "Left", TextSize = 17 })
+
+Tab2:Slider({
+    Title = "FOV (Camera)",
+    Desc = "Change camera field of view",
+    Value = { Min = 40, Max = 120, Default = 70 },
+    Callback = function(value)
+        workspace.CurrentCamera.FieldOfView = value
+    end,
+})
+
+local ESPEnabled = false
+local ESPConnections = {}
+
+-- Function to create an ESP box around a player (hitbox)
+local function createESPBox(player)
+    local character = player.Character
+    if not character or not player.Team then return end
+    
+    -- Create the box (hitbox) around the player's character
+    local box = Instance.new("BoxHandleAdornment")
+    box.Adornee = character:FindFirstChild("HumanoidRootPart")
+    box.Size = character:FindFirstChild("HumanoidRootPart").Size
+    box.Color3 = player.TeamColor.Color
+    box.Transparency = 0.5
+    box.Visible = true
+    box.Parent = workspace
+    box.ZIndex = 5
+
+    -- Create nameplate above the player
+    local nameplate = Instance.new("BillboardGui")
+    nameplate.Adornee = character:FindFirstChild("Head")
+    nameplate.Size = UDim2.new(0, 200, 0, 50)
+    nameplate.StudsOffset = Vector3.new(0, 2, 0) -- Offset slightly above the head
+    nameplate.Parent = character:FindFirstChild("Head")
+
+    local nameText = Instance.new("TextLabel")
+    nameText.Text = player.Name
+    nameText.TextColor3 = Color3.new(1, 1, 1)  -- White text color
+    nameText.BackgroundTransparency = 1
+    nameText.Size = UDim2.new(1, 0, 1, 0)
+    nameText.TextScaled = true
+    nameText.Parent = nameplate
+end
+
+-- Function to enable or disable the ESP
+local function toggleESP(state)
+    ESPEnabled = state
+
+    -- Clear existing ESP boxes and nameplates
+    for _, connection in pairs(ESPConnections) do
+        connection:Disconnect()
+    end
+    ESPConnections = {}
+
+    if ESPEnabled then
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer then
+                table.insert(ESPConnections, player.CharacterAdded:Connect(function()
+                    createESPBox(player)
+                end))
+            end
+        end
+    end
+end
+
+-- Toggle Button in your UI
+Tab1:Toggle({
+    Title = "ESP Box (Team Color) & Names",
+    Desc = "Enable or disable the ESP box and nameplates for players",
+    Value = false,
+    Callback = function(state)
+        toggleESP(state)
+    end,
+})
+
+
+-- Fullbright
+local isBright = false
+Tab2:Toggle({
+    Title = "Fullbright",
+    Desc = "Toggle Fullbright mode",
+    Value = false,
+    Callback = function(state)
+        isBright = state
+        if state then
+            Lighting.Ambient = Color3.new(1, 1, 1)
+            Lighting.OutdoorAmbient = Color3.new(1, 1, 1)
+            Lighting.Brightness = 10
+        else
+            Lighting.Ambient = Color3.fromRGB(128, 128, 128)
+            Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+            Lighting.Brightness = 2
+        end
+    end
+})
+
+-- X-Ray
+local function setXRayTransparency(transparency)
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("BasePart") and obj.Transparency < 1 then
+            obj.LocalTransparencyModifier = transparency
+        end
+    end
+end
+
+Tab2:Toggle({
+    Title = "X-Ray",
+    Desc = "Makes everything semi-transparent",
+    Value = false,
+    Callback = function(state)
+        setXRayTransparency(state and 0.6 or 0)
+        print("X-Ray Toggled:", state)
+    end,
+})
+
+
+-- Flight Tab
+local Tab3 = Window:Tab({ Title = "Flight", Icon = "plane" })
+Tab3:Section({ Title = "Main", TextXAlignment = "Left", TextSize = 17 })
+
+local flying = false
+local flySpeed = 50
+local hrp
+
+local function flyLoop()
+    local bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+    bodyVelocity.Velocity = Vector3.zero
+    bodyVelocity.Name = "FlyVelocity"
+    bodyVelocity.Parent = hrp
+
+    RunService:BindToRenderStep("FlyRender", Enum.RenderPriority.Input.Value, function()
+        local moveVec = Vector3.zero
+        if UIS:IsKeyDown(Enum.KeyCode.W) then moveVec += workspace.CurrentCamera.CFrame.LookVector end
+        if UIS:IsKeyDown(Enum.KeyCode.S) then moveVec -= workspace.CurrentCamera.CFrame.LookVector end
+        if UIS:IsKeyDown(Enum.KeyCode.A) then moveVec -= workspace.CurrentCamera.CFrame.RightVector end
+        if UIS:IsKeyDown(Enum.KeyCode.D) then moveVec += workspace.CurrentCamera.CFrame.RightVector end
+        if UIS:IsKeyDown(Enum.KeyCode.Space) then moveVec += Vector3.new(0, 1, 0) end
+        if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then moveVec -= Vector3.new(0, 1, 0) end
+
+        bodyVelocity.Velocity = moveVec.Magnitude > 0 and moveVec.Unit * flySpeed or Vector3.zero
+    end)
+end
+
+local function stopFly()
+    RunService:UnbindFromRenderStep("FlyRender")
+    if hrp and hrp:FindFirstChild("FlyVelocity") then
+        hrp.FlyVelocity:Destroy()
+    end
+end
+
+Tab3:Toggle({
+    Title = "Fly Mode",
+    Desc = "Toggle flying mode (WASD + Space + Ctrl)",
+    Value = false,
+    Callback = function(state)
+        flying = state
+        hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if flying and hrp then
+            flyLoop()
+        else
+            stopFly()
+        end
+    end,
+})
+
+Tab3:Slider({
+    Title = "Fly Speed",
+    Desc = "Adjust flying speed",
+    Value = { Min = 10, Max = 200, Default = 50 },
+    Callback = function(value)
+        flySpeed = value
+    end,
+})
+
+-- Scripts Tab
+local Tab4 = Window:Tab({ Title = "Scripts", Icon = "scroll" })
+Tab4:Section({ Title = "Main", TextXAlignment = "Left", TextSize = 17 })
+
+Tab4:Button({
+    Title = "Infinite Yield",
+    Desc = "Opens IY.",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end,
+})
+
+
+Tab4:Button({
+    Title = "Dex Explorer",
+    Desc = "Opens Dex.",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+    end,
+})
