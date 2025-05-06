@@ -292,3 +292,12 @@ Tab4:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
     end,
 })
+
+
+Tab4:Button({
+    Title = "Simple spy",
+    Desc = "Opens Dex.",
+    Callback = function()
+        loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/78n/SimpleSpy/main/SimpleSpyBeta.lua"))()
+    end,
+})
