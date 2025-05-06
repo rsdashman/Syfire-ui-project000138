@@ -3383,6 +3383,18 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/
             })
         end):setTooltip('OPP')
 
+				        section:addButton({
+            text = 'FE Salute', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://pastebin.com/raw/L1UP30nc"))();
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('salute')
+
 --------------------------------------
 
 --------------------------------
