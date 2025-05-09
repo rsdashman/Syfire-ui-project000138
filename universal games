@@ -1,9 +1,9 @@
 local DiscordLib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt")()
 local win = DiscordLib:Window("GAMES")
 
-local serv = win:Server("Preview", "")
+local serv = win:Server("Preview", "rbxassetid://129741142793712")
 
-local btns = serv:Channel("Deadrails")
+local btns = serv:Channel("✪ | Deadrails")
 
 btns:Button("tora isME best deadrails script", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/dead-rails/Other%20dead%20rails%20script%20op"))()
@@ -19,14 +19,14 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs
 end)
 
 
-local btns = serv:Channel("build a boat")
+local btns = serv:Channel("✪ | build a boat")
 
 btns:Button("Fly to gold", function()
 loadstring(game:HttpGet("https://orbitsc.net/babft"))()
 end)
 
 
-local btns = serv:Channel("grow a garden")
+local btns = serv:Channel("✪ | grow a garden")
 
 btns:Button("grow a garden", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/game/refs/heads/main/TbaoHubGrowGarden"))()
@@ -92,15 +92,170 @@ end)
 
 
 
+local serv = win:Server("Players", "rbxassetid://99346154145181")
+
+local btns = serv:Channel("✪ | Player")
+
+
+btns:Button("FLY!", function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
+end)
+
+btns:Button("FLY!", function()
+
+end)
+
+btns:Seperator()
+
+btns:Button("IY", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+end)
+
+btns:Button("NA ADMIN", function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source'))()
+end)
 
 
 
 
+local btns = serv:Channel("✪ | tools")
+btns:Button("hold all tools", function()
+       	local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local backpack = player:FindFirstChild("Backpack")
+
+if backpack then
+    for _, tool in ipairs(backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = character  
+        end
+    end
+end
+
+end)
+
+btns:Button("TPTOOL", function()
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/8def4101f93a3bb65779346593442026/raw/fef58863e216ebb3686dcc983a8dd5737bf0fe59/gistfile1.txt"))()
+end)
+
+btns:Button("Speedtool", function()
+
+local tool = Instance.new("Tool")  
+tool.Name = "SpeedTool"
+tool.RequiresHandle = false
+tool.Parent = game.Players.LocalPlayer.Backpack  
+
+local defaultSpeed = 16  -- Velocidade normal
+local speedBoost = 200   -- Velocidade quando equipado
+
+local function setSpeed(speed)
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    humanoid.WalkSpeed = speed
+end
+
+tool.Equipped:Connect(function()
+    setSpeed(speedBoost)
+end)
+
+tool.Unequipped:Connect(function()
+    setSpeed(defaultSpeed)
+end)
+
+end)
+
+btns:Button("float tool", function()
+
+local floatTool = Instance.new("Tool")
+floatTool.Name = "Float tool"
+floatTool.ToolTip = "SKIDED, BIG SORRY :("
+floatTool.RequiresHandle = false
+floatTool.Parent = game.Players.LocalPlayer.Backpack  -- Assuming the tool goes to the player's backpack
+
+local floatConn, floatBP, floatBG
+local baseY = 0
+local floatStartTime = 0
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local HRP = character:WaitForChild("HumanoidRootPart")
+local RunService = game:GetService("RunService")
+
+floatTool.Equipped:Connect(function(mouse)
+    -- Float tool does not force PlatformStand, so movement remains normal.
+    baseY = HRP.Position.Y
+    floatStartTime = tick()
+
+    floatBP = Instance.new("BodyPosition")
+    floatBP.MaxForce = Vector3.new(0, 1e5, 0)
+    floatBP.P = 1e4
+    floatBP.D = 100
+    floatBP.Parent = HRP
+
+    floatBG = Instance.new("BodyGyro")
+    floatBG.MaxTorque = Vector3.new(0, 0, 1e5)
+    floatBG.P = 1e4
+    floatBG.D = 100
+    floatBG.Parent = HRP
+
+    floatConn = RunService.RenderStepped:Connect(function(dt)
+        local t = tick() - floatStartTime
+        local offsetY = math.sin(t * 1) * 2  -- Vertical bobbing
+        floatBP.Position = Vector3.new(HRP.Position.X, baseY + offsetY, HRP.Position.Z)
+
+        local rollOsc = math.sin(t * 1) * math.rad(10)  -- Tilt (roll) oscillation
+        local _, currentYaw, _ = HRP.CFrame:ToEulerAnglesYXZ()
+        floatBG.CFrame = CFrame.Angles(0, currentYaw, rollOsc)
+    end)
+end)
+
+floatTool.Unequipped:Connect(function()
+    if floatConn then
+        floatConn:Disconnect()
+        floatConn = nil
+    end
+    if floatBP then
+        floatBP:Destroy()
+        floatBP = nil
+    end
+    if floatBG then
+        floatBG:Destroy()
+        floatBG = nil
+    end
+    HRP.Velocity = Vector3.new(0, 0, 0)
+    HRP.RotVelocity = Vector3.new(0, 0, 0)
+end)
+end)
+
+btns:Button("Minecraft tools", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Ahma174/Tool/refs/heads/main/Minecraft%20Tools"))()
+end)
+
+btns:Button("Teleknesis", function()
+loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty11.lua"))()
+end)
+
+btns:Button("Jerkoff!!!", function()
+loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+end)
+
+btns:Button("Part check", function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/dd87c15041315abf3227c395e6582c89/raw/ac827b220edc19625590113698149f0faecf06dc/gistfile1.txt"))()
+end)
 
 
 
 
+local btns = serv:Channel("✪ | btools")
 
+btns:Button("Btools", function()
+loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/BTools.txt"))()
+end)
+
+btns:Button("F3X", function()
+loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)()
+end)
 
 
 
