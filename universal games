@@ -5,6 +5,105 @@ local serv = win:Server("Preview", "")
 
 local btns = serv:Channel("Deadrails")
 
-btns:Button("Kill all", function()
-DiscordLib:Notification("Notification", "Killed everyone!", "Okay!")
+btns:Button("tora isME best deadrails script", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/dead-rails/Other%20dead%20rails%20script%20op"))()
 end)
+
+btns:Button("Native(has a key system)", function()
+script_key="PASTEKEYHERE";
+(loadstring or load)(game:HttpGet("https://getnative.cc/script/loader"))()
+end)
+
+btns:Button("auto bond TNHUB(has a key system)", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
+end)
+
+
+local btns = serv:Channel("build a boat")
+
+btns:Button("Fly to gold", function()
+loadstring(game:HttpGet("https://orbitsc.net/babft"))()
+end)
+
+
+local btns = serv:Channel("grow a garden")
+
+btns:Button("grow a garden", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/game/refs/heads/main/TbaoHubGrowGarden"))()
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
