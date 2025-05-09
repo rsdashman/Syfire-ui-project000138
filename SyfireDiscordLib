@@ -3,7 +3,7 @@ local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 
 --> ScriptHub V3 <--
-loadstring(game:HttpGet("https://skidsblox.lol", true))() --your loadstring
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/universal%20games", true))() 
 
 --> ScriptHub V3 Variables <--
 local DiscordUI = CoreGui:FindFirstChild("Discord")
