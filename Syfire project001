@@ -68,7 +68,18 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-p
             })
         end):setTooltip('our project')
 
+        section:addButton({
+            text = 'Syfire scripts', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/SyfireDiscordLib"))() 
 
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('our project')
         
         section:addButton({
             text = 'F to fly', 
