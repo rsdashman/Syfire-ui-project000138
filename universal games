@@ -32,112 +32,7 @@ btns:Button("grow a garden", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/game/refs/heads/main/TbaoHubGrowGarden"))()
 end)
 
-local btns = serv:Channel("✪ | Dev")
 
-btns:Button("Dex v3", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/BypassedDarkDexV3.lua", true))()
-end)
-
-btns:Button("Rspy", function()
-loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))()
-end)
-
-btns:Button("Save instace", function()
-saveinstance()
-end)
-
-btns:Seperator()
-
-btns:Button("DisplayPos", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/PositionShower"))()
-end)
-
-local btns = serv:Channel("✪ | FE Scripts")
-
-btns:Button("Jerk off", function()
-loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
-end)
-
-btns:Button("Super ring", function()
-loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-ring-parts-V6-Open-source-No-chat-26899"))()
-end)
-
-btns:Button("Fast animation", function()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/yeerma/such/1353808a0cf32da96f1bead94d5980f4cc1cfa84/nickerfackot'))()
-end)
-
-btns:Button("FE fake lag", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
-end)
-
-btns:Button("Bang", function()
-loadstring(game:HttpGet("https://gist.githubusercontent.com/drfwedes23/abc025c561566876eff561b578f73ca2/raw/4df690531a08261e3f9575686d7eee4fcacc1732/gistfile1.txt"))()
-end)
-
-btns:Button("FE seraphic blade", function()
-loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Touch-fling-10457"))() 
-loadstring(game:HttpGet("https://pastefy.app/59mJGQGe/raw"))()
-end)
-
-btns:Button("FE shooter", function()
-loadstring(game:HttpGet("https://gist.githubusercontent.com/drfwedes23/4756dadc70865a845ce06ea5495e95d0/raw/091c157c5b29b0a907ef3de3ae93aa1744bb36fe/gistfile1.txt"))()
-end)
-
-btns:Button("FE Virus", function()
-loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-virus-infection-26555"))()
-end)
-
-btns:Button("FE HAmmer", function()
-loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-hammer-28636"))()
-end)
-
-btns:Button("FE Lay gravit", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Underssky/GravityLayScript/refs/heads/main/MainGravityLay.txt"))()
-end)
-
-btns:Button("FE SCP-096", function()
-loadstring(game:HttpGet("https://pastefy.app/YsJgITXR/raw"))()
-end)
-
-btns:Button("FE Glios fighter", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/gale", true))()
-end)
-
-btns:Button("FE back flip", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/FE-Backflip"))()
-end)
-
-
-
-
-
-local btns = serv:Channel("✪ | Bang")
-
-btns:Button("Jerk off", function()
-loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
-end)
-
-btns:Button("Bang", function()
-loadstring(game:HttpGet("https://gist.githubusercontent.com/drfwedes23/abc025c561566876eff561b578f73ca2/raw/4df690531a08261e3f9575686d7eee4fcacc1732/gistfile1.txt"))()
-end)
-
-btns:Button("FACE FUCK", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
-end)
-
-btns:Button("Freak", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ShutUpJamesTheLoser/freaky/refs/heads/main/fe", true))()
-end)
-
-local btns = serv:Channel("✪ | Animations")
-
-btns:Button("Aquamatrix", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ExploitFin/AquaMatrix/refs/heads/AquaMatrix/AquaMatrix"))()
-end)
-
-btns:Button("Energize", function()
-loadstring(game:HttpGet(('https://pastebin.com/raw/1p6xnBNf'),true))()
-end)
 
 
 
@@ -341,6 +236,115 @@ end)
 
 btns:Button("F3X", function()
 loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)()
+end)
+
+
+
+local btns = serv:Channel("✪ | Dev")
+
+btns:Button("Dex v3", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/BypassedDarkDexV3.lua", true))()
+end)
+
+btns:Button("Rspy", function()
+loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))()
+end)
+
+btns:Button("Save instace", function()
+saveinstance()
+end)
+
+btns:Seperator()
+
+btns:Button("DisplayPos", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/PositionShower"))()
+end)
+
+local btns = serv:Channel("✪ | FE Scripts")
+
+btns:Button("Jerk off", function()
+loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+end)
+
+btns:Button("Super ring", function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-ring-parts-V6-Open-source-No-chat-26899"))()
+end)
+
+btns:Button("Fast animation", function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/yeerma/such/1353808a0cf32da96f1bead94d5980f4cc1cfa84/nickerfackot'))()
+end)
+
+btns:Button("FE fake lag", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
+end)
+
+btns:Button("Bang", function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/drfwedes23/abc025c561566876eff561b578f73ca2/raw/4df690531a08261e3f9575686d7eee4fcacc1732/gistfile1.txt"))()
+end)
+
+btns:Button("FE seraphic blade", function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Touch-fling-10457"))() 
+loadstring(game:HttpGet("https://pastefy.app/59mJGQGe/raw"))()
+end)
+
+btns:Button("FE shooter", function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/drfwedes23/4756dadc70865a845ce06ea5495e95d0/raw/091c157c5b29b0a907ef3de3ae93aa1744bb36fe/gistfile1.txt"))()
+end)
+
+btns:Button("FE Virus", function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-virus-infection-26555"))()
+end)
+
+btns:Button("FE HAmmer", function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-hammer-28636"))()
+end)
+
+btns:Button("FE Lay gravit", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Underssky/GravityLayScript/refs/heads/main/MainGravityLay.txt"))()
+end)
+
+btns:Button("FE SCP-096", function()
+loadstring(game:HttpGet("https://pastefy.app/YsJgITXR/raw"))()
+end)
+
+btns:Button("FE Glios fighter", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/gale", true))()
+end)
+
+btns:Button("FE back flip", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/FE-Backflip"))()
+end)
+
+
+
+
+
+local btns = serv:Channel("✪ | Bang")
+
+btns:Button("Jerk off", function()
+loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+end)
+
+btns:Button("Bang", function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/drfwedes23/abc025c561566876eff561b578f73ca2/raw/4df690531a08261e3f9575686d7eee4fcacc1732/gistfile1.txt"))()
+end)
+
+btns:Button("FACE FUCK", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
+end)
+
+btns:Button("Freak", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ShutUpJamesTheLoser/freaky/refs/heads/main/fe", true))()
+end)
+
+local btns = serv:Channel("✪ | Animations")
+
+btns:Button("Aquamatrix", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ExploitFin/AquaMatrix/refs/heads/AquaMatrix/AquaMatrix"))()
+end)
+
+btns:Button("Energize", function()
+loadstring(game:HttpGet(('https://pastebin.com/raw/1p6xnBNf'),true))()
 end)
 
 
