@@ -1,7 +1,7 @@
 local DiscordLib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt")()
 local win = DiscordLib:Window("GAMES")
 
-local serv = win:Server("Preview", "rbxassetid://129741142793712")
+local serv = win:Server("Preview", "rbxassetid://95314846725645")
 
 local btns = serv:Channel("✪ | Deadrails")
 
@@ -33,7 +33,9 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/game/refs/hea
 end)
 
 
-
+btns:Button("grow a garden(toraIsMe)", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/GrowaGarden"))()
+end)
 
 
 
