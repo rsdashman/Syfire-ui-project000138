@@ -18,6 +18,9 @@ btns:Button("auto bond TNHUB(has a key system)", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
 end)
 
+btns:Button("Nathub", function()
+loadstring(game:HttpGet("https://get.nathub.xyz/loader"))();
+end)
 
 local btns = serv:Channel("✪ | build a boat")
 
@@ -37,7 +40,9 @@ btns:Button("grow a garden(toraIsMe)", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/GrowaGarden"))()
 end)
 
-
+btns:Button("grow a garden farm(has a key system)", function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/rybowe/rybowescripts/main/release.lua'))()
+end)
 
 
 
