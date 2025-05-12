@@ -255,8 +255,14 @@ btns:Button("Rspy", function()
 loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))()
 end)
 
-btns:Button("Save instace", function()
-saveinstance()
+btns:Button("Save instace (better)", function()
+local Params = {
+ RepoURL = "https://raw.githubusercontent.com/Devraj2010isme/BetterSaveinstance/refs/heads/main/",
+ SSI = "saveinstance",
+}
+local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
+local Options = {} -- Documentação aqui: https://github.com/Devraj2010isme/BetterSaveinstance/blob/main/README.md
+synsaveinstance(Options)
 end)
 
 btns:Seperator()
