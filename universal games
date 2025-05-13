@@ -40,7 +40,9 @@ btns:Button("grow a garden(toraIsMe)", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/GrowaGarden"))()
 end)
 
-
+btns:Button("grow a garden(has a keysystem)", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nf-36/Koronis/refs/heads/main/Scripts/Loader.lua"))()
+end)
 
 
 
