@@ -366,5 +366,41 @@ btns:Button("ghosthub", function()
 loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/GhostHub'))()
 end)
 
+btns:Button("Skibidihub plus", function()
+loadstring(game:HttpGet("https://pastefy.app/3wbcKaDv/raw"))()
+end)
+
+btns:Button("Orca", function()
+loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua"))()
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
