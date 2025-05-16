@@ -360,8 +360,11 @@ btns:Button("Energize", function()
 loadstring(game:HttpGet(('https://pastebin.com/raw/1p6xnBNf'),true))()
 end)
 
+local btns = serv:Channel("✪ | Hubs!")
 
-
+btns:Button("ghosthub", function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/GhostHub'))()
+end)
 
 
 
