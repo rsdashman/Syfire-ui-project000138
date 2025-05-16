@@ -932,6 +932,19 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/
                 duration = 3
             })
         end):setTooltip('y')
+
+
+		    		        section:addButton({
+            text = 'XxghosthubxX', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/GhostHub'))()
+            ui.notify({
+                title = 'Opens ghosthub',
+                message = 'is Open!',
+                duration = 3
+            })
+        end):setTooltip('y')
 	
 			    		        section:addButton({
             text = 'AKAdmin|key:1234', 
