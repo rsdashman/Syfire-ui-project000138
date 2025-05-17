@@ -44,7 +44,9 @@ btns:Button("grow a garden(has a keysystem)", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/nf-36/Koronis/refs/heads/main/Scripts/Loader.lua"))()
 end)
 
-
+btns:Button("grow a garden(NativeHub | has a keysys)", function()
+(loadstring or load)(game:HttpGet("https://getnative.cc/script/loader"))()
+end)
 
 
 
