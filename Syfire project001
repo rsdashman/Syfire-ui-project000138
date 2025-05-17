@@ -317,23 +317,12 @@ end)
         end):setTooltip('OPP')
 	
 	
-		        section:addButton({
-            text = 'Clock', 
-            style = 'large' -- style of the button, can be 'large' or 'small'
-        }, function() 
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/Clock%20not%20mine"))()
-            ui.notify({
-                title = 'button',
-                message = 'The large button got clicked!',
-                duration = 3
-            })
-        end):setTooltip('OPP')
 	
 			        section:addButton({
             text = 'Free cam', 
             style = 'large' -- style of the button, can be 'large' or 'small'
         }, function() 
-			loadstring(game:HttpGet("https://pastebin.com/raw/GX6MytJm"))()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/Free%20Cam"))()
             ui.notify({
                 title = 'button',
                 message = 'The large button got clicked!',
@@ -377,6 +366,18 @@ else
 		game.StarterGui:SetCore("SendNotification", {Title="WeAreDevs.net"; Text="Click teleport disabled"; Duration=5;})
 	end
 end
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+
+		        section:addButton({
+            text = 'Clock', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/Clock%20not%20mine"))()
             ui.notify({
                 title = 'button',
                 message = 'The large button got clicked!',
