@@ -30,7 +30,7 @@ ui.autoDisableToggles = true -- All toggles will automatically be disabled when 
 -- Technically multiple windows can be made, but there is no (and likely wont ever be) official support for them
 -- since its a lot of work for such a minute use
 local window = ui.newWindow({
-    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.85.0💎', -- fixed fatal error 
+    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.90.0💎', -- fixed fatal error 
     resize = true, -- Ability to resize
     size = Vector2.new(429, 260), -- Window size, accepts UDim2s and Vector2s
     position = nil -- Custom position, defaults to roughly the bottom right corner
@@ -323,6 +323,74 @@ end)
             style = 'large' -- style of the button, can be 'large' or 'small'
         }, function() 
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/Free%20Cam"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+
+			        section:addButton({
+            text = 'infinite zoom', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+			local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local camera = workspace.CurrentCamera
+
+local isEnabled = false
+local currentMaxZoom = player.CameraMaxZoomDistance
+local defaultMaxZoom = 100
+
+local function onMouseWheel(input, gameProcessed)
+    if not isEnabled or gameProcessed then return end
+    
+    if input.UserInputType == Enum.UserInputType.MouseWheel then
+        local currentZoom = (camera.CFrame.Position - camera.Focus.Position).Magnitude
+        
+        if input.Position.Z < 0 then
+            if currentZoom >= currentMaxZoom * 0.9 then
+                currentMaxZoom = currentMaxZoom * 1.5
+                player.CameraMaxZoomDistance = currentMaxZoom
+            end
+        end
+    end
+end
+
+local function onKeyPress(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.V then
+        isEnabled = not isEnabled
+        
+        if isEnabled then
+            player.CameraMaxZoomDistance = currentMaxZoom
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Infinite Zoom",
+                Text = "Infinite zoom enabled!",
+                Duration = 3
+            })
+        else
+            player.CameraMaxZoomDistance = defaultMaxZoom
+            currentMaxZoom = defaultMaxZoom
+            game:GetService("StarterGui"):SetCore("SendNotification", {
+                Title = "Infinite Zoom",
+                Text = "Infinite zoom disabled!",
+                Duration = 3
+            })
+        end
+    end
+end
+
+UserInputService.InputChanged:Connect(onMouseWheel)
+UserInputService.InputBegan:Connect(onKeyPress)
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Infinite Zoom",
+    Text = "Press V to toggle infinite zoom!",
+    Duration = 5
+})
             ui.notify({
                 title = 'button',
                 message = 'The large button got clicked!',
