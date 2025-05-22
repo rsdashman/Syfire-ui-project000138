@@ -30,7 +30,7 @@ ui.autoDisableToggles = true -- All toggles will automatically be disabled when 
 -- Technically multiple windows can be made, but there is no (and likely wont ever be) official support for them
 -- since its a lot of work for such a minute use
 local window = ui.newWindow({
-    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.90.0💎', -- fixed fatal error 
+    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.92.0💎', -- fixed fatal error 
     resize = true, -- Ability to resize
     size = Vector2.new(429, 260), -- Window size, accepts UDim2s and Vector2s
     position = nil -- Custom position, defaults to roughly the bottom right corner
@@ -323,6 +323,18 @@ end)
             style = 'large' -- style of the button, can be 'large' or 'small'
         }, function() 
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/Free%20Cam"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('OPP')
+
+			        section:addButton({
+            text = 'Way points', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/way%20points%20scripts"))()
             ui.notify({
                 title = 'button',
                 message = 'The large button got clicked!',
@@ -2218,6 +2230,20 @@ loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/m
                 duration = 3
             })
         end):setTooltip('rspy')
+
+
+        		        section:addButton({
+            text = 'Remote event abuse', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/v0c0n1337/scripts/refs/heads/main/remote%20event%20abuse.txt"))()
+            ui.notify({
+                title = 'opens rspy',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('rspy')
+
 
 
 	
