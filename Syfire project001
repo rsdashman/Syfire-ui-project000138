@@ -4268,6 +4268,34 @@ loadstring(game:HttpGet("https://orbitsc.net/babft"))()
         end):setTooltip('PERFECT!')
 
 
+    local section = menu:addSection({
+        text = 'Mic up', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+
+				        		        section:addButton({
+            text = 'Stalkie', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+repeat task.wait() until game.Players.LocalPlayer
+loadstring(game:HttpGet("https://raw.githubusercontent.com/0riginalWarrior/Stalkie/refs/heads/main/roblox.lua"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('Stalkie! key: pizza')
+
+
+
+
+
+
+
+
+
 
 
 
