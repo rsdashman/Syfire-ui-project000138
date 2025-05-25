@@ -48,8 +48,11 @@ btns:Button("grow a garden(NativeHub | has a keysys)", function()
 loadstring(game:HttpGet("https://getnative.cc/script/loader"))()
 end)
 
+local btns = serv:Channel("✪ | Slap battles")
 
-
+btns:Button("Slap battles | keylesss)", function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Slap-Battles-vinq-25237"))()
+end)
 
 
 
