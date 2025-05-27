@@ -75,7 +75,11 @@ end)
 
 
 
+local btns = serv:Channel("✪ | Rivals")
 
+btns:Button("Rivals | keylesss)", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/PUSCRIPTS/PINGUIN/refs/heads/main/Rivals"))()
+end)
 
 
 
