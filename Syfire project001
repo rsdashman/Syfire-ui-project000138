@@ -1093,6 +1093,19 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/CriShoux/OwlHub/maste
                 duration = 3
             })
         end):setTooltip('!')
+
+
+        section:addButton({
+            text = 'Rage aim', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/FOGOTY/rageaim/refs/heads/main/script"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('!')
     
     
             section:addButton({
@@ -4001,6 +4014,18 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/
             style = 'large' -- style of the button, can be 'large' or 'small'
         }, function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/Free%20Cam"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('FREECAM!')
+
+				        		        section:addButton({
+            text = 'Quizbot', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Quiz-Bot-36390"))()
             ui.notify({
                 title = 'get',
                 message = 'Open!',
