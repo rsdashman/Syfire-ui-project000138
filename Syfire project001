@@ -30,7 +30,7 @@ ui.autoDisableToggles = true -- All toggles will automatically be disabled when 
 -- Technically multiple windows can be made, but there is no (and likely wont ever be) official support for them
 -- since its a lot of work for such a minute use
 local window = ui.newWindow({
-    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.99.0💎', -- fixed fatal error 
+    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.99.9💎', -- fixed fatal error 
     resize = true, -- Ability to resize
     size = Vector2.new(429, 260), -- Window size, accepts UDim2s and Vector2s
     position = nil -- Custom position, defaults to roughly the bottom right corner
@@ -3749,6 +3749,19 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/r
         end):setTooltip('target')
 
 
+				        section:addButton({
+            text = 'Anti bang', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-Bang-Script-39958"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('Sonic script')
+
+
 	        		        section:addButton({
             text = 'FE Hugger(H) to hug', 
             style = 'large' -- style of the button, can be 'large' or 'small'
@@ -3819,7 +3832,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/r
 
 
 	        		        section:addButton({
-            text = 'FE Hugger(H) to hug', 
+            text = 'FE Hugger(H) PATCHED to hug', 
             style = 'large' -- style of the button, can be 'large' or 'small'
         }, function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/JSFKGBASDJKHIOAFHDGHIUODSGBJKLFGDKSB/fe/refs/heads/main/FEHUGG"))()
@@ -3829,6 +3842,18 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JSFKGBASDJKHIOAFHDGHI
                 duration = 3
             })
         end):setTooltip('target')
+
+				        section:addButton({
+            text = 'CRASH PLAYER', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function() 
+		loadstring(game:HttpGet("https://gist.githubusercontent.com/SolentraXminishakk/28e5606b99480adb6f0aa82846e4ff16/raw/03487f4a04364a912ffc93e3987d372b4a98df39/gistfile1.txt"))()
+            ui.notify({
+                title = 'button',
+                message = 'The large button got clicked!',
+                duration = 3
+            })
+        end):setTooltip('Sonic script')
 
 
 
