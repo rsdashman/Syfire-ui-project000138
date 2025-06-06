@@ -1,0 +1,123 @@
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local SPEED_MULTIPLIER = 30
+local JUMP_POWER = 60
+local JUMP_GAP = 0.3
+
+local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local ball = character:WaitForChild("HumanoidRootPart")
+
+local originalSize = ball.Size
+local originalShape = ball.Shape
+local originalCameraSubject = Camera.CameraSubject
+
+local isBallMode = false
+local tc
+
+local params = RaycastParams.new()
+params.FilterType = Enum.RaycastFilterType.Blacklist
+params.FilterDescendantsInstances = {character}
+
+local function applyRollingPhysics(part)
+	local props = PhysicalProperties.new(0.3, 0.1, 0.5) 
+	part.CustomPhysicalProperties = props
+	part.Massless = false
+	part.Anchored = false
+end
+
+local function ActivateBallMode()
+	isBallMode = true
+
+	for _, v in ipairs(character:GetDescendants()) do
+		if v:IsA("BasePart") then
+			v.CanCollide = false
+		end
+	end
+
+	ball.Shape = Enum.PartType.Ball
+	ball.Size = Vector3.new(5, 5, 5)
+	applyRollingPhysics(ball)
+
+	humanoid.PlatformStand = true
+	Camera.CameraSubject = ball
+
+	tc = RunService.RenderStepped:Connect(function(delta)
+		if UserInputService:GetFocusedTextBox() then return end
+
+		ball.CanCollide = true
+		humanoid.PlatformStand = true
+
+		if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+			ball.RotVelocity -= Camera.CFrame.RightVector * delta * SPEED_MULTIPLIER
+		end
+		if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+			ball.RotVelocity -= Camera.CFrame.LookVector * delta * SPEED_MULTIPLIER
+		end
+		if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+			ball.RotVelocity += Camera.CFrame.RightVector * delta * SPEED_MULTIPLIER
+		end
+		if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+			ball.RotVelocity += Camera.CFrame.LookVector * delta * SPEED_MULTIPLIER
+		end
+	end)
+end
+
+UserInputService.JumpRequest:Connect(function()
+	if not isBallMode then return end
+
+	local result = workspace:Raycast(
+		ball.Position,
+		Vector3.new(0, -((ball.Size.Y / 2) + JUMP_GAP), 0),
+		params
+	)
+	if result then
+		ball.Velocity = ball.Velocity + Vector3.new(0, JUMP_POWER, 0)
+	end
+end)
+
+local function ResetCharacter()
+	isBallMode = false
+
+	if tc then
+		tc:Disconnect()
+		tc = nil
+	end
+
+	ball.Shape = originalShape
+	ball.Size = originalSize
+	ball.CustomPhysicalProperties = nil
+	ball.Massless = false
+	ball.Anchored = false
+
+	humanoid.PlatformStand = false
+
+	for _, v in ipairs(character:GetDescendants()) do
+		if v:IsA("BasePart") then
+			v.CanCollide = true
+		end
+	end
+
+	Camera.CameraSubject = humanoid
+end
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.KeyCode == Enum.KeyCode.B then
+		if isBallMode then
+			ResetCharacter()
+		else
+			ActivateBallMode()
+		end
+	end
+end)
+
+humanoid.Died:Connect(function()
+	if tc then tc:Disconnect() end
+end)
+
+ActivateBallMode()
