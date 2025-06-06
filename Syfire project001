@@ -30,7 +30,7 @@ ui.autoDisableToggles = true -- All toggles will automatically be disabled when 
 -- Technically multiple windows can be made, but there is no (and likely wont ever be) official support for them
 -- since its a lot of work for such a minute use
 local window = ui.newWindow({
-    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.99.9💎', -- fixed fatal error 
+    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V4.99.99💎', -- fixed fatal error 
     resize = true, -- Ability to resize
     size = Vector2.new(429, 260), -- Window size, accepts UDim2s and Vector2s
     position = nil -- Custom position, defaults to roughly the bottom right corner
@@ -3831,17 +3831,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/r
         end):setTooltip('target')
 
 
-	        		        section:addButton({
-            text = 'FE Hugger(H) PATCHED to hug', 
-            style = 'large' -- style of the button, can be 'large' or 'small'
-        }, function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/JSFKGBASDJKHIOAFHDGHIUODSGBJKLFGDKSB/fe/refs/heads/main/FEHUGG"))()
-            ui.notify({
-                title = 'get',
-                message = 'Open!',
-                duration = 3
-            })
-        end):setTooltip('target')
 
 				        section:addButton({
             text = 'CRASH PLAYER', 
@@ -4077,6 +4066,26 @@ loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Quiz-Bot-36
                 duration = 3
             })
         end):setTooltip('FREECAM!')
+
+    local section = menu:addSection({
+        text = 'Others', -- Title of section
+        side = 'auto', -- Side of the menu that the section is placed on. Defaults to 'auto', but can be 'left' or 'right'
+        showMinButton = true, -- Ability to minimize this section. Defaults to true
+    })
+
+				        		        section:addButton({
+            text = 'BallMode (press B)', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('FREECAM!')
+
+
 ---------------------------------------------------------------
 ---------------------------------------------------------------
 ---------------------------------------------------------------
