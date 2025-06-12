@@ -30,7 +30,7 @@ ui.autoDisableToggles = true -- All toggles will automatically be disabled when 
 -- Technically multiple windows can be made, but there is no (and likely wont ever be) official support for them
 -- since its a lot of work for such a minute use
 local window = ui.newWindow({
-    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V5.0.0💎', -- fixed fatal error 
+    text = '💎✨SyFireX✨💎▬▬ι═══════ﺤ*OP*💎V5.5.0💎', -- fixed fatal error 
     resize = true, -- Ability to resize
     size = Vector2.new(429, 260), -- Window size, accepts UDim2s and Vector2s
     position = nil -- Custom position, defaults to roughly the bottom right corner
@@ -4089,6 +4089,42 @@ loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Quiz-Bot-36
             style = 'large' -- style of the button, can be 'large' or 'small'
         }, function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('FREECAM!')
+
+				        		        section:addButton({
+            text = 'Dino game', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/826a570a68894562bb121eee1d1c0d91/raw/47839dc45d0ffc6c20448880a2ec5a11a4150f73/gistfile1.txt"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('FREECAM!')
+
+				        		        section:addButton({
+            text = 'Dino game admin', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/e80987558087d802d05aebc56eea1029/raw/c6d5bc9e930233e5ac048d12b4705c898af53a0f/gistfile1.txt"))()
+            ui.notify({
+                title = 'get',
+                message = 'Open!',
+                duration = 3
+            })
+        end):setTooltip('FREECAM!')
+
+				        		        section:addButton({
+            text = 'Orbit gui', 
+            style = 'large' -- style of the button, can be 'large' or 'small'
+        }, function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/2f8f7d68c6043906362bb2597018eea5/raw/f5810319567f7bc15dcaadc7b128d4b6a28b9b32/gistfile1.txt"))()
             ui.notify({
                 title = 'get',
                 message = 'Open!',
