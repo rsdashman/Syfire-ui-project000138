@@ -1,7 +1,7 @@
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 local Window = WindUI:CreateWindow({
-    Title = "Meu Hub com ESP, Fly e Xray",
+    Title = "Syfire009",
     Theme = "Dark",
     Size = UDim2.fromOffset(500, 400),
     Transparent = true,
@@ -13,18 +13,18 @@ local Tabs = {
 }
 
 Tabs.Main:Paragraph({
-    Title = "Bem-vindo ao Hub",
+    Title = "huh?",
     Desc = "Use as abas para acessar funcionalidades.",
 })
 
--- Variáveis globais para controle
+
 local espEnabled = false
 local flyEnabled = false
 local xrayEnabled = false
 local flySpeed = 50
 local flyLoop
 
--- Função básica ESP
+
 local function toggleESP(state)
     espEnabled = state
     for _, player in pairs(game.Players:GetPlayers()) do
@@ -51,7 +51,6 @@ local function toggleESP(state)
     end
 end
 
--- Função básica Fly
 local function toggleFly(state)
     flyEnabled = state
     local plr = game.Players.LocalPlayer
@@ -95,7 +94,6 @@ local function toggleFly(state)
     end
 end
 
--- Função básica Xray (torna os blocos transparentes)
 local function toggleXray(state)
     xrayEnabled = state
     for _, part in pairs(workspace:GetDescendants()) do
@@ -109,7 +107,19 @@ local function toggleXray(state)
     end
 end
 
--- Aba Scripts com botões para ativar/desativar as funções
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------
+
 Tabs.Scripts:Toggle({
     Title = "ESP",
     Callback = function(state)
@@ -142,8 +152,8 @@ Tabs.Scripts:Toggle({
 })
 
 Tabs.Scripts:Button({
-    Title = "Fechar UI",
+    Title = "Hamster ball 'B' to toggle",
     Callback = function()
-        Window:Destroy()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
     end,
 })
