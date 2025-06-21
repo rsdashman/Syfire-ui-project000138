@@ -1,4 +1,4 @@
-local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local WindUI = loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/3811ad118062a64af3750be902ac3a83/raw/c65db2e65d6cd94286b19c798c699ea25c6f7b71/ui%2520lib"))()
 
 -- Test
 
