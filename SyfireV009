@@ -1,26 +1,105 @@
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
-local Window = WindUI:CreateWindow({
-    Title = "Syfire009",
-    Theme = "Dark",
-    Size = UDim2.fromOffset(500, 400),
-    Transparent = true,
+-- Test
+
+
+
+-- Set theme:
+--WindUI:SetTheme("Light")
+
+--- EXAMPLE !!!
+
+function gradient(text, startColor, endColor)
+    local result = ""
+    local length = #text
+
+    for i = 1, length do
+        local t = (i - 1) / math.max(length - 1, 1)
+        local r = math.floor((startColor.R + (endColor.R - startColor.R) * t) * 255)
+        local g = math.floor((startColor.G + (endColor.G - startColor.G) * t) * 255)
+        local b = math.floor((startColor.B + (endColor.B - startColor.B) * t) * 255)
+
+        local char = text:sub(i, i)
+        result = result .. "<font color=\"rgb(" .. r ..", " .. g .. ", " .. b .. ")\">" .. char .. "</font>"
+    end
+
+    return result
+end
+
+local Confirmed = false
+
+WindUI:Popup({
+    Title = "Welcome! Popup Example",
+    Icon = "rbxassetid://129260712070622",
+    IconThemed = true,
+    Content = "This is an Example UI for the " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
+    Buttons = {
+        {
+            Title = "Cancel",
+            --Icon = "",
+            Callback = function() end,
+            Variant = "Secondary", -- Primary, Secondary, Tertiary
+        },
+        {
+            Title = "Continue",
+            Icon = "arrow-right",
+            Callback = function() Confirmed = true end,
+            Variant = "Primary", -- Primary, Secondary, Tertiary
+        }
+    }
 })
 
-local Tabs = {
-    Main = Window:Tab({ Title = "Principal", Icon = "home" }),
-    Scripts = Window:Tab({ Title = "Scripts", Icon = "code" }),
-}
 
-Tabs.Main:Paragraph({
-    Title = "huh?",
-    Desc = "...",
-})
+repeat wait() until Confirmed
+
+----------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 local espEnabled = false
 local flyEnabled = false
 local xrayEnabled = false
-local flySpeed = 50
+local flySpeed = 100
 local flyLoop
 
 
@@ -111,48 +190,658 @@ end
 
 
 
+local InfiniteJumpEnabled = false
+
+
+local UserInputService = game:GetService("UserInputService")
+UserInputService.JumpRequest:Connect(function()
+    if InfiniteJumpEnabled then
+        local player = game:GetService("Players").LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+end)
+
+local player = game.Players.LocalPlayer
+local noclip = false
+
+local function updateCollision()
+	local character = player.Character or player.CharacterAdded:Wait()
+	for _, part in ipairs(character:GetDescendants()) do
+		if part:IsA("BasePart") then
+			if noclip then
+				part.CanCollide = false
+			else
+				
+				if part.Name == "Head" or part.Name == "Torso" or part.Name == "UpperTorso" or part.Name == "LowerTorso" then
+					part.CanCollide = true
+				else
+					part.CanCollide = false
+				end
+			end
+		end
+	end
+end
+
+game:GetService("RunService").Stepped:Connect(function()
+	if noclip then
+		updateCollision()
+	end
+end)
+
+
+
+
+--Others
 
 
 
 
 
 
--------------------------------------------------
 
-Tabs.Scripts:Toggle({
-    Title = "ESP",
-    Callback = function(state)
-        toggleESP(state)
-    end,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Soon/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------
+
+local Window = WindUI:CreateWindow({
+    Title = "Syfire UI 007",
+    Icon = "rbxassetid://129260712070622",
+    IconThemed = true,
+    Author = "Syfire UI",
+    Folder = "CloudHub",
+    Size = UDim2.fromOffset(580, 460),
+    Transparent = true,
+    Theme = "Dark",
+    User = {
+        Enabled = true, -- <- or false
+        Callback = function() print("clicked") end, -- <- optional
+        Anonymous = false -- <- or true
+    },
+    SideBarWidth = 200,
+    -- HideSearchBar = true, -- hides searchbar
+    ScrollBarEnabled = true, -- enables scrollbar
+    -- Background = "rbxassetid://13511292247", -- rbxassetid only
+
+    -- remove it below if you don't want to use the key system in your script.
+    KeySystem = { -- <- keysystem enabled
+        Key = { "1234", "5678" },
+        Note = "Example Key System. \n\nThe Key is '1234' or '5678",
+        -- Thumbnail = {
+        --     Image = "rbxassetid://18220445082", -- rbxassetid only
+        --     Title = "Thumbnail"
+        -- },
+        URL = "link-to-linkvertise-or-discord-or-idk", -- remove this if the key is not obtained from the link.
+        SaveKey = true, -- saves key : optional
+    },
 })
 
-Tabs.Scripts:Toggle({
+
+-- Window:SetBackgroundImage("rbxassetid://13511292247")
+-- Window:SetBackgroundImageTransparency(0.9)
+
+
+-- TopBar Edit
+
+-- Disable Topbar Buttons
+-- Window:DisableTopbarButtons({
+--     "Close", 
+--     "Minimize", 
+--     "Fullscreen",
+-- })
+
+-- Create Custom Topbar Buttons
+--                        ↓ Name             ↓ Icon          ↓ Callback                           ↓ LayoutOrder
+Window:CreateTopbarButton("MyCustomButton1", "bird",         function() print("clicked 1!") end,  990)
+Window:CreateTopbarButton("MyCustomButton2", "droplet-off",  function() print("clicked 2!") end,  989)
+Window:CreateTopbarButton("MyCustomButton3", "battery-plus", function() Window:ToggleFullscreen() end, 988)
+
+
+Window:EditOpenButton({
+    Title = "Open Example UI",
+    Icon = "monitor",
+    CornerRadius = UDim.new(0,16),
+    StrokeThickness = 2,
+    Color = ColorSequence.new( -- gradient
+        Color3.fromHex("FF0F7B"), 
+        Color3.fromHex("F89B29")
+    ),
+    --Enabled = false,
+    Draggable = true,
+})
+
+
+local Tabs = {}
+
+do
+    Tabs.ElementsSection = Window:Section({
+        Title = "Elements",
+        Opened = true,
+    })
+    
+    Tabs.WindowSection = Window:Section({
+        Title = "Window Management",
+        Icon = "app-window-mac",
+        Opened = true,
+    })
+    
+    Tabs.OtherSection = Window:Section({
+        Title = "Other",
+        Opened = true,
+    })
+
+    
+    
+    Tabs.ButtonTab = Tabs.ElementsSection:Tab({ Title = "Main", Icon = "mouse-pointer-2", Desc = "Contains interactive buttons for various actions." })
+    Tabs.CodeTab = Tabs.ElementsSection:Tab({ Title = "Code", Icon = "code", Desc = "Displays and manages code snippets." })
+	Tabs.HeadTab = Tabs.ElementsSection:Tab({ Title = "Local player", Icon = "code", Desc = "Local player functions." })
+    
+    Tabs.WindowTab = Tabs.WindowSection:Tab({ 
+        Title = "Window and File Configuration", 
+        Icon = "settings", 
+        Desc = "Manage window settings and file configurations.", 
+        ShowTabTitle = true 
+    })
+    Tabs.CreateThemeTab = Tabs.WindowSection:Tab({ Title = "Create Theme", Icon = "palette", Desc = "Design and apply custom themes." })
+    
+    Tabs.LongTab = Tabs.OtherSection:Tab({ 
+        Title = "Long and empty tab. with custom icon", 
+        Icon = "rbxassetid://129260712070622", 
+        IconThemed = true, 
+        Desc = "Long Description" 
+    })
+
+    
+    Tabs.LastSection = Window:Section({
+        Title = "Section without tabs",
+        --Opened = true,
+    })
+    
+    Tabs.ConfigTab = Window:Tab({ Title = "Config", Icon = "file-cog" })
+end
+
+
+
+Window:SelectTab(1)
+
+---------------------===================---------------------
+
+Tabs.ButtonTab:Button({
     Title = "Fly",
+    Desc = "",
+    Callback = function()
+	loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
+end
+})
+
+Tabs.ButtonTab:Toggle({
+    Title = "Noclip",
     Callback = function(state)
-        toggleFly(state)
+       noclip = state
+	   updateCollision()
     end,
 })
 
-Tabs.Scripts:Slider({
-    Title = "Velocidade do Fly",
-    Min = 10,
-    Max = 150,
-    Def = 50,
-    Callback = function(value)
-        flySpeed = value
-    end,
-})
-
-Tabs.Scripts:Toggle({
+Tabs.ButtonTab:Toggle({
     Title = "Xray",
     Callback = function(state)
         toggleXray(state)
     end,
 })
 
-Tabs.Scripts:Button({
-    Title = "Hamster ball 'B' to toggle",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
+Tabs.ButtonTab:Toggle({
+    Title = "Ragdoll fly",
+    Callback = function(state)
+
+     toggleFly(state)
+
     end,
+})
+
+Tabs.ButtonTab:Toggle({
+    Title = "ESP",
+    Callback = function(state)
+        toggleESP(state)
+    end,
+})
+
+Tabs.ButtonTab:Toggle({
+    Title = "INFJUMP",
+    Callback = function(state)
+        InfiniteJumpEnabled = state
+    end,
+})
+
+
+Tabs.ButtonTab:Button({
+    Title = "Set ToggleKey to 'L'",
+    Callback = function() Window:SetToggleKey(Enum.KeyCode.L) end,
+})
+
+Tabs.ButtonTab:Divider()
+
+
+Tabs.ButtonTab:Button({
+    Title = "Locked Button",
+    Desc = "This button is locked",
+    Locked = true,
+})
+
+
+Tabs.CodeTab:Code({
+    Title = "example-code.luau",
+    Code = [[-- Example Luau code to test syntax highlighting
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+
+local function factorial(n)
+    if n <= 1 then
+        return 1
+    else
+        return n * factorial(n - 1)
+    end
+end
+
+local result = factorial(5)
+print("Factorial of 5 is:", result)
+
+local playerName = "Player"
+local score = 100
+
+if score >= 100 then
+    print(playerName .. " earned an achievement!")
+else
+    warn("Need more points.")
+end
+
+-- Table with nested values
+local playerStats = {
+    name = "Player",
+    health = 100,
+    inventory = {"sword", "shield", "potion"}
+}
+
+for i, item in ipairs(playerStats.inventory) do
+    print("Item in inventory:", item)
+end]],
+})
+
+Tabs.CodeTab:Code({
+    Code = [[print("WindUI on top!")]],
+})
+
+--headtab
+
+Tabs.HeadTab:Button({
+    Title = "Hamsterball",
+    Desc = "",
+    Callback = function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
+end
+})
+
+
+Tabs.HeadTab:Slider({
+    Title = "Walkspeed",
+    Value = {
+        Min = 16,
+        Max = 100,
+        Default = 16,
+    },
+    Callback = function(state)
+	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = state
+	end 
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local ToggleElement = Tabs.ConfigTab:Toggle({
+    Title = "Toggle",
+    Desc = "Config Test Toggle",
+    Callback = function(v) print("Toggle Changed: " .. tostring(v)) end
+})
+
+local SliderElement = Tabs.ConfigTab:Slider({
+    Title = "Slider",
+    Desc = "Config Test Slider",
+    Value = {
+        Min = 0,
+        Max = 100,
+        Default = 50,
+    },
+    Callback = function(v) print("Slider Changed: " .. v) end
+})
+
+local KeybindElement = Tabs.ConfigTab:Keybind({
+    Title = "Keybind",
+    Desc = "Config Test Keybind",
+    Value = "F",
+    Callback = function(v) print("Keybind Changed/Clicked: " .. v) end
+})
+
+local DropdownElement = Tabs.ConfigTab:Dropdown({
+    Title = "Dropdown",
+    Desc = "Config Test Dropdown",
+    Values = { "Test 1", "Test 2" },
+    Value = "Test 1",
+    Callback = function(v) print("Dropdown Changed: " .. HttpService:JSONEncode(v)) end
+})
+
+local InputElement = Tabs.ConfigTab:Input({
+    Title = "Input",
+    Desc = "Config Test Input",
+    Value = "Test",
+    Placeholder = "Enter text.......",
+    Callback = function(v) print("Input Changed: " .. v) end
+})
+
+local ColorpickerElement = Tabs.ConfigTab:Colorpicker({
+    Title = "Colorpicker",
+    Desc = "Config Test Colorpicker",
+    Default = Color3.fromHex("#315dff"),
+    Transparency = 0, -- Transparency enabled
+    Callback = function(c,t) print("Colorpicker Changed: " .. c:ToHex() .. "\nTransparency: " .. t) end
+})
+
+-- Configs
+
+
+-- 1. Load ConfigManager
+local ConfigManager = Window.ConfigManager
+
+
+-- 2. Create Config File                    ↓ Config File name
+local myConfig = ConfigManager:CreateConfig("myConfig")
+
+
+-- 3. Register elements
+
+--               | ↓ Element name (no spaces)  | ↓ Element          |
+myConfig:Register( "toggleNameExample",          ToggleElement      )
+myConfig:Register( "sliderNameExample",          SliderElement      ) 
+myConfig:Register( "keybindNameExample",         KeybindElement     )
+myConfig:Register( "dropdownNameExample",        DropdownElement    )
+myConfig:Register( "inputNameExample",           InputElement       )
+myConfig:Register( "ColorpickerNameExample",     ColorpickerElement )
+
+
+-- Save
+
+--[[ Saving at 
+    {yourExecutor}
+        /Workspace
+            /WindUI
+                /{Window.Folder}
+                    /config
+                        /myConfig.json
+                        
+                                       ]]
+                                   
+-- myConfig:Save()
+
+
+-- Load   
+
+-- myConfig:Load()
+
+
+
+-- Usage:
+
+Tabs.ConfigTab:Button({
+    Title = "Save",
+    Desc = "Saves elements to config",
+    Callback = function()
+        myConfig:Save()
+    end
+})
+
+Tabs.ConfigTab:Button({
+    Title = "Load",
+    Desc = "Loads elements from config",
+    Callback = function()
+        myConfig:Load()
+    end
+})
+
+Tabs.ConfigTab:Button({
+    Title = "Print all configs",
+    --Desc = "Prints configs",
+    Callback = function()
+        print(game:GetService("HttpService"):JSONEncode(ConfigManager:AllConfigs()))
+    end
 })
