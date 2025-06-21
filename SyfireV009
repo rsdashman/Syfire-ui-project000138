@@ -14,9 +14,8 @@ local Tabs = {
 
 Tabs.Main:Paragraph({
     Title = "huh?",
-    Desc = "Use as abas para acessar funcionalidades.",
+    Desc = "...",
 })
-
 
 local espEnabled = false
 local flyEnabled = false
