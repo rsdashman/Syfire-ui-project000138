@@ -1,5 +1,5 @@
 -- UILib.lua
--- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar visível
+-- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar acima das tabs
 
 local UILib = {}
 
@@ -34,7 +34,7 @@ local function makeDraggable(frame, dragHandle)
     end)
 end
 
--- Cria uma nova janela (Frame) com search bar
+-- Cria uma nova janela (Frame)
 function UILib:CreateWindow(title, size, position)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = title or "UILib_Window"
@@ -48,25 +48,10 @@ function UILib:CreateWindow(title, size, position)
     frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
     frame.Parent = screenGui
 
-    -- Search bar
-    local searchBar = Instance.new("TextBox")
-    searchBar.PlaceholderText = "Pesquisar..."
-    searchBar.Size = UDim2.new(1, 0, 0, 28)
-    searchBar.Position = UDim2.new(0, 0, 0, 0)
-    searchBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    searchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
-    searchBar.Font = Enum.Font.SourceSans
-    searchBar.TextSize = 18
-    searchBar.BorderSizePixel = 2
-    searchBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
-    searchBar.ClearTextOnFocus = false
-    searchBar.ZIndex = 2
-    searchBar.Parent = frame
-
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Text = title or "Janela"
     titleLabel.Size = UDim2.new(1, 0, 0, 32)
-    titleLabel.Position = UDim2.new(0, 0, 0, 28)
+    titleLabel.Position = UDim2.new(0, 0, 0, 0)
     titleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.Font = Enum.Font.SourceSansBold
@@ -80,15 +65,30 @@ function UILib:CreateWindow(title, size, position)
     makeDraggable(frame, titleLabel)
 
     screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-    return frame, searchBar
+    return frame
 end
 
--- Cria Tabs laterais dentro de um frame, recebe searchBar opcional
-function UILib:CreateTabs(parent, tabNames, searchBar)
+-- Cria Tabs laterais dentro de um frame, com search bar acima das tabs
+function UILib:CreateTabs(parent, tabNames)
     local tabs = {}
     local tabButtons = {}
     local tabFrames = {}
     local selectedTab = nil
+
+    -- Search bar acima das tabs
+    local searchBar = Instance.new("TextBox")
+    searchBar.PlaceholderText = "Pesquisar..."
+    searchBar.Size = UDim2.new(0, 100, 0, 28)
+    searchBar.Position = UDim2.new(0, 0, 0, 32)
+    searchBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    searchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+    searchBar.Font = Enum.Font.SourceSans
+    searchBar.TextSize = 18
+    searchBar.BorderSizePixel = 2
+    searchBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    searchBar.ClearTextOnFocus = false
+    searchBar.ZIndex = 2
+    searchBar.Parent = parent
 
     -- Barra lateral das tabs
     local tabBar = Instance.new("Frame")
@@ -145,21 +145,20 @@ function UILib:CreateTabs(parent, tabNames, searchBar)
     end
 
     -- Search bar filtra tabs
-    if searchBar then
-        searchBar:GetPropertyChangedSignal("Text"):Connect(function()
-            local query = string.lower(searchBar.Text)
-            for i, btn in ipairs(tabButtons) do
-                if query == "" or string.find(string.lower(btn.Text), query, 1, true) then
-                    btn.Visible = true
-                else
-                    btn.Visible = false
-                end
+    searchBar:GetPropertyChangedSignal("Text"):Connect(function()
+        local query = string.lower(searchBar.Text)
+        for i, btn in ipairs(tabButtons) do
+            if query == "" or string.find(string.lower(btn.Text), query, 1, true) then
+                btn.Visible = true
+            else
+                btn.Visible = false
             end
-        end)
-    end
+        end
+    end)
 
     tabs.TabFrames = tabFrames
     tabs.TabButtons = tabButtons
+    tabs.SearchBar = searchBar
     tabs.SelectedTab = function() return selectedTab end
     return tabs
 end
