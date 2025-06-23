@@ -1,0 +1,128 @@
+-- UILib.lua
+-- Biblioteca simples de UI para Roblox com suporte a Tabs
+
+local UILib = {}
+
+-- Cria uma nova janela (Frame)
+function UILib:CreateWindow(title, size, position)
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = title or "UILib_Window"
+    screenGui.ResetOnSpawn = false
+    
+    local frame = Instance.new("Frame")
+    frame.Size = size or UDim2.new(0, 400, 0, 300)
+    frame.Position = position or UDim2.new(0.5, -200, 0.5, -150)
+    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    frame.BorderSizePixel = 0
+    frame.Parent = screenGui
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Text = title or "Janela"
+    titleLabel.Size = UDim2.new(1, 0, 0, 32)
+    titleLabel.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+    titleLabel.Font = Enum.Font.SourceSansBold
+    titleLabel.TextSize = 20
+    titleLabel.BorderSizePixel = 0
+    titleLabel.Parent = frame
+
+    screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    return frame
+end
+
+-- Cria Tabs (abas) dentro de um frame
+function UILib:CreateTabs(parent, tabNames)
+    local tabs = {}
+    local tabButtons = {}
+    local tabFrames = {}
+    local selectedTab = nil
+
+    -- Barra de navegação das tabs
+    local tabBar = Instance.new("Frame")
+    tabBar.Size = UDim2.new(1, 0, 0, 28)
+    tabBar.Position = UDim2.new(0, 0, 0, 32)
+    tabBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    tabBar.BorderSizePixel = 0
+    tabBar.Parent = parent
+
+    local tabWidth = math.floor(400 / #tabNames)
+    for i, name in ipairs(tabNames) do
+        -- Botão da Tab
+        local tabBtn = Instance.new("TextButton")
+        tabBtn.Text = name
+        tabBtn.Size = UDim2.new(0, tabWidth, 1, 0)
+        tabBtn.Position = UDim2.new(0, (i-1)*tabWidth, 0, 0)
+        tabBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        tabBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+        tabBtn.Font = Enum.Font.SourceSansBold
+        tabBtn.TextSize = 16
+        tabBtn.BorderSizePixel = 0
+        tabBtn.Parent = tabBar
+        tabButtons[i] = tabBtn
+
+        -- Frame da Tab
+        local tabFrame = Instance.new("Frame")
+        tabFrame.Size = UDim2.new(1, 0, 1, -60)
+        tabFrame.Position = UDim2.new(0, 0, 0, 60)
+        tabFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        tabFrame.BorderSizePixel = 0
+        tabFrame.Visible = false
+        tabFrame.Parent = parent
+        tabFrames[i] = tabFrame
+
+        -- Troca de Tab ao clicar
+        tabBtn.MouseButton1Click:Connect(function()
+            for j, f in ipairs(tabFrames) do
+                f.Visible = (i == j)
+                tabButtons[j].BackgroundColor3 = (i == j) and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(35, 35, 35)
+            end
+            selectedTab = i
+        end)
+    end
+    -- Ativa a primeira Tab por padrão
+    if #tabFrames > 0 then
+        tabFrames[1].Visible = true
+        tabButtons[1].BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        selectedTab = 1
+    end
+
+    tabs.TabFrames = tabFrames
+    tabs.TabButtons = tabButtons
+    tabs.SelectedTab = function() return selectedTab end
+    return tabs
+end
+
+-- Cria um botão dentro de um frame/tab
+function UILib:CreateButton(parent, text, position, size, callback)
+    local button = Instance.new("TextButton")
+    button.Text = text or "Botão"
+    button.Size = size or UDim2.new(0, 120, 0, 36)
+    button.Position = position or UDim2.new(0, 16, 0, 16)
+    button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    button.TextColor3 = Color3.fromRGB(220, 220, 220)
+    button.Font = Enum.Font.SourceSans
+    button.TextSize = 18
+    button.BorderSizePixel = 0
+    button.AutoButtonColor = true
+    button.Parent = parent
+    if callback then
+        button.MouseButton1Click:Connect(callback)
+    end
+    return button
+end
+
+-- Cria um label dentro de um frame/tab
+function UILib:CreateLabel(parent, text, position, size)
+    local label = Instance.new("TextLabel")
+    label.Text = text or "Label"
+    label.Size = size or UDim2.new(0, 120, 0, 28)
+    label.Position = position or UDim2.new(0, 16, 0, 60)
+    label.BackgroundTransparency = 1
+    label.TextColor3 = Color3.fromRGB(180, 180, 180)
+    label.Font = Enum.Font.SourceSans
+    label.TextSize = 16
+    label.Parent = parent
+    return label
+end
+
+return UILib
