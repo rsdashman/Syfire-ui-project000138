@@ -1,5 +1,5 @@
 -- UILib.lua
--- Biblioteca simples de UI para Roblox com Tabs laterais e drag control
+-- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto e bordas brancas
 
 local UILib = {}
 
@@ -43,18 +43,20 @@ function UILib:CreateWindow(title, size, position)
     local frame = Instance.new("Frame")
     frame.Size = size or UDim2.new(0, 400, 0, 300)
     frame.Position = position or UDim2.new(0.5, -200, 0.5, -150)
-    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    frame.BorderSizePixel = 0
+    frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    frame.BorderSizePixel = 2
+    frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
     frame.Parent = screenGui
 
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Text = title or "Janela"
     titleLabel.Size = UDim2.new(1, 0, 0, 32)
-    titleLabel.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+    titleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.Font = Enum.Font.SourceSansBold
     titleLabel.TextSize = 20
-    titleLabel.BorderSizePixel = 0
+    titleLabel.BorderSizePixel = 2
+    titleLabel.BorderColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.Parent = frame
     titleLabel.Active = true
 
@@ -75,8 +77,9 @@ function UILib:CreateTabs(parent, tabNames)
     local tabBar = Instance.new("Frame")
     tabBar.Size = UDim2.new(0, 100, 1, -32)
     tabBar.Position = UDim2.new(0, 0, 0, 32)
-    tabBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    tabBar.BorderSizePixel = 0
+    tabBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    tabBar.BorderSizePixel = 2
+    tabBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
     tabBar.Parent = parent
 
     for i, name in ipairs(tabNames) do
@@ -85,11 +88,12 @@ function UILib:CreateTabs(parent, tabNames)
         tabBtn.Text = name
         tabBtn.Size = UDim2.new(1, 0, 0, 36)
         tabBtn.Position = UDim2.new(0, 0, 0, (i-1)*38)
-        tabBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-        tabBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+        tabBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         tabBtn.Font = Enum.Font.SourceSansBold
         tabBtn.TextSize = 16
-        tabBtn.BorderSizePixel = 0
+        tabBtn.BorderSizePixel = 2
+        tabBtn.BorderColor3 = Color3.fromRGB(255, 255, 255)
         tabBtn.Parent = tabBar
         tabButtons[i] = tabBtn
 
@@ -97,8 +101,9 @@ function UILib:CreateTabs(parent, tabNames)
         local tabFrame = Instance.new("Frame")
         tabFrame.Size = UDim2.new(1, -100, 1, -32)
         tabFrame.Position = UDim2.new(0, 100, 0, 32)
-        tabFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-        tabFrame.BorderSizePixel = 0
+        tabFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        tabFrame.BorderSizePixel = 2
+        tabFrame.BorderColor3 = Color3.fromRGB(255, 255, 255)
         tabFrame.Visible = false
         tabFrame.Parent = parent
         tabFrames[i] = tabFrame
@@ -107,7 +112,7 @@ function UILib:CreateTabs(parent, tabNames)
         tabBtn.MouseButton1Click:Connect(function()
             for j, f in ipairs(tabFrames) do
                 f.Visible = (i == j)
-                tabButtons[j].BackgroundColor3 = (i == j) and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(35, 35, 35)
+                tabButtons[j].BackgroundColor3 = (i == j) and Color3.fromRGB(30, 30, 30) or Color3.fromRGB(0, 0, 0)
             end
             selectedTab = i
         end)
@@ -115,7 +120,7 @@ function UILib:CreateTabs(parent, tabNames)
     -- Ativa a primeira Tab por padrão
     if #tabFrames > 0 then
         tabFrames[1].Visible = true
-        tabButtons[1].BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        tabButtons[1].BackgroundColor3 = Color3.fromRGB(30, 30, 30)
         selectedTab = 1
     end
 
@@ -131,11 +136,12 @@ function UILib:CreateButton(parent, text, position, size, callback)
     button.Text = text or "Botão"
     button.Size = size or UDim2.new(0, 120, 0, 36)
     button.Position = position or UDim2.new(0, 16, 0, 16)
-    button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    button.TextColor3 = Color3.fromRGB(220, 220, 220)
+    button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.Font = Enum.Font.SourceSans
     button.TextSize = 18
-    button.BorderSizePixel = 0
+    button.BorderSizePixel = 2
+    button.BorderColor3 = Color3.fromRGB(255, 255, 255)
     button.AutoButtonColor = true
     button.Parent = parent
     if callback then
@@ -151,9 +157,11 @@ function UILib:CreateLabel(parent, text, position, size)
     label.Size = size or UDim2.new(0, 120, 0, 28)
     label.Position = position or UDim2.new(0, 16, 0, 60)
     label.BackgroundTransparency = 1
-    label.TextColor3 = Color3.fromRGB(180, 180, 180)
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
     label.Font = Enum.Font.SourceSans
     label.TextSize = 16
+    label.BorderSizePixel = 2
+    label.BorderColor3 = Color3.fromRGB(255, 255, 255)
     label.Parent = parent
     return label
 end
