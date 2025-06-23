@@ -1,5 +1,5 @@
 -- UILib.lua
--- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar
+-- Biblioteca de UI para Roblox com Tabs laterais, drag, fundo preto, bordas brancas, search bar, seleções e botões dos dois lados
 
 local UILib = {}
 
@@ -34,7 +34,7 @@ local function makeDraggable(frame, dragHandle)
     end)
 end
 
--- Cria uma nova janela (Frame) com search bar
+-- Cria uma nova janela (Frame)
 function UILib:CreateWindow(title, size, position)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = title or "UILib_Window"
@@ -48,102 +48,156 @@ function UILib:CreateWindow(title, size, position)
     frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
     frame.Parent = screenGui
 
-    -- Search bar
-    local searchBar = Instance.new("TextBox")
-    searchBar.PlaceholderText = "Pesquisar..."
-    searchBar.Size = UDim2.new(1, 0, 0, 28)
-    searchBar.Position = UDim2.new(0, 0, 0, 0)
-    searchBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    searchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
-    searchBar.Font = Enum.Font.SourceSans
-    searchBar.TextSize = 18
-    searchBar.BorderSizePixel = 2
-    searchBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
-    searchBar.ClearTextOnFocus = false
-    searchBar.Parent = frame
-
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Text = title or "Janela"
     titleLabel.Size = UDim2.new(1, 0, 0, 32)
-    titleLabel.Position = UDim2.new(0, 0, 0, 28)
+    titleLabel.Position = UDim2.new(0, 0, 0, 0)
     titleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.Font = Enum.Font.SourceSansBold
     titleLabel.TextSize = 20
     titleLabel.BorderSizePixel = 2
     titleLabel.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.ZIndex = 1
     titleLabel.Parent = frame
     titleLabel.Active = true
 
     makeDraggable(frame, titleLabel)
 
     screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-    return frame, searchBar
+    return frame
 end
 
--- Cria Tabs laterais dentro de um frame, recebe searchBar opcional
-function UILib:CreateTabs(parent, tabNames, searchBar)
+-- Cria Tabs laterais dentro de um frame, cada tab tem sua própria search bar para pesquisar botões
+function UILib:CreateTabs(parent, tabNames)
     local tabs = {}
     local tabButtons = {}
     local tabFrames = {}
+    local tabSearchBars = {}
+    local tabButtonsInFrame = {}
+    local tabButtonsLeft = {}
+    local tabButtonsRight = {}
     local selectedTab = nil
 
-    -- Barra lateral das tabs
+    local tabBtnHeight = 36
+    local tabBtnSpacing = 2
+    local tabBarTop = 32
+    local tabBarHeight = #tabNames * (tabBtnHeight + tabBtnSpacing) - tabBtnSpacing
+
+    -- Barra lateral das tabs (esquerda)
     local tabBar = Instance.new("Frame")
-    tabBar.Size = UDim2.new(0, 100, 1, -60)
-    tabBar.Position = UDim2.new(0, 0, 0, 60)
+    tabBar.Size = UDim2.new(0, 100, 0, tabBarHeight)
+    tabBar.Position = UDim2.new(0, 0, 0, tabBarTop)
     tabBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     tabBar.BorderSizePixel = 2
     tabBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    tabBar.ZIndex = 1
     tabBar.Parent = parent
 
+    -- Barra lateral direita para botões extras
+    local rightBar = Instance.new("Frame")
+    rightBar.Size = UDim2.new(0, 100, 0, tabBarHeight)
+    rightBar.Position = UDim2.new(1, -100, 0, tabBarTop)
+    rightBar.AnchorPoint = Vector2.new(1,0)
+    rightBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    rightBar.BorderSizePixel = 2
+    rightBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    rightBar.ZIndex = 1
+    rightBar.Parent = parent
+
     for i, name in ipairs(tabNames) do
-        -- Botão da Tab
+        -- Botão da Tab (esquerda)
         local tabBtn = Instance.new("TextButton")
         tabBtn.Text = name
-        tabBtn.Size = UDim2.new(1, 0, 0, 36)
-        tabBtn.Position = UDim2.new(0, 0, 0, (i-1)*38)
+        tabBtn.Size = UDim2.new(1, 0, 0, tabBtnHeight)
+        tabBtn.Position = UDim2.new(0, 0, 0, (i-1)*(tabBtnHeight + tabBtnSpacing))
         tabBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         tabBtn.Font = Enum.Font.SourceSansBold
         tabBtn.TextSize = 16
         tabBtn.BorderSizePixel = 2
         tabBtn.BorderColor3 = Color3.fromRGB(255, 255, 255)
+        tabBtn.ZIndex = 1
         tabBtn.Parent = tabBar
         tabButtons[i] = tabBtn
 
-        -- Frame da Tab
+        -- Frame da Tab (conteúdo)
         local tabFrame = Instance.new("Frame")
-        tabFrame.Size = UDim2.new(1, -100, 1, -60)
-        tabFrame.Position = UDim2.new(0, 100, 0, 60)
+        tabFrame.Size = UDim2.new(1, -200, 1, -tabBarTop)
+        tabFrame.Position = UDim2.new(0, 100, 0, tabBarTop)
         tabFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         tabFrame.BorderSizePixel = 2
         tabFrame.BorderColor3 = Color3.fromRGB(255, 255, 255)
         tabFrame.Visible = false
+        tabFrame.ZIndex = 1
         tabFrame.Parent = parent
         tabFrames[i] = tabFrame
 
-        -- Troca de Tab ao clicar
-        tabBtn.MouseButton1Click:Connect(function()
-            for j, f in ipairs(tabFrames) do
-                f.Visible = (i == j)
-                tabButtons[j].BackgroundColor3 = (i == j) and Color3.fromRGB(30, 30, 30) or Color3.fromRGB(0, 0, 0)
-            end
-            selectedTab = i
-        end)
-    end
-    -- Ativa a primeira Tab por padrão
-    if #tabFrames > 0 then
-        tabFrames[1].Visible = true
-        tabButtons[1].BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        selectedTab = 1
+        -- Search bar dentro do conteúdo da tab
+        local searchBar = Instance.new("TextBox")
+        searchBar.PlaceholderText = "Pesquisar botões..."
+        searchBar.Size = UDim2.new(1, -32, 0, 28)
+        searchBar.Position = UDim2.new(0, 16, 0, 12)
+        searchBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        searchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+        searchBar.Font = Enum.Font.SourceSans
+        searchBar.TextSize = 18
+        searchBar.BorderSizePixel = 2
+        searchBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
+        searchBar.ClearTextOnFocus = false
+        searchBar.ZIndex = 2
+        searchBar.Parent = tabFrame
+        tabSearchBars[i] = searchBar
+        tabButtonsInFrame[i] = {}
+        tabButtonsLeft[i] = {}
+        tabButtonsRight[i] = {}
     end
 
-    -- Search bar filtra tabs
-    if searchBar then
+    -- Função para mostrar apenas a tab selecionada
+    local function showTab(idx)
+        for j, f in ipairs(tabFrames) do
+            f.Visible = (idx == j)
+            tabButtons[j].BackgroundColor3 = (idx == j) and Color3.fromRGB(30, 30, 30) or Color3.fromRGB(0, 0, 0)
+        end
+        selectedTab = idx
+    end
+
+    -- Troca de Tab ao clicar
+    for i, tabBtn in ipairs(tabButtons) do
+        tabBtn.MouseButton1Click:Connect(function()
+            showTab(i)
+        end)
+    end
+
+    -- Ativa a primeira Tab por padrão
+    if #tabFrames > 0 then
+        showTab(1)
+    end
+
+    -- Função para criar botões dentro da tab e registrar para search
+    function tabs:CreateButtonInTab(tabIdx, text, position, size, callback)
+        local btn = UILib:CreateButton(tabFrames[tabIdx], text, position, size, callback)
+        table.insert(tabButtonsInFrame[tabIdx], btn)
+        return btn
+    end
+
+    -- Função para criar botões na barra lateral esquerda ou direita
+    function tabs:CreateButtonInSide(side, tabIdx, text, position, size, callback)
+        local bar = (side == "right") and rightBar or tabBar
+        local btn = UILib:CreateButton(bar, text, position, size, callback)
+        if side == "right" then
+            table.insert(tabButtonsRight[tabIdx], btn)
+        else
+            table.insert(tabButtonsLeft[tabIdx], btn)
+        end
+        return btn
+    end
+
+    -- Search bar filtra botões da tab ativa
+    for i, searchBar in ipairs(tabSearchBars) do
         searchBar:GetPropertyChangedSignal("Text"):Connect(function()
             local query = string.lower(searchBar.Text)
-            for i, btn in ipairs(tabButtons) do
+            for _, btn in ipairs(tabButtonsInFrame[i]) do
                 if query == "" or string.find(string.lower(btn.Text), query, 1, true) then
                     btn.Visible = true
                 else
@@ -155,7 +209,10 @@ function UILib:CreateTabs(parent, tabNames, searchBar)
 
     tabs.TabFrames = tabFrames
     tabs.TabButtons = tabButtons
+    tabs.TabSearchBars = tabSearchBars
     tabs.SelectedTab = function() return selectedTab end
+    tabs.CreateButtonInTab = tabs.CreateButtonInTab
+    tabs.CreateButtonInSide = tabs.CreateButtonInSide
     return tabs
 end
 
@@ -164,7 +221,7 @@ function UILib:CreateButton(parent, text, position, size, callback)
     local button = Instance.new("TextButton")
     button.Text = text or "Botão"
     button.Size = size or UDim2.new(0, 120, 0, 36)
-    button.Position = position or UDim2.new(0, 16, 0, 16)
+    button.Position = position or UDim2.new(0, 16, 0, 48)
     button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.Font = Enum.Font.SourceSans
@@ -172,6 +229,7 @@ function UILib:CreateButton(parent, text, position, size, callback)
     button.BorderSizePixel = 2
     button.BorderColor3 = Color3.fromRGB(255, 255, 255)
     button.AutoButtonColor = true
+    button.ZIndex = 1
     button.Parent = parent
     if callback then
         button.MouseButton1Click:Connect(callback)
@@ -184,23 +242,77 @@ function UILib:CreateLabel(parent, text, position, size)
     local label = Instance.new("TextLabel")
     label.Text = text or "Label"
     label.Size = size or UDim2.new(0, 120, 0, 28)
-    label.Position = position or UDim2.new(0, 16, 0, 60)
+    label.Position = position or UDim2.new(0, 16, 0, 90)
     label.BackgroundTransparency = 1
     label.TextColor3 = Color3.fromRGB(255, 255, 255)
     label.Font = Enum.Font.SourceSans
     label.TextSize = 16
     label.BorderSizePixel = 2
     label.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    label.ZIndex = 1
     label.Parent = parent
     return label
 end
 
--- Cria um toggle dentro de um frame/tab
-function UILib:CreateToggle(parent, text, position, size, defaultState, callback)
+-- Cria um dropdown (seleção)
+function UILib:CreateDropdown(parent, options, position, size, callback)
+    local dropdown = Instance.new("Frame")
+    dropdown.Size = size or UDim2.new(0, 140, 0, 36)
+    dropdown.Position = position or UDim2.new(0, 16, 0, 48)
+    dropdown.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    dropdown.BorderSizePixel = 2
+    dropdown.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    dropdown.Parent = parent
+
+    local selected = Instance.new("TextButton")
+    selected.Text = options[1] or "Selecionar"
+    selected.Size = UDim2.new(1, 0, 1, 0)
+    selected.BackgroundTransparency = 1
+    selected.TextColor3 = Color3.fromRGB(255, 255, 255)
+    selected.Font = Enum.Font.SourceSans
+    selected.TextSize = 18
+    selected.Parent = dropdown
+
+    local listFrame = Instance.new("Frame")
+    listFrame.Size = UDim2.new(1, 0, 0, #options * 28)
+    listFrame.Position = UDim2.new(0, 0, 1, 0)
+    listFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    listFrame.BorderSizePixel = 2
+    listFrame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    listFrame.Visible = false
+    listFrame.Parent = dropdown
+
+    for i, opt in ipairs(options) do
+        local optBtn = Instance.new("TextButton")
+        optBtn.Text = opt
+        optBtn.Size = UDim2.new(1, 0, 0, 28)
+        optBtn.Position = UDim2.new(0, 0, 0, (i-1)*28)
+        optBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        optBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        optBtn.Font = Enum.Font.SourceSans
+        optBtn.TextSize = 16
+        optBtn.BorderSizePixel = 0
+        optBtn.Parent = listFrame
+        optBtn.MouseButton1Click:Connect(function()
+            selected.Text = opt
+            listFrame.Visible = false
+            if callback then callback(opt) end
+        end)
+    end
+
+    selected.MouseButton1Click:Connect(function()
+        listFrame.Visible = not listFrame.Visible
+    end)
+
+    return dropdown
+end
+
+-- Cria um toggle (on/off)
+function UILib:CreateToggle(parent, text, position, size, callback)
     local toggle = Instance.new("TextButton")
-    toggle.Text = text or "Toggle"
+    toggle.Text = "[ ] " .. (text or "Toggle")
     toggle.Size = size or UDim2.new(0, 120, 0, 36)
-    toggle.Position = position or UDim2.new(0, 16, 0, 16)
+    toggle.Position = position or UDim2.new(0, 16, 0, 48)
     toggle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
     toggle.Font = Enum.Font.SourceSans
@@ -208,19 +320,15 @@ function UILib:CreateToggle(parent, text, position, size, defaultState, callback
     toggle.BorderSizePixel = 2
     toggle.BorderColor3 = Color3.fromRGB(255, 255, 255)
     toggle.AutoButtonColor = true
+    toggle.ZIndex = 1
     toggle.Parent = parent
-
-    local getState = function()
-        return toggle.Text == "Ativado"
-    end
-
+    local state = false
     toggle.MouseButton1Click:Connect(function()
-        local newState = not getState()
-        toggle.Text = newState and "Ativado" or "Desativado"
-        callback(newState)
+        state = not state
+        toggle.Text = (state and "[X] " or "[ ] ") .. (text or "Toggle")
+        if callback then callback(state) end
     end)
-
-    return toggle, getState
+    return toggle
 end
 
 return UILib
