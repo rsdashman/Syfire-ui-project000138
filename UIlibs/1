@@ -1,5 +1,5 @@
 -- UILib.lua
--- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar embaixo das tabs
+-- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar realmente abaixo das tabs
 
 local UILib = {}
 
@@ -68,7 +68,7 @@ function UILib:CreateWindow(title, size, position)
     return frame
 end
 
--- Cria Tabs laterais dentro de um frame, com search bar embaixo das tabs
+-- Cria Tabs laterais dentro de um frame, com search bar realmente abaixo das tabs
 function UILib:CreateTabs(parent, tabNames)
     local tabs = {}
     local tabButtons = {}
@@ -78,10 +78,10 @@ function UILib:CreateTabs(parent, tabNames)
     local tabBtnHeight = 36
     local tabBtnSpacing = 2
     local tabBarTop = 32
-    local tabBarHeight = #tabNames * (tabBtnHeight + tabBtnSpacing) - tabBtnSpacing
     local searchBarHeight = 28
+    local tabBarHeight = #tabNames * (tabBtnHeight + tabBtnSpacing) - tabBtnSpacing + searchBarHeight
 
-    -- Barra lateral das tabs
+    -- Barra lateral das tabs (agora inclui a search bar)
     local tabBar = Instance.new("Frame")
     tabBar.Size = UDim2.new(0, 100, 0, tabBarHeight)
     tabBar.Position = UDim2.new(0, 0, 0, tabBarTop)
@@ -109,7 +109,7 @@ function UILib:CreateTabs(parent, tabNames)
 
         -- Frame da Tab
         local tabFrame = Instance.new("Frame")
-        tabFrame.Size = UDim2.new(1, -100, 1, -(tabBarTop + tabBarHeight + searchBarHeight))
+        tabFrame.Size = UDim2.new(1, -100, 1, -(tabBarTop + tabBarHeight))
         tabFrame.Position = UDim2.new(0, 100, 0, tabBarTop)
         tabFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         tabFrame.BorderSizePixel = 2
@@ -129,11 +129,11 @@ function UILib:CreateTabs(parent, tabNames)
         end)
     end
 
-    -- Search bar embaixo das tabs
+    -- Search bar realmente abaixo das tabs, dentro do tabBar
     local searchBar = Instance.new("TextBox")
     searchBar.PlaceholderText = "Pesquisar..."
-    searchBar.Size = UDim2.new(0, 100, 0, searchBarHeight)
-    searchBar.Position = UDim2.new(0, 0, 0, tabBarTop + tabBarHeight)
+    searchBar.Size = UDim2.new(1, 0, 0, searchBarHeight)
+    searchBar.Position = UDim2.new(0, 0, 0, tabBarHeight - searchBarHeight)
     searchBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     searchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
     searchBar.Font = Enum.Font.SourceSans
@@ -142,7 +142,7 @@ function UILib:CreateTabs(parent, tabNames)
     searchBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
     searchBar.ClearTextOnFocus = false
     searchBar.ZIndex = 2
-    searchBar.Parent = parent
+    searchBar.Parent = tabBar
 
     -- Ativa a primeira Tab por padrão
     if #tabFrames > 0 then
