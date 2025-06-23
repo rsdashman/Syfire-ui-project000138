@@ -1,9 +1,9 @@
 -- UILib.lua
--- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar para pesquisar botões da tab ativa
+-- UI Library moderna para Roblox: tabs laterais, search bar, drag, visual flat/dark, bordas arredondadas, animação de hover
 
 local UILib = {}
 
--- Função utilitária para drag
+-- Utilitário para drag
 local function makeDraggable(frame, dragHandle)
     local dragging, dragInput, mousePos, framePos
     dragHandle.InputBegan:Connect(function(input)
@@ -34,41 +34,73 @@ local function makeDraggable(frame, dragHandle)
     end)
 end
 
--- Cria uma nova janela (Frame)
+-- Cria uma nova janela moderna
 function UILib:CreateWindow(title, size, position)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = title or "UILib_Window"
     screenGui.ResetOnSpawn = false
-    
+
     local frame = Instance.new("Frame")
-    frame.Size = size or UDim2.new(0, 600, 0, 340)
-    frame.Position = position or UDim2.new(0.5, -300, 0.5, -170)
-    frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    frame.BorderSizePixel = 2
-    frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    frame.Size = size or UDim2.new(0, 650, 0, 400)
+    frame.Position = position or UDim2.new(0.5, -325, 0.5, -200)
+    frame.BackgroundColor3 = Color3.fromRGB(24, 26, 32)
+    frame.BorderSizePixel = 0
+    frame.AnchorPoint = Vector2.new(0, 0)
     frame.Parent = screenGui
+    frame.ClipsDescendants = true
+    frame.Name = "UILibMainFrame"
+    frame.ZIndex = 1
+    frame.Active = true
+    frame.Selectable = true
+    frame.BackgroundTransparency = 0
+    frame:SetAttribute("UILibShadow", true)
 
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.Text = title or "Janela"
-    titleLabel.Size = UDim2.new(1, 0, 0, 32)
-    titleLabel.Position = UDim2.new(0, 0, 0, 0)
-    titleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    titleLabel.Font = Enum.Font.SourceSansBold
-    titleLabel.TextSize = 20
-    titleLabel.BorderSizePixel = 2
-    titleLabel.BorderColor3 = Color3.fromRGB(255, 255, 255)
-    titleLabel.ZIndex = 1
-    titleLabel.Parent = frame
-    titleLabel.Active = true
+    -- Sombra leve
+    local shadow = Instance.new("ImageLabel")
+    shadow.Image = "rbxassetid://1316045217"
+    shadow.Size = UDim2.new(1, 30, 1, 30)
+    shadow.Position = UDim2.new(0, -15, 0, -15)
+    shadow.BackgroundTransparency = 1
+    shadow.ImageTransparency = 0.7
+    shadow.ZIndex = 0
+    shadow.Parent = frame
 
-    makeDraggable(frame, titleLabel)
+    -- Barra de título
+    local titleBar = Instance.new("TextLabel")
+    titleBar.Text = title or "Janela"
+    titleBar.Size = UDim2.new(1, 0, 0, 38)
+    titleBar.Position = UDim2.new(0, 0, 0, 0)
+    titleBar.BackgroundColor3 = Color3.fromRGB(30, 32, 40)
+    titleBar.TextColor3 = Color3.fromRGB(220, 220, 230)
+    titleBar.Font = Enum.Font.GothamBold
+    titleBar.TextSize = 22
+    titleBar.BorderSizePixel = 0
+    titleBar.ZIndex = 2
+    titleBar.Parent = frame
+    titleBar.Active = true
+    titleBar.TextXAlignment = Enum.TextXAlignment.Left
+    titleBar.TextYAlignment = Enum.TextYAlignment.Center
+    titleBar.ClipsDescendants = true
+    titleBar.Name = "UILibTitleBar"
+    titleBar.BackgroundTransparency = 0.05
+    titleBar.TextStrokeTransparency = 0.8
+    titleBar.TextStrokeColor3 = Color3.fromRGB(0,0,0)
+    titleBar.Text = "  " .. (title or "Janela")
+    titleBar.UICorner = Instance.new("UICorner", titleBar)
+    titleBar.UICorner.CornerRadius = UDim.new(0, 10)
+
+    -- Bordas arredondadas na janela
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 14)
+    corner.Parent = frame
+
+    makeDraggable(frame, titleBar)
 
     screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
     return frame
 end
 
--- Cria Tabs laterais dentro de um frame, cada tab tem sua própria search bar para pesquisar botões
+-- Tabs laterais modernas, search bar no topo do conteúdo da tab
 function UILib:CreateTabs(parent, tabNames)
     local tabs = {}
     local tabButtons = {}
@@ -77,63 +109,81 @@ function UILib:CreateTabs(parent, tabNames)
     local tabButtonsInFrame = {}
     local selectedTab = nil
 
-    local tabBtnHeight = 36
-    local tabBtnSpacing = 2
-    local tabBarTop = 32
+    local tabBtnHeight = 40
+    local tabBtnSpacing = 6
+    local tabBarTop = 38
+    local tabBarWidth = 120
     local tabBarHeight = #tabNames * (tabBtnHeight + tabBtnSpacing) - tabBtnSpacing
 
     -- Barra lateral das tabs
     local tabBar = Instance.new("Frame")
-    tabBar.Size = UDim2.new(0, 100, 0, tabBarHeight)
+    tabBar.Size = UDim2.new(0, tabBarWidth, 1, -tabBarTop)
     tabBar.Position = UDim2.new(0, 0, 0, tabBarTop)
-    tabBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    tabBar.BorderSizePixel = 2
-    tabBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
-    tabBar.ZIndex = 1
+    tabBar.BackgroundColor3 = Color3.fromRGB(28, 30, 38)
+    tabBar.BorderSizePixel = 0
+    tabBar.ZIndex = 2
     tabBar.Parent = parent
+    local tabBarCorner = Instance.new("UICorner")
+    tabBarCorner.CornerRadius = UDim.new(0, 12)
+    tabBarCorner.Parent = tabBar
 
     for i, name in ipairs(tabNames) do
         -- Botão da Tab
         local tabBtn = Instance.new("TextButton")
         tabBtn.Text = name
-        tabBtn.Size = UDim2.new(1, 0, 0, tabBtnHeight)
-        tabBtn.Position = UDim2.new(0, 0, 0, (i-1)*(tabBtnHeight + tabBtnSpacing))
-        tabBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        tabBtn.Font = Enum.Font.SourceSansBold
-        tabBtn.TextSize = 16
-        tabBtn.BorderSizePixel = 2
-        tabBtn.BorderColor3 = Color3.fromRGB(255, 255, 255)
-        tabBtn.ZIndex = 1
+        tabBtn.Size = UDim2.new(1, -12, 0, tabBtnHeight)
+        tabBtn.Position = UDim2.new(0, 6, 0, (i-1)*(tabBtnHeight + tabBtnSpacing) + 8)
+        tabBtn.BackgroundColor3 = Color3.fromRGB(36, 38, 48)
+        tabBtn.TextColor3 = Color3.fromRGB(200, 200, 220)
+        tabBtn.Font = Enum.Font.GothamSemibold
+        tabBtn.TextSize = 18
+        tabBtn.BorderSizePixel = 0
+        tabBtn.ZIndex = 3
         tabBtn.Parent = tabBar
+        tabBtn.AutoButtonColor = false
+        tabBtn.Name = "UILibTabBtn" .. i
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, 8)
+        btnCorner.Parent = tabBtn
         tabButtons[i] = tabBtn
-
+        -- Hover anim
+        tabBtn.MouseEnter:Connect(function()
+            tabBtn.BackgroundColor3 = Color3.fromRGB(50, 52, 64)
+        end)
+        tabBtn.MouseLeave:Connect(function()
+            if selectedTab ~= i then
+                tabBtn.BackgroundColor3 = Color3.fromRGB(36, 38, 48)
+            end
+        end)
         -- Frame da Tab (conteúdo)
         local tabFrame = Instance.new("Frame")
-        tabFrame.Size = UDim2.new(1, -100, 1, -tabBarTop)
-        tabFrame.Position = UDim2.new(0, 100, 0, tabBarTop)
-        tabFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        tabFrame.BorderSizePixel = 2
-        tabFrame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+        tabFrame.Size = UDim2.new(1, -tabBarWidth, 1, -tabBarTop)
+        tabFrame.Position = UDim2.new(0, tabBarWidth, 0, tabBarTop)
+        tabFrame.BackgroundColor3 = Color3.fromRGB(32, 34, 44)
+        tabFrame.BorderSizePixel = 0
         tabFrame.Visible = false
-        tabFrame.ZIndex = 1
+        tabFrame.ZIndex = 2
         tabFrame.Parent = parent
+        local tabFrameCorner = Instance.new("UICorner")
+        tabFrameCorner.CornerRadius = UDim.new(0, 10)
+        tabFrameCorner.Parent = tabFrame
         tabFrames[i] = tabFrame
-
         -- Search bar dentro do conteúdo da tab
         local searchBar = Instance.new("TextBox")
         searchBar.PlaceholderText = "Pesquisar botões..."
-        searchBar.Size = UDim2.new(1, -32, 0, 28)
-        searchBar.Position = UDim2.new(0, 16, 0, 12)
-        searchBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        searchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
-        searchBar.Font = Enum.Font.SourceSans
+        searchBar.Size = UDim2.new(1, -32, 0, 32)
+        searchBar.Position = UDim2.new(0, 16, 0, 16)
+        searchBar.BackgroundColor3 = Color3.fromRGB(40, 42, 54)
+        searchBar.TextColor3 = Color3.fromRGB(220, 220, 230)
+        searchBar.Font = Enum.Font.Gotham
         searchBar.TextSize = 18
-        searchBar.BorderSizePixel = 2
-        searchBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
+        searchBar.BorderSizePixel = 0
         searchBar.ClearTextOnFocus = false
-        searchBar.ZIndex = 2
+        searchBar.ZIndex = 3
         searchBar.Parent = tabFrame
+        local searchCorner = Instance.new("UICorner")
+        searchCorner.CornerRadius = UDim.new(0, 8)
+        searchCorner.Parent = searchBar
         tabSearchBars[i] = searchBar
         tabButtonsInFrame[i] = {}
     end
@@ -142,7 +192,7 @@ function UILib:CreateTabs(parent, tabNames)
     local function showTab(idx)
         for j, f in ipairs(tabFrames) do
             f.Visible = (idx == j)
-            tabButtons[j].BackgroundColor3 = (idx == j) and Color3.fromRGB(30, 30, 30) or Color3.fromRGB(0, 0, 0)
+            tabButtons[j].BackgroundColor3 = (idx == j) and Color3.fromRGB(60, 62, 80) or Color3.fromRGB(36, 38, 48)
         end
         selectedTab = idx
     end
@@ -161,7 +211,8 @@ function UILib:CreateTabs(parent, tabNames)
 
     -- Função para criar botões dentro da tab e registrar para search
     function tabs:CreateButtonInTab(tabIdx, text, position, size, callback)
-        local btn = UILib:CreateButton(tabFrames[tabIdx], text, position, size, callback)
+        local yBase = 60
+        local btn = UILib:CreateButton(tabFrames[tabIdx], text, position or UDim2.new(0, 16, 0, yBase + (#tabButtonsInFrame[tabIdx]) * 48), size, callback)
         table.insert(tabButtonsInFrame[tabIdx], btn)
         return btn
     end
@@ -188,41 +239,49 @@ function UILib:CreateTabs(parent, tabNames)
     return tabs
 end
 
--- Cria um botão dentro de um frame/tab
+-- Cria um botão moderno dentro de um frame/tab
 function UILib:CreateButton(parent, text, position, size, callback)
     local button = Instance.new("TextButton")
     button.Text = text or "Botão"
-    button.Size = size or UDim2.new(0, 120, 0, 36)
-    button.Position = position or UDim2.new(0, 16, 0, 48)
-    button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.Font = Enum.Font.SourceSans
+    button.Size = size or UDim2.new(1, -32, 0, 40)
+    button.Position = position or UDim2.new(0, 16, 0, 0)
+    button.BackgroundColor3 = Color3.fromRGB(44, 46, 60)
+    button.TextColor3 = Color3.fromRGB(220, 220, 230)
+    button.Font = Enum.Font.GothamMedium
     button.TextSize = 18
-    button.BorderSizePixel = 2
-    button.BorderColor3 = Color3.fromRGB(255, 255, 255)
-    button.AutoButtonColor = true
-    button.ZIndex = 1
+    button.BorderSizePixel = 0
+    button.AutoButtonColor = false
+    button.ZIndex = 3
     button.Parent = parent
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 8)
+    btnCorner.Parent = button
+    -- Hover anim
+    button.MouseEnter:Connect(function()
+        button.BackgroundColor3 = Color3.fromRGB(60, 62, 80)
+    end)
+    button.MouseLeave:Connect(function()
+        button.BackgroundColor3 = Color3.fromRGB(44, 46, 60)
+    end)
     if callback then
         button.MouseButton1Click:Connect(callback)
     end
     return button
 end
 
--- Cria um label dentro de um frame/tab
+-- Cria um label moderno dentro de um frame/tab
 function UILib:CreateLabel(parent, text, position, size)
     local label = Instance.new("TextLabel")
     label.Text = text or "Label"
-    label.Size = size or UDim2.new(0, 120, 0, 28)
-    label.Position = position or UDim2.new(0, 16, 0, 90)
+    label.Size = size or UDim2.new(1, -32, 0, 28)
+    label.Position = position or UDim2.new(0, 16, 0, 0)
     label.BackgroundTransparency = 1
-    label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    label.Font = Enum.Font.SourceSans
+    label.TextColor3 = Color3.fromRGB(180, 180, 200)
+    label.Font = Enum.Font.Gotham
     label.TextSize = 16
-    label.BorderSizePixel = 2
-    label.BorderColor3 = Color3.fromRGB(255, 255, 255)
-    label.ZIndex = 1
+    label.ZIndex = 3
     label.Parent = parent
+    label.TextXAlignment = Enum.TextXAlignment.Left
     return label
 end
 
