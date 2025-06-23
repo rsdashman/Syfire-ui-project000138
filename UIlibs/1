@@ -1,5 +1,5 @@
 -- UILib.lua
--- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto e bordas brancas
+-- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar
 
 local UILib = {}
 
@@ -34,23 +34,38 @@ local function makeDraggable(frame, dragHandle)
     end)
 end
 
--- Cria uma nova janela (Frame)
+-- Cria uma nova janela (Frame) com search bar
 function UILib:CreateWindow(title, size, position)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = title or "UILib_Window"
     screenGui.ResetOnSpawn = false
     
     local frame = Instance.new("Frame")
-    frame.Size = size or UDim2.new(0, 400, 0, 300)
-    frame.Position = position or UDim2.new(0.5, -200, 0.5, -150)
+    frame.Size = size or UDim2.new(0, 600, 0, 340)
+    frame.Position = position or UDim2.new(0.5, -300, 0.5, -170)
     frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     frame.BorderSizePixel = 2
     frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
     frame.Parent = screenGui
 
+    -- Search bar
+    local searchBar = Instance.new("TextBox")
+    searchBar.PlaceholderText = "Pesquisar..."
+    searchBar.Size = UDim2.new(1, 0, 0, 28)
+    searchBar.Position = UDim2.new(0, 0, 0, 0)
+    searchBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    searchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+    searchBar.Font = Enum.Font.SourceSans
+    searchBar.TextSize = 18
+    searchBar.BorderSizePixel = 2
+    searchBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    searchBar.ClearTextOnFocus = false
+    searchBar.Parent = frame
+
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Text = title or "Janela"
     titleLabel.Size = UDim2.new(1, 0, 0, 32)
+    titleLabel.Position = UDim2.new(0, 0, 0, 28)
     titleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.Font = Enum.Font.SourceSansBold
@@ -63,11 +78,11 @@ function UILib:CreateWindow(title, size, position)
     makeDraggable(frame, titleLabel)
 
     screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-    return frame
+    return frame, searchBar
 end
 
--- Cria Tabs laterais dentro de um frame
-function UILib:CreateTabs(parent, tabNames)
+-- Cria Tabs laterais dentro de um frame, recebe searchBar opcional
+function UILib:CreateTabs(parent, tabNames, searchBar)
     local tabs = {}
     local tabButtons = {}
     local tabFrames = {}
@@ -75,8 +90,8 @@ function UILib:CreateTabs(parent, tabNames)
 
     -- Barra lateral das tabs
     local tabBar = Instance.new("Frame")
-    tabBar.Size = UDim2.new(0, 100, 1, -32)
-    tabBar.Position = UDim2.new(0, 0, 0, 32)
+    tabBar.Size = UDim2.new(0, 100, 1, -60)
+    tabBar.Position = UDim2.new(0, 0, 0, 60)
     tabBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     tabBar.BorderSizePixel = 2
     tabBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
@@ -99,8 +114,8 @@ function UILib:CreateTabs(parent, tabNames)
 
         -- Frame da Tab
         local tabFrame = Instance.new("Frame")
-        tabFrame.Size = UDim2.new(1, -100, 1, -32)
-        tabFrame.Position = UDim2.new(0, 100, 0, 32)
+        tabFrame.Size = UDim2.new(1, -100, 1, -60)
+        tabFrame.Position = UDim2.new(0, 100, 0, 60)
         tabFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         tabFrame.BorderSizePixel = 2
         tabFrame.BorderColor3 = Color3.fromRGB(255, 255, 255)
@@ -122,6 +137,20 @@ function UILib:CreateTabs(parent, tabNames)
         tabFrames[1].Visible = true
         tabButtons[1].BackgroundColor3 = Color3.fromRGB(30, 30, 30)
         selectedTab = 1
+    end
+
+    -- Search bar filtra tabs
+    if searchBar then
+        searchBar:GetPropertyChangedSignal("Text"):Connect(function()
+            local query = string.lower(searchBar.Text)
+            for i, btn in ipairs(tabButtons) do
+                if query == "" or string.find(string.lower(btn.Text), query, 1, true) then
+                    btn.Visible = true
+                else
+                    btn.Visible = false
+                end
+            end
+        end)
     end
 
     tabs.TabFrames = tabFrames
