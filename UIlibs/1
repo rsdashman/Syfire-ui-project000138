@@ -1,5 +1,5 @@
 -- UILib.lua
--- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar
+-- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar visível
 
 local UILib = {}
 
@@ -60,6 +60,7 @@ function UILib:CreateWindow(title, size, position)
     searchBar.BorderSizePixel = 2
     searchBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
     searchBar.ClearTextOnFocus = false
+    searchBar.ZIndex = 2
     searchBar.Parent = frame
 
     local titleLabel = Instance.new("TextLabel")
@@ -72,6 +73,7 @@ function UILib:CreateWindow(title, size, position)
     titleLabel.TextSize = 20
     titleLabel.BorderSizePixel = 2
     titleLabel.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.ZIndex = 1
     titleLabel.Parent = frame
     titleLabel.Active = true
 
@@ -95,6 +97,7 @@ function UILib:CreateTabs(parent, tabNames, searchBar)
     tabBar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     tabBar.BorderSizePixel = 2
     tabBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    tabBar.ZIndex = 1
     tabBar.Parent = parent
 
     for i, name in ipairs(tabNames) do
@@ -109,6 +112,7 @@ function UILib:CreateTabs(parent, tabNames, searchBar)
         tabBtn.TextSize = 16
         tabBtn.BorderSizePixel = 2
         tabBtn.BorderColor3 = Color3.fromRGB(255, 255, 255)
+        tabBtn.ZIndex = 1
         tabBtn.Parent = tabBar
         tabButtons[i] = tabBtn
 
@@ -120,6 +124,7 @@ function UILib:CreateTabs(parent, tabNames, searchBar)
         tabFrame.BorderSizePixel = 2
         tabFrame.BorderColor3 = Color3.fromRGB(255, 255, 255)
         tabFrame.Visible = false
+        tabFrame.ZIndex = 1
         tabFrame.Parent = parent
         tabFrames[i] = tabFrame
 
@@ -172,6 +177,7 @@ function UILib:CreateButton(parent, text, position, size, callback)
     button.BorderSizePixel = 2
     button.BorderColor3 = Color3.fromRGB(255, 255, 255)
     button.AutoButtonColor = true
+    button.ZIndex = 1
     button.Parent = parent
     if callback then
         button.MouseButton1Click:Connect(callback)
@@ -191,6 +197,7 @@ function UILib:CreateLabel(parent, text, position, size)
     label.TextSize = 16
     label.BorderSizePixel = 2
     label.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    label.ZIndex = 1
     label.Parent = parent
     return label
 end
