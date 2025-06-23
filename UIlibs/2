@@ -1,0 +1,85 @@
+-- ... código anterior ...
+
+-- Cria um toggle moderno dentro de um frame/tab
+function UILib:CreateToggle(parent, text, position, size, default, callback)
+    local toggleFrame = Instance.new("Frame")
+    toggleFrame.Size = size or UDim2.new(1, -32, 0, 40)
+    toggleFrame.Position = position or UDim2.new(0, 16, 0, 0)
+    toggleFrame.BackgroundTransparency = 1
+    toggleFrame.ZIndex = 3
+    toggleFrame.Parent = parent
+
+    local label = Instance.new("TextLabel")
+    label.Text = text or "Toggle"
+    label.Size = UDim2.new(1, -60, 1, 0)
+    label.Position = UDim2.new(0, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.TextColor3 = Color3.fromRGB(180, 180, 200)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 16
+    label.ZIndex = 3
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = toggleFrame
+
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(0, 48, 0, 28)
+    toggleBtn.Position = UDim2.new(1, -56, 0.5, -14)
+    toggleBtn.BackgroundColor3 = default and Color3.fromRGB(80, 200, 120) or Color3.fromRGB(44, 46, 60)
+    toggleBtn.Text = ""
+    toggleBtn.BorderSizePixel = 0
+    toggleBtn.ZIndex = 4
+    toggleBtn.Parent = toggleFrame
+    toggleBtn.AutoButtonColor = false
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(1, 14)
+    btnCorner.Parent = toggleBtn
+
+    local circle = Instance.new("Frame")
+    circle.Size = UDim2.new(0, 20, 0, 20)
+    circle.Position = default and UDim2.new(1, -24, 0.5, -10) or UDim2.new(0, 4, 0.5, -10)
+    circle.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+    circle.ZIndex = 5
+    circle.Parent = toggleBtn
+    circle.BorderSizePixel = 0
+    local circleCorner = Instance.new("UICorner")
+    circleCorner.CornerRadius = UDim.new(1, 10)
+    circleCorner.Parent = circle
+
+    local state = default and true or false
+
+    local function updateVisual()
+        if state then
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(80, 200, 120)
+            circle.Position = UDim2.new(1, -24, 0.5, -10)
+        else
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(44, 46, 60)
+            circle.Position = UDim2.new(0, 4, 0.5, -10)
+        end
+    end
+
+    toggleBtn.MouseButton1Click:Connect(function()
+        state = not state
+        updateVisual()
+        if callback then
+            callback(state)
+        end
+    end)
+
+    -- Hover anim
+    toggleBtn.MouseEnter:Connect(function()
+        if state then
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(100, 220, 140)
+        else
+            toggleBtn.BackgroundColor3 = Color3.fromRGB(60, 62, 80)
+        end
+    end)
+    toggleBtn.MouseLeave:Connect(function()
+        updateVisual()
+    end)
+
+    updateVisual()
+    return toggleFrame, function() return state end
+end
+
+-- ... código posterior ...
