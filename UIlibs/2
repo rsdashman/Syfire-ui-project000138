@@ -1,5 +1,5 @@
 -- UILib.lua
--- Biblioteca de UI para Roblox com Tabs laterais, drag, fundo preto, bordas brancas, search bar, seleções e botões dos dois lados
+-- Biblioteca de UI para Roblox com Tabs laterais, drag, fundo preto, bordas brancas ARREDONDADAS, search bar, seleções, botões dos dois lados, minimizar e fechar
 
 local UILib = {}
 
@@ -34,6 +34,13 @@ local function makeDraggable(frame, dragHandle)
     end)
 end
 
+-- Utilitário para adicionar bordas arredondadas
+local function addCorner(instance, radius)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, radius or 10)
+    corner.Parent = instance
+end
+
 -- Cria uma nova janela (Frame)
 function UILib:CreateWindow(title, size, position)
     local screenGui = Instance.new("ScreenGui")
@@ -47,22 +54,66 @@ function UILib:CreateWindow(title, size, position)
     frame.BorderSizePixel = 2
     frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
     frame.Parent = screenGui
+    addCorner(frame, 14)
 
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Text = title or "Janela"
-    titleLabel.Size = UDim2.new(1, 0, 0, 32)
+    titleLabel.Size = UDim2.new(1, -80, 0, 32)
     titleLabel.Position = UDim2.new(0, 0, 0, 0)
     titleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.Font = Enum.Font.SourceSansBold
     titleLabel.TextSize = 20
-    titleLabel.BorderSizePixel = 2
-    titleLabel.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.BorderSizePixel = 0
     titleLabel.ZIndex = 1
     titleLabel.Parent = frame
     titleLabel.Active = true
+    addCorner(titleLabel, 12)
+
+    -- Botão de minimizar
+    local minBtn = Instance.new("TextButton")
+    minBtn.Text = "_"
+    minBtn.Size = UDim2.new(0, 32, 0, 28)
+    minBtn.Position = UDim2.new(1, -72, 0, 2)
+    minBtn.AnchorPoint = Vector2.new(0,0)
+    minBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    minBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    minBtn.Font = Enum.Font.SourceSansBold
+    minBtn.TextSize = 22
+    minBtn.BorderSizePixel = 0
+    minBtn.ZIndex = 2
+    minBtn.Parent = frame
+    addCorner(minBtn, 8)
+
+    -- Botão de fechar
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Text = "X"
+    closeBtn.Size = UDim2.new(0, 32, 0, 28)
+    closeBtn.Position = UDim2.new(1, -36, 0, 2)
+    closeBtn.AnchorPoint = Vector2.new(0,0)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.SourceSansBold
+    closeBtn.TextSize = 20
+    closeBtn.BorderSizePixel = 0
+    closeBtn.ZIndex = 2
+    closeBtn.Parent = frame
+    addCorner(closeBtn, 8)
 
     makeDraggable(frame, titleLabel)
+
+    -- Minimizar: esconde todo conteúdo exceto barra de título
+    minBtn.MouseButton1Click:Connect(function()
+        for _, child in ipairs(frame:GetChildren()) do
+            if child ~= titleLabel and child ~= minBtn and child ~= closeBtn and not child:IsA("UICorner") then
+                child.Visible = not child.Visible
+            end
+        end
+    end)
+    -- Fechar: remove a janela
+    closeBtn.MouseButton1Click:Connect(function()
+        screenGui:Destroy()
+    end)
 
     screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
     return frame
@@ -93,6 +144,7 @@ function UILib:CreateTabs(parent, tabNames)
     tabBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
     tabBar.ZIndex = 1
     tabBar.Parent = parent
+    addCorner(tabBar, 12)
 
     -- Barra lateral direita para botões extras
     local rightBar = Instance.new("Frame")
@@ -104,6 +156,7 @@ function UILib:CreateTabs(parent, tabNames)
     rightBar.BorderColor3 = Color3.fromRGB(255, 255, 255)
     rightBar.ZIndex = 1
     rightBar.Parent = parent
+    addCorner(rightBar, 12)
 
     for i, name in ipairs(tabNames) do
         -- Botão da Tab (esquerda)
@@ -119,6 +172,7 @@ function UILib:CreateTabs(parent, tabNames)
         tabBtn.BorderColor3 = Color3.fromRGB(255, 255, 255)
         tabBtn.ZIndex = 1
         tabBtn.Parent = tabBar
+        addCorner(tabBtn, 10)
         tabButtons[i] = tabBtn
 
         -- Frame da Tab (conteúdo)
@@ -131,6 +185,7 @@ function UILib:CreateTabs(parent, tabNames)
         tabFrame.Visible = false
         tabFrame.ZIndex = 1
         tabFrame.Parent = parent
+        addCorner(tabFrame, 12)
         tabFrames[i] = tabFrame
 
         -- Search bar dentro do conteúdo da tab
@@ -147,6 +202,7 @@ function UILib:CreateTabs(parent, tabNames)
         searchBar.ClearTextOnFocus = false
         searchBar.ZIndex = 2
         searchBar.Parent = tabFrame
+        addCorner(searchBar, 8)
         tabSearchBars[i] = searchBar
         tabButtonsInFrame[i] = {}
         tabButtonsLeft[i] = {}
@@ -231,6 +287,7 @@ function UILib:CreateButton(parent, text, position, size, callback)
     button.AutoButtonColor = true
     button.ZIndex = 1
     button.Parent = parent
+    addCorner(button, 8)
     if callback then
         button.MouseButton1Click:Connect(callback)
     end
@@ -251,6 +308,7 @@ function UILib:CreateLabel(parent, text, position, size)
     label.BorderColor3 = Color3.fromRGB(255, 255, 255)
     label.ZIndex = 1
     label.Parent = parent
+    addCorner(label, 8)
     return label
 end
 
@@ -263,6 +321,7 @@ function UILib:CreateDropdown(parent, options, position, size, callback)
     dropdown.BorderSizePixel = 2
     dropdown.BorderColor3 = Color3.fromRGB(255, 255, 255)
     dropdown.Parent = parent
+    addCorner(dropdown, 8)
 
     local selected = Instance.new("TextButton")
     selected.Text = options[1] or "Selecionar"
@@ -272,6 +331,7 @@ function UILib:CreateDropdown(parent, options, position, size, callback)
     selected.Font = Enum.Font.SourceSans
     selected.TextSize = 18
     selected.Parent = dropdown
+    addCorner(selected, 8)
 
     local listFrame = Instance.new("Frame")
     listFrame.Size = UDim2.new(1, 0, 0, #options * 28)
@@ -281,6 +341,7 @@ function UILib:CreateDropdown(parent, options, position, size, callback)
     listFrame.BorderColor3 = Color3.fromRGB(255, 255, 255)
     listFrame.Visible = false
     listFrame.Parent = dropdown
+    addCorner(listFrame, 8)
 
     for i, opt in ipairs(options) do
         local optBtn = Instance.new("TextButton")
@@ -293,6 +354,7 @@ function UILib:CreateDropdown(parent, options, position, size, callback)
         optBtn.TextSize = 16
         optBtn.BorderSizePixel = 0
         optBtn.Parent = listFrame
+        addCorner(optBtn, 8)
         optBtn.MouseButton1Click:Connect(function()
             selected.Text = opt
             listFrame.Visible = false
@@ -322,6 +384,7 @@ function UILib:CreateToggle(parent, text, position, size, callback)
     toggle.AutoButtonColor = true
     toggle.ZIndex = 1
     toggle.Parent = parent
+    addCorner(toggle, 8)
     local state = false
     toggle.MouseButton1Click:Connect(function()
         state = not state
