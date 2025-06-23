@@ -1,7 +1,38 @@
 -- UILib.lua
--- Biblioteca simples de UI para Roblox com suporte a Tabs
+-- Biblioteca simples de UI para Roblox com Tabs laterais e drag control
 
 local UILib = {}
+
+-- Função utilitária para drag
+local function makeDraggable(frame, dragHandle)
+    local dragging, dragInput, mousePos, framePos
+    dragHandle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            mousePos = input.Position
+            framePos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    dragHandle.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - mousePos
+            frame.Position = UDim2.new(
+                framePos.X.Scale, framePos.X.Offset + delta.X,
+                framePos.Y.Scale, framePos.Y.Offset + delta.Y
+            )
+        end
+    end)
+end
 
 -- Cria uma nova janela (Frame)
 function UILib:CreateWindow(title, size, position)
@@ -25,33 +56,35 @@ function UILib:CreateWindow(title, size, position)
     titleLabel.TextSize = 20
     titleLabel.BorderSizePixel = 0
     titleLabel.Parent = frame
+    titleLabel.Active = true
+
+    makeDraggable(frame, titleLabel)
 
     screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
     return frame
 end
 
--- Cria Tabs (abas) dentro de um frame
+-- Cria Tabs laterais dentro de um frame
 function UILib:CreateTabs(parent, tabNames)
     local tabs = {}
     local tabButtons = {}
     local tabFrames = {}
     local selectedTab = nil
 
-    -- Barra de navegação das tabs
+    -- Barra lateral das tabs
     local tabBar = Instance.new("Frame")
-    tabBar.Size = UDim2.new(1, 0, 0, 28)
+    tabBar.Size = UDim2.new(0, 100, 1, -32)
     tabBar.Position = UDim2.new(0, 0, 0, 32)
     tabBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     tabBar.BorderSizePixel = 0
     tabBar.Parent = parent
 
-    local tabWidth = math.floor(400 / #tabNames)
     for i, name in ipairs(tabNames) do
         -- Botão da Tab
         local tabBtn = Instance.new("TextButton")
         tabBtn.Text = name
-        tabBtn.Size = UDim2.new(0, tabWidth, 1, 0)
-        tabBtn.Position = UDim2.new(0, (i-1)*tabWidth, 0, 0)
+        tabBtn.Size = UDim2.new(1, 0, 0, 36)
+        tabBtn.Position = UDim2.new(0, 0, 0, (i-1)*38)
         tabBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
         tabBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
         tabBtn.Font = Enum.Font.SourceSansBold
@@ -62,8 +95,8 @@ function UILib:CreateTabs(parent, tabNames)
 
         -- Frame da Tab
         local tabFrame = Instance.new("Frame")
-        tabFrame.Size = UDim2.new(1, 0, 1, -60)
-        tabFrame.Position = UDim2.new(0, 0, 0, 60)
+        tabFrame.Size = UDim2.new(1, -100, 1, -32)
+        tabFrame.Position = UDim2.new(0, 100, 0, 32)
         tabFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
         tabFrame.BorderSizePixel = 0
         tabFrame.Visible = false
