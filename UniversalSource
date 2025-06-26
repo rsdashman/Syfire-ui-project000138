@@ -35,6 +35,170 @@ local Window = OrionLib:MakeWindow({
 })
 
 local MainTab = Window:MakeTab({
+    Name = "Main",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+
+MainSection:AddButton({
+    Name = "FLY Universal",
+    Callback = function()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
+    end
+})
+
+
+local SpeedSlider = MainSection:AddSlider({
+    Name = "Walkspeed",
+    Min = 16,
+    Max = 300,
+    Default = 16,
+    Increment = 1,
+    ValueName = "km/h",
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.WalkSpeed = Value
+        end
+    end
+})
+
+local JumpP = MainSection:AddSlider({
+    Name = "Jumpp",
+    Min = 50,
+    Max = 500,
+    Default = 50,
+    Increment = 1,
+    ValueName = "H/gh",
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.JumpPower = Value
+        end
+    end
+})
+
+MainSection:AddToggle({
+    Name = "Infinite Jump",
+    Default = false,
+    Callback = function(enabled)
+        _G.InfJumpEnabled = enabled
+
+        if _G._InfJumpConn then
+            _G._InfJumpConn:Disconnect()
+            _G._InfJumpConn = nil
+        end
+
+        if enabled then
+            local UserInputService = game:GetService("UserInputService")
+            _G._InfJumpConn = UserInputService.JumpRequest:Connect(function()
+                local player = game.Players.LocalPlayer
+                if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+                    player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        end
+    end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MainSection:AddToggle({
+    Name = "ESP (Box)",
+    Default = false,
+    Callback = function(enabled)
+        _G.ESPEnabled = enabled
+
+        if not enabled then
+            for _, v in pairs(game:GetService("Workspace"):GetChildren()) do
+                if v:FindFirstChild("ESPBox") then
+                    v:FindFirstChild("ESPBox"):Destroy()
+                end
+            end
+            return
+        end
+
+        -- ESP loop
+        spawn(function()
+            while _G.ESPEnabled do
+                for _, player in pairs(game.Players:GetPlayers()) do
+                    if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                        local char = player.Character
+
+                        if not char:FindFirstChild("ESPBox") then
+                            local esp = Instance.new("BillboardGui", char)
+                            esp.Name = "ESPBox"
+                            esp.Adornee = char:FindFirstChild("HumanoidRootPart")
+                            esp.Size = UDim2.new(4, 0, 5, 0)
+                            esp.AlwaysOnTop = true
+
+                            local frame = Instance.new("Frame", esp)
+                            frame.Size = UDim2.new(1, 0, 1, 0)
+                            frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+                            frame.BackgroundTransparency = 0.3
+                            frame.BorderSizePixel = 0
+                        end
+                    end
+                end
+                wait(1)
+            end
+        end)
+    end
+})
+
+
+MainSection:AddToggle({
+    Name = "X-Ray Mode",
+    Default = false,
+    Callback = function(enabled)
+        _G.XRay = enabled
+
+        local function setTransparency(object, transparency)
+            for _, v in pairs(object:GetDescendants()) do
+                if v:IsA("BasePart") and not v:IsDescendantOf(game.Players.LocalPlayer.Character) then
+                    v.LocalTransparencyModifier = transparency
+                end
+            end
+        end
+
+        if enabled then
+            spawn(function()
+                while _G.XRay do
+                    setTransparency(workspace, 0.7)
+                    wait(1)
+                end
+            end)
+        else
+            
+            setTransparency(workspace, 0)
+        end
+    end
+})
+
+
+
+
+
+
+
+
+
+local MainTab = Window:MakeTab({
     Name = "ToH1",
     Icon = "link"
 })
@@ -253,6 +417,29 @@ local MainTab = Window:MakeTab({
     Name = "Grow a gardem",
     Icon = "link"
 })
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "Soon",
+    Callback = function()
+print("Soon")
+    end
+})
+
+----=========Tab4=========----
+
+
+
+
+
+
+
+
+
+
+
 
 
 
