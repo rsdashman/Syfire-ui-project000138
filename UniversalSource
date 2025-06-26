@@ -1,4 +1,4 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/rsdashman/Roblox-ui-libs-Example/refs/heads/main/OrionLib')))()
+local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/Roblox-ui-libs-Example/refs/heads/main/OrionLib'))()
 --script zone
 
 
@@ -12,7 +12,7 @@ if isfile and readfile and writefile then
     end
 
     if executedBefore then
-        loadstring(game:HttpGet(("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource"))), true()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource")), true()
     end
 end
 
