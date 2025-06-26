@@ -414,6 +414,67 @@ print("Soon")
 })
 
 ----=========Tab4=========----
+local MainTab = Window:MakeTab({
+    Name = "Esp and aimbot",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "Owl hub",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"))();
+    end
+})
+
+MainSection:AddButton({
+    Name = "Open aimbot and esp",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ttwizz/Open-Aimbot/master/source.lua", true))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Vocano aimbot",
+    Callback = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Volcano-universal-aimbot-36995"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Aimbot arena",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/aimbot%20Arena%20%5Bnot%20mine%5D", true))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Acc age esp",
+    Callback = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Account-Age-ESP-41401", true))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Friend esp",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/itsryp/roblox-scripts/main/friendviewer.lua"))()
+    end
+})
+
+----=========Tab5=========----
+local MainTab = Window:MakeTab({
+    Name = "Esp and aimbot",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+
+
 
 
 
