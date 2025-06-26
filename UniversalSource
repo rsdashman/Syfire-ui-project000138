@@ -12,7 +12,7 @@ if isfile and readfile and writefile then
     end
 
     if executedBefore then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/seu-usuario/seu-repo/main/skidware.lua"))()
+        https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource
     end
 end
 
