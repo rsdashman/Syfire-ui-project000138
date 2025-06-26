@@ -2,21 +2,6 @@ local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsda
 --script zone
 
 
-if isfile and readfile and writefile then
-    local executedBefore = false
-
-    if not isfile("orion/init.flag") then
-        writefile("orion/init.flag", "executed")
-    else
-        executedBefore = true
-    end
-
-    if executedBefore then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource")), true()
-    end
-end
-
-
 
 
 --script zone/
