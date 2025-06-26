@@ -466,7 +466,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/itsryp/roblox-scripts
 
 ----=========Tab5=========----
 local MainTab = Window:MakeTab({
-    Name = "Esp and aimbot",
+    Name = "Soon",
     Icon = "link"
 })
 local MainSection = MainTab:AddSection({
