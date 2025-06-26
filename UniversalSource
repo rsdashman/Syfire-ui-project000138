@@ -90,6 +90,45 @@ MainSection:AddToggle({
 })
 
 
+MainSection:AddToggle({
+    Name = "NoClip (Corpo + Cabeça)",
+    Default = false,
+    Callback = function(enabled)
+        _G.NoClipEnabled = enabled
+
+        -- Parar qualquer loop anterior
+        if _G._NoClipLoop then
+            _G._NoClipLoop:Disconnect()
+            _G._NoClipLoop = nil
+        end
+
+        -- Ativar noclip
+        if enabled then
+            local RunService = game:GetService("RunService")
+
+            _G._NoClipLoop = RunService.Stepped:Connect(function()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    for _, part in pairs(character:GetDescendants()) do
+                        if part:IsA("BasePart") and (part.Name == "Head" or part.Name == "Torso" or part.Name == "UpperTorso" or part.Name == "LowerTorso" or part.Name == "HumanoidRootPart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        else
+            -- Restaurar colisão
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                for _, part in pairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") and (part.Name == "Head" or part.Name == "Torso" or part.Name == "UpperTorso" or part.Name == "LowerTorso" or part.Name == "HumanoidRootPart") then
+                        part.CanCollide = true
+                    end
+                end
+            end
+        end
+    end
+})
 
 
 
