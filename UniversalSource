@@ -1,0 +1,258 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/rsdashman/Roblox-ui-libs-Example/refs/heads/main/OrionLib')))()
+--script zone
+
+
+if isfile and readfile and writefile then
+    local executedBefore = false
+
+    if not isfile("orion/init.flag") then
+        writefile("orion/init.flag", "executed")
+    else
+        executedBefore = true
+    end
+
+    if executedBefore then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/seu-usuario/seu-repo/main/skidware.lua"))()
+    end
+end
+
+
+
+
+--script zone/
+
+
+local Window = OrionLib:MakeWindow({
+    Name = "NTRF.VIP",
+    SearchBar = {
+        Default = "🔍 Search...",
+        ClearTextOnFocus = true
+    },
+    SaveConfig = true,
+    ConfigFolder = "OrionConfig",
+    IntroEnabled = true,
+    IntroText = "Script Hub"
+})
+
+local MainTab = Window:MakeTab({
+    Name = "ToH1",
+    Icon = "link"
+})
+
+-- ===== Example section =====
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "Inf Jump",
+    Callback = function()
+local player = game.Players.LocalPlayer
+local gear = game.ReplicatedStorage.Assets.Gear.jump
+
+if gear then
+    gear:Clone().Parent = player.Backpack
+else
+    warn("Gear not found!")
+end
+    end
+})
+
+MainSection:AddButton({
+    Name = "idk tp2",
+    Callback = function()
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local teleportLocation = game:GetService("Workspace").tower.sections.finish.steps.stop
+
+-- Verifica se a localização de teleportação existe
+if teleportLocation then
+    character:SetPrimaryPartCFrame(teleportLocation.CFrame)
+else
+    warn("-----------------")
+end
+    end
+})
+
+MainSection:AddButton({
+    Name = "Get all coil",
+    Callback = function()
+
+local player = game.Players.LocalPlayer
+local gear = game.ReplicatedStorage.Assets.Gear.jump
+local gear2 = game.ReplicatedStorage.Assets.Gear.gravity
+local gear3 = game.ReplicatedStorage.Assets.Gear.fusion
+local gear4 = game.ReplicatedStorage.Assets.Gear.speed
+
+if gear then
+    gear:Clone().Parent = player.Backpack
+else
+    warn("Gear not found!")
+end
+
+if gear2 then
+    gear2:Clone().Parent = player.Backpack
+else
+    warn("Gear not found!")
+end
+
+if gear3 then
+    gear3:Clone().Parent = player.Backpack
+else
+    warn("Gear not found!")
+end
+
+if gear4 then
+    gear4:Clone().Parent = player.Backpack
+else
+    warn("Gear not found!")
+end
+    
+end})
+
+MainSection:AddButton({
+    Name = "go to top",
+    Callback = function()
+local player = game.Players.LocalPlayer
+
+if player and player.Character then
+    local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+    
+    if humanoidRootPart then
+
+        humanoidRootPart.CFrame = CFrame.new(0, 800, 0)
+        
+
+        print("Teleportado para (0, 800, 0) com sucesso!")
+    else
+        print("Erro: HumanoidRootPart não encontrado!")
+    end
+else
+    print("Erro: Jogador ou personagem não encontrado!")
+end
+    end
+})
+
+local ESPToggle = MainSection:AddToggle({
+    Name = "Autofarm",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+
+_G.tower = true
+spawn(function()
+	while _G.tower == true do
+		local destino = Vector3.new(-20.56, 53.75, 40.40)
+local player = game.Players.LocalPlayer
+if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
+end
+wait(5)
+		local destino = Vector3.new(-46.18, 105.75, 2.37)
+local player = game.Players.LocalPlayer
+if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
+end
+wait(9)
+		local destino = Vector3.new(34.25, 267.75, 7.81)
+local player = game.Players.LocalPlayer
+if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
+end
+		wait(9)
+	end
+end)
+
+        else
+_G.tower = false
+spawn(function()
+	while _G.tower == true do
+		local destino = Vector3.new(-20.56, 53.75, 40.40)
+local player = game.Players.LocalPlayer
+if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
+end
+wait(5)
+		local destino = Vector3.new(-46.18, 105.75, 2.37)
+local player = game.Players.LocalPlayer
+if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
+end
+wait(9)
+		local destino = Vector3.new(34.25, 267.75, 7.81)
+local player = game.Players.LocalPlayer
+if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
+end
+		wait(9)
+	end
+end)
+
+
+
+end
+    end
+})
+
+local SpeedSlider = MainSection:AddSlider({
+    Name = "Walkspeed",
+    Min = 16,
+    Max = 300,
+    Default = 16,
+    Increment = 1,
+    ValueName = "km/h",
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.WalkSpeed = Value
+        end
+    end
+})
+
+local SpeedSlider = MainSection:AddSlider({
+    Name = "Jumpp",
+    Min = 50,
+    Max = 500,
+    Default = 50,
+    Increment = 1,
+    ValueName = "km/h",
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.JumpPower = Value
+        end
+    end
+})
+-------============Tab2=================-----
+local MainTab = Window:MakeTab({
+    Name = "Admin scripts",
+    Icon = "link"
+})
+
+-- ===== Example section =====
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "IY",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "N/A admin",
+    Callback = function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source'))()
+    end
+})
+--------============Tab3=============-----------------
+local MainTab = Window:MakeTab({
+    Name = "Grow a gardem",
+    Icon = "link"
+})
+
+
+
