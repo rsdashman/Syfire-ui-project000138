@@ -12,7 +12,7 @@ if isfile and readfile and writefile then
     end
 
     if executedBefore then
-        https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource
+        loadstring(game:HttpGet(("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource"))), true()
     end
 end
 
@@ -429,7 +429,6 @@ print("Soon")
 })
 
 ----=========Tab4=========----
-
 
 
 
