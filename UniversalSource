@@ -760,3 +760,108 @@ end)
     end
 })
 
+
+----=========Tab7=========----
+local MainTab = Window:MakeTab({
+    Name = "Minigames",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "Flappy bird",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/%5Bnot%20mine%5D%20flappy%20bird"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Dino game Admin",
+    Callback = function()
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/e80987558087d802d05aebc56eea1029/raw/c6d5bc9e930233e5ac048d12b4705c898af53a0f/gistfile1.txt"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Dino game",
+    Callback = function()
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/826a570a68894562bb121eee1d1c0d91/raw/47839dc45d0ffc6c20448880a2ec5a11a4150f73/gistfile1.txt"))()
+    end
+})
+
+----=========Tab8=========----
+local MainTab = Window:MakeTab({
+    Name = "Misc",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "Hamster ball",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Super ring",
+    Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-ring-parts-V6-Open-source-No-chat-26899"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Fake lag",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Face bang",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
+    end
+})
+
+----=========Tab9=========----
+local MainTab = Window:MakeTab({
+    Name = "Bang/troll",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "Jerk",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Face bang",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Bang",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/FWwdST5Y"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Anti-bang",
+    Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-Bang-Script-39958"))()
+    end
+})
+
