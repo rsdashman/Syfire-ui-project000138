@@ -505,25 +505,258 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/itsryp/roblox-scripts
 
 ----=========Tab5=========----
 local MainTab = Window:MakeTab({
-    Name = "Soon",
+    Name = "Devlopment",
     Icon = "link"
 })
 local MainSection = MainTab:AddSection({
     Name = "Scripts"
 })
 
+MainSection:AddButton({
+    Name = "Rspy",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/SimpleSpyV3/main.lua"))()
+    end
+})
 
+MainSection:AddButton({
+    Name = "Dark dex v3",
+    Callback = function()
+if game:GetService'CoreGui':FindFirstChild'Dex' then game:GetService'CoreGui'.Dex:Destroy(); end
 
+math.randomseed(tick())
 
+local charset = {} for i = 48, 57 do table.insert(charset, string.char(i)) end for i = 65, 90 do table.insert(charset, string.char(i)) end for i = 97, 122 do table.insert(charset, string.char(i)) end function RandomCharacters(length) if length > 0 then return RandomCharacters(length - 1) .. charset[math.random(1, #charset)] else return "" end end
 
+local Dex = game:GetObjects("rbxassetid://3567096419")[1] Dex.Name = RandomCharacters(math.random(5, 20)) Dex.Parent = game:GetService("CoreGui")
 
+local function Load(Obj, Url) local function GiveOwnGlobals(Func, Script) local Fenv = {} local RealFenv = {script = Script} local FenvMt = {} FenvMt.__index = function(a,b) if RealFenv[b] == nil then return getfenv()[b] else return RealFenv[b] end end FenvMt.__newindex = function(a, b, c) if RealFenv[b] == nil then getfenv()[b] = c else RealFenv[b] = c end end setmetatable(Fenv, FenvMt) setfenv(Func, Fenv) return Func end
 
+local function LoadScripts(Script) if Script.ClassName == "Script" or Script.ClassName == "LocalScript" then spawn(function() GiveOwnGlobals(loadstring(Script.Source, "=" .. Script:GetFullName()), Script)() end) end for i,v in pairs(Script:GetChildren()) do LoadScripts(v) end end
 
+LoadScripts(Obj) end
 
+Load(Dex)
+    end
+})
 
+MainSection:AddButton({
+    Name = "Better Save instance",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/save%20instance"))()
+    end
+})
 
+----=========Tab6=========----
+local MainTab = Window:MakeTab({
+    Name = "Tools",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
 
+MainSection:AddButton({
+    Name = "TPtool",
+    Callback = function()
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/8def4101f93a3bb65779346593442026/raw/fef58863e216ebb3686dcc983a8dd5737bf0fe59/gistfile1.txt"))()
+    end
+})
 
+MainSection:AddButton({
+    Name = "Btools",
+    Callback = function()
+        loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/BTools.txt"))()
+    end
+})
 
+MainSection:AddButton({
+    Name = "F3X",
+    Callback = function()
+        loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)()
+    end
+})
 
+MainSection:AddButton({
+    Name = "Float tool",
+    Callback = function()
+        local floatTool = Instance.new("Tool")
+floatTool.Name = "Float tool"
+floatTool.ToolTip = "SKIDED, BIG SORRY :("
+floatTool.RequiresHandle = false
+floatTool.Parent = game.Players.LocalPlayer.Backpack  -- Assuming the tool goes to the player's backpack
+
+local floatConn, floatBP, floatBG
+local baseY = 0
+local floatStartTime = 0
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local HRP = character:WaitForChild("HumanoidRootPart")
+local RunService = game:GetService("RunService")
+
+floatTool.Equipped:Connect(function(mouse)
+    -- Float tool does not force PlatformStand, so movement remains normal.
+    baseY = HRP.Position.Y
+    floatStartTime = tick()
+
+    floatBP = Instance.new("BodyPosition")
+    floatBP.MaxForce = Vector3.new(0, 1e5, 0)
+    floatBP.P = 1e4
+    floatBP.D = 100
+    floatBP.Parent = HRP
+
+    floatBG = Instance.new("BodyGyro")
+    floatBG.MaxTorque = Vector3.new(0, 0, 1e5)
+    floatBG.P = 1e4
+    floatBG.D = 100
+    floatBG.Parent = HRP
+
+    floatConn = RunService.RenderStepped:Connect(function(dt)
+        local t = tick() - floatStartTime
+        local offsetY = math.sin(t * 1) * 2  -- Vertical bobbing
+        floatBP.Position = Vector3.new(HRP.Position.X, baseY + offsetY, HRP.Position.Z)
+
+        local rollOsc = math.sin(t * 1) * math.rad(10)  -- Tilt (roll) oscillation
+        local _, currentYaw, _ = HRP.CFrame:ToEulerAnglesYXZ()
+        floatBG.CFrame = CFrame.Angles(0, currentYaw, rollOsc)
+    end)
+end)
+
+floatTool.Unequipped:Connect(function()
+    if floatConn then
+        floatConn:Disconnect()
+        floatConn = nil
+    end
+    if floatBP then
+        floatBP:Destroy()
+        floatBP = nil
+    end
+    if floatBG then
+        floatBG:Destroy()
+        floatBG = nil
+    end
+    HRP.Velocity = Vector3.new(0, 0, 0)
+    HRP.RotVelocity = Vector3.new(0, 0, 0)
+end)
+    end
+})
+
+MainSection:AddButton({
+    Name = "Minecraft tools",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Ahma174/Tool/refs/heads/main/Minecraft%20Tools"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Bang",
+    Callback = function()
+        
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Backpack = LocalPlayer.Backpack
+
+local bangTool = Instance.new("Tool")
+bangTool.Name = "Bang"
+bangTool.ToolTip = "Winter arc of palace fr"
+bangTool.RequiresHandle = false
+bangTool.Parent = Backpack
+
+local bangOrbiting = false
+local bangConn, bangBP, bangBG, bangClickConn
+local bangTime = 0
+local distanceBehind = 1.2  -- Distance behind target is now 1.2 studs
+
+bangTool.Equipped:Connect(function(mouse)
+    -- Enable PlatformStand for Bang tool
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local HRP = character:WaitForChild("HumanoidRootPart")
+    
+    humanoid.PlatformStand = true
+    
+    bangClickConn = mouse.Button1Down:Connect(function()
+        if bangOrbiting then return end
+        local targetPart = mouse.Target
+        if targetPart then
+            local targetChar = targetPart:FindFirstAncestorOfClass("Model")
+            local targetPlayer = targetChar and Players:GetPlayerFromCharacter(targetChar)
+            if targetPlayer and targetPlayer ~= LocalPlayer then
+                local targetHRP = targetChar:FindFirstChild("HumanoidRootPart") or targetChar:FindFirstChild("Torso")
+                if targetHRP then
+                    bangOrbiting = true
+                    bangTime = 0
+
+                    bangBP = Instance.new("BodyPosition")
+                    bangBP.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+                    bangBP.P = 1e4
+                    bangBP.D = 100
+                    bangBP.Parent = HRP
+
+                    bangBG = Instance.new("BodyGyro")
+                    bangBG.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
+                    bangBG.P = 1e4
+                    bangBG.D = 100
+                    bangBG.Parent = HRP
+
+                    bangConn = RunService.RenderStepped:Connect(function(dt)
+                        if not (targetHRP and targetHRP.Parent) then
+                            bangConn:Disconnect()
+                            bangOrbiting = false
+                            if bangBP then bangBP:Destroy() bangBP = nil end
+                            if bangBG then bangBG:Destroy() bangBG = nil end
+                            return
+                        end
+
+                        bangTime = bangTime + dt
+                        local targetPos = targetHRP.Position
+                        local targetLook = targetHRP.CFrame.LookVector
+                        local desiredPos = targetPos - (targetLook * distanceBehind)
+                        bangBP.Position = desiredPos
+
+                        -- More intense oscillation: frequency increased to 8 and amplitude increased to 40°.
+                        local frequency = 8
+                        local amplitude = math.rad(40)
+                        local pitchOsc = math.sin(bangTime * frequency) * amplitude
+                        local baseCFrame = CFrame.new(desiredPos, desiredPos + targetLook)
+                        bangBG.CFrame = baseCFrame * CFrame.Angles(pitchOsc, 0, 0)
+                    end)
+                end
+            end
+        end
+    end)
+end)
+
+bangTool.Unequipped:Connect(function()
+    if bangClickConn then
+        bangClickConn:Disconnect()
+        bangClickConn = nil
+    end
+    if bangConn then
+        bangConn:Disconnect()
+        bangConn = nil
+    end
+    if bangBP then
+        bangBP:Destroy()
+        bangBP = nil
+    end
+    if bangBG then
+        bangBG:Destroy()
+        bangBG = nil
+    end
+    bangOrbiting = false
+
+    -- Properly reference the Humanoid and HRP when Unequipped
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local HRP = character:WaitForChild("HumanoidRootPart")
+    
+    humanoid.PlatformStand = false
+    HRP.Velocity = Vector3.new(0, 0, 0)
+    HRP.RotVelocity = Vector3.new(0, 0, 0)
+end)
+    end
+})
 
