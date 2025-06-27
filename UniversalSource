@@ -131,8 +131,125 @@ MainSection:AddToggle({
 })
 
 
+MainSection:AddToggle({
+    Name = "Fly",
+    Default = false,
+    Callback = function(enabled)
+        _G.FlyEnabled = enabled
+
+        -- Desativa fly anterior, se tiver
+        if _G._FlyConn then
+            _G._FlyConn:Disconnect()
+            _G._FlyConn = nil
+        end
+
+        if not enabled then
+            -- Resetar velocidade e gravidade ao desativar
+            local char = game.Players.LocalPlayer.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                char.HumanoidRootPart.Velocity = Vector3.zero
+            end
+            return
+        end
+
+        -- Fly Loop
+        local UIS = game:GetService("UserInputService")
+        local RunService = game:GetService("RunService")
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local hrp = character:WaitForChild("HumanoidRootPart")
+
+        local speed = 60
+        local flying = true
+        local direction = Vector3.zero
+
+        -- Captura teclas
+        local keysDown = {}
+
+        _G._FlyConn = RunService.RenderStepped:Connect(function()
+            if not _G.FlyEnabled then return end
+
+            direction = Vector3.zero
+            local cam = workspace.CurrentCamera
+
+            if keysDown["W"] then direction = direction + cam.CFrame.LookVector end
+            if keysDown["S"] then direction = direction - cam.CFrame.LookVector end
+            if keysDown["A"] then direction = direction - cam.CFrame.RightVector end
+            if keysDown["D"] then direction = direction + cam.CFrame.RightVector end
+            if keysDown["Space"] then direction = direction + cam.CFrame.UpVector end
+            if keysDown["LeftShift"] then direction = direction - cam.CFrame.UpVector end
+
+            if direction.Magnitude > 0 then
+                hrp.Velocity = direction.Unit * speed
+            else
+                hrp.Velocity = Vector3.zero
+            end
+        end)
+
+        -- Escuta teclas
+        UIS.InputBegan:Connect(function(input, gpe)
+            if not gpe then
+                keysDown[input.KeyCode.Name] = true
+            end
+        end)
+
+        UIS.InputEnded:Connect(function(input, gpe)
+            if not gpe then
+                keysDown[input.KeyCode.Name] = false
+            end
+        end)
+    end
+})
 
 
+MainSection:AddToggle({
+    Name = "Feather Touch (Grudar atrás do mais próximo)",
+    Default = false,
+    Callback = function(enabled)
+        _G.FeatherTouch = enabled
+
+        -- Parar loop anterior
+        if _G._FeatherLoop then
+            _G._FeatherLoop:Disconnect()
+            _G._FeatherLoop = nil
+        end
+
+        if enabled then
+            local RunService = game:GetService("RunService")
+            local Players = game:GetService("Players")
+            local LocalPlayer = Players.LocalPlayer
+
+            _G._FeatherLoop = RunService.RenderStepped:Connect(function()
+                local myChar = LocalPlayer.Character
+                local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                if not myHRP then return end
+
+                -- Procurar o jogador mais próximo
+                local closestDistance = math.huge
+                local closestHRP = nil
+
+                for _, player in pairs(Players:GetPlayers()) do
+                    if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                        local targetHRP = player.Character.HumanoidRootPart
+                        local dist = (targetHRP.Position - myHRP.Position).Magnitude
+                        if dist < closestDistance then
+                            closestDistance = dist
+                            closestHRP = targetHRP
+                        end
+                    end
+                end
+
+                -- Grudar atrás
+                if closestHRP then
+                    -- Posição atrás baseada na frente do HRP (LookVector * -1)
+                    local offset = -closestHRP.CFrame.LookVector * 2 -- distância atrás
+                    local targetPos = closestHRP.Position + offset + Vector3.new(0, 1.5, 0) -- levemente acima
+                    myHRP.CFrame = CFrame.new(targetPos, closestHRP.Position)
+                end
+            end)
+        end
+    end
+})
 
 
 
@@ -864,4 +981,3 @@ MainSection:AddButton({
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-Bang-Script-39958"))()
     end
 })
-
