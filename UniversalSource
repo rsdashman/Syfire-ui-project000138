@@ -248,7 +248,51 @@ MainSection:AddToggle({
 
 
 
+MainSection:AddToggle({
+    Name = "Follow",
+    Default = false,
+    Callback = function(enabled)
+        _G.FeatherTouch = enabled
 
+        if _G._FeatherLoop then
+            _G._FeatherLoop:Disconnect()
+            _G._FeatherLoop = nil
+        end
+
+        if enabled then
+            local RunService = game:GetService("RunService")
+            local Players = game:GetService("Players")
+            local LocalPlayer = Players.LocalPlayer
+
+            _G._FeatherLoop = RunService.RenderStepped:Connect(function()
+                local myChar = LocalPlayer.Character
+                local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                if not myHRP then return end
+
+                -- Procurar o jogador mais próximo
+                local closestDistance = math.huge
+                local closestHRP = nil
+
+                for _, player in pairs(Players:GetPlayers()) do
+                    if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                        local targetHRP = player.Character.HumanoidRootPart
+                        local dist = (targetHRP.Position - myHRP.Position).Magnitude
+                        if dist < closestDistance then
+                            closestDistance = dist
+                            closestHRP = targetHRP
+                        end
+                    end
+                end
+
+                if closestHRP then
+                    local offset = -closestHRP.CFrame.LookVector * 1 -- distância atrás
+                    local targetPos = closestHRP.Position + offset + Vector3.new(0, 0, 0) -- levemente acima
+                    myHRP.CFrame = CFrame.new(targetPos, closestHRP.Position)
+                end
+            end)
+        end
+    end
+})
 
 
 
