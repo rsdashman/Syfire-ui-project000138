@@ -36,6 +36,7 @@ loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446
 })
 
 
+
 local SpeedSlider = MainSection:AddSlider({
     Name = "Walkspeed",
     Min = 16,
@@ -91,7 +92,7 @@ MainSection:AddToggle({
 
 
 MainSection:AddToggle({
-    Name = "NoClip (Corpo + Cabeça)",
+    Name = "BEST NoClip",
     Default = false,
     Callback = function(enabled)
         _G.NoClipEnabled = enabled
@@ -137,14 +138,12 @@ MainSection:AddToggle({
     Callback = function(enabled)
         _G.FlyEnabled = enabled
 
-        -- Desativa fly anterior, se tiver
         if _G._FlyConn then
             _G._FlyConn:Disconnect()
             _G._FlyConn = nil
         end
 
         if not enabled then
-            -- Resetar velocidade e gravidade ao desativar
             local char = game.Players.LocalPlayer.Character
             if char and char:FindFirstChild("HumanoidRootPart") then
                 char.HumanoidRootPart.Velocity = Vector3.zero
@@ -152,7 +151,6 @@ MainSection:AddToggle({
             return
         end
 
-        -- Fly Loop
         local UIS = game:GetService("UserInputService")
         local RunService = game:GetService("RunService")
         local player = game.Players.LocalPlayer
@@ -163,7 +161,6 @@ MainSection:AddToggle({
         local flying = true
         local direction = Vector3.zero
 
-        -- Captura teclas
         local keysDown = {}
 
         _G._FlyConn = RunService.RenderStepped:Connect(function()
@@ -186,7 +183,6 @@ MainSection:AddToggle({
             end
         end)
 
-        -- Escuta teclas
         UIS.InputBegan:Connect(function(input, gpe)
             if not gpe then
                 keysDown[input.KeyCode.Name] = true
@@ -203,12 +199,11 @@ MainSection:AddToggle({
 
 
 MainSection:AddToggle({
-    Name = "Feather Touch (Grudar atrás do mais próximo)",
+    Name = "Feather Touch",
     Default = false,
     Callback = function(enabled)
         _G.FeatherTouch = enabled
 
-        -- Parar loop anterior
         if _G._FeatherLoop then
             _G._FeatherLoop:Disconnect()
             _G._FeatherLoop = nil
@@ -239,11 +234,9 @@ MainSection:AddToggle({
                     end
                 end
 
-                -- Grudar atrás
                 if closestHRP then
-                    -- Posição atrás baseada na frente do HRP (LookVector * -1)
-                    local offset = -closestHRP.CFrame.LookVector * 2 -- distância atrás
-                    local targetPos = closestHRP.Position + offset + Vector3.new(0, 1.5, 0) -- levemente acima
+                    local offset = -closestHRP.CFrame.LookVector * 1 -- distância atrás
+                    local targetPos = closestHRP.Position + offset + Vector3.new(0, 1.2, 0) -- levemente acima
                     myHRP.CFrame = CFrame.new(targetPos, closestHRP.Position)
                 end
             end)
@@ -274,7 +267,6 @@ MainSection:AddToggle({
             return
         end
 
-        -- ESP loop
         spawn(function()
             while _G.ESPEnabled do
                 for _, player in pairs(game.Players:GetPlayers()) do
@@ -335,6 +327,357 @@ MainSection:AddToggle({
 
 
 
+local RunService = game:GetService("RunService")
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local rootPart = character:WaitForChild("HumanoidRootPart")
+
+local spinning = false
+local spinSpeed = 0
+local spinConnection
+
+MainSection:AddSlider({
+    Name = "Spin",
+    Min = 0,
+    Max = 999,
+    Default = 0,
+    Increment = 1,
+    ValueName = "Speed",
+    Callback = function(value)
+        spinSpeed = value
+
+        if spinSpeed > 0 and not spinning then
+            spinning = true
+            spinConnection = RunService.RenderStepped:Connect(function(dt)
+                if character and rootPart then
+                    rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, math.rad(spinSpeed), 0)
+                end
+            end)
+        elseif spinSpeed == 0 and spinning then
+            spinning = false
+            if spinConnection then
+                spinConnection:Disconnect()
+                spinConnection = nil
+            end
+        end
+    end
+})
+
+--//////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+
+local airwalkPlatform = Instance.new("Part")
+airwalkPlatform.Anchored = true
+airwalkPlatform.Size = Vector3.new(5, 1, 5)
+airwalkPlatform.Transparency = 1
+airwalkPlatform.CanCollide = false
+airwalkPlatform.Parent = workspace
+
+local airwalkEnabled = false
+local airwalkY = 0
+local airwalkSpeed = 5
+local keyUp = false
+local keyDown = false
+local airwalkConnection
+
+-- Input handlers
+UserInputService.InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.Space then
+		keyUp = true
+	elseif input.KeyCode == Enum.KeyCode.LeftShift then
+		keyDown = true
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.Space then
+		keyUp = false
+	elseif input.KeyCode == Enum.KeyCode.LeftShift then
+		keyDown = false
+	end
+end)
+
+-- Start/stop functions
+local function startAirWalk()
+	local character = player.Character or player.CharacterAdded:Wait()
+	local rootPart = character:WaitForChild("HumanoidRootPart")
+	airwalkY = rootPart.Position.Y - 3
+	airwalkEnabled = true
+	airwalkPlatform.CanCollide = true
+
+	airwalkConnection = RunService.RenderStepped:Connect(function(dt)
+		if not airwalkEnabled then return end
+		if keyUp then airwalkY += airwalkSpeed * dt end
+		if keyDown then airwalkY -= airwalkSpeed * dt end
+
+		local char = player.Character
+		if char and char:FindFirstChild("HumanoidRootPart") then
+			local root = char.HumanoidRootPart
+			airwalkPlatform.Position = Vector3.new(root.Position.X, airwalkY, root.Position.Z)
+		end
+	end)
+end
+
+local function stopAirWalk()
+	airwalkEnabled = false
+	airwalkPlatform.CanCollide = false
+	airwalkPlatform.Position = Vector3.new(0, -1000, 0)
+	if airwalkConnection then
+		airwalkConnection:Disconnect()
+		airwalkConnection = nil
+	end
+end
+
+-- Toggle
+MainSection:AddToggle({
+	Name = "Air Walk V2",
+	Default = false,
+	Callback = function(v)
+		if v then
+			startAirWalk()
+		else
+			stopAirWalk()
+		end
+	end
+})
+
+-- Slider de velocidade
+MainSection:AddSlider({
+	Name = "AirWalk V2 Speed",
+	Min = 1,
+	Max = 25,
+	Default = 5,
+	Increment = 1,
+	ValueName = "stud/s",
+	Callback = function(value)
+		airwalkSpeed = value
+	end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----/////////////////////////////////////////////////////////////
+
+
+
+
+
+MainSection:AddButton({
+    Name = "C to Aimbot",
+    Callback = function()
+
+
+
+--[[
+	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+]]
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local enabled = false
+local smoothing = 0.15
+local prediction = 0.13
+local FOV = 120
+
+local fovCircle = Drawing.new("Circle")
+fovCircle.Radius = FOV
+fovCircle.Thickness = 2
+fovCircle.Color = Color3.fromRGB(255,255,255)
+fovCircle.Filled = false
+fovCircle.Visible = true
+
+local function getClosestPlayer()
+    local closest, dist = nil, math.huge
+    for _, v in pairs(Players:GetPlayers()) do
+        if v ~= LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0 then
+            local pos = v.Character.HumanoidRootPart.Position
+            local screen, onScreen = Camera:WorldToViewportPoint(pos)
+            if onScreen then
+                local mouseLocation = UserInputService:GetMouseLocation()
+                local mag = (Vector2.new(mouseLocation.X, mouseLocation.Y - 36) - Vector2.new(screen.X, screen.Y)).magnitude
+                if mag < dist and mag <= FOV then
+                    dist = mag
+                    closest = v
+                end
+            end
+        end
+    end
+    return closest
+end
+
+if UserInputService.TouchEnabled then
+    local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+    ScreenGui.Name = "AimAssistMenu"
+    local Frame = Instance.new("Frame", ScreenGui)
+    Frame.Size = UDim2.new(0, 140, 0, 60)
+    Frame.Position = UDim2.new(0, 100, 0, 100)
+    Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+    Frame.BackgroundTransparency = 0.15
+    Frame.Active = true
+    Frame.Draggable = true
+    Frame.BorderSizePixel = 0
+    Frame.AnchorPoint = Vector2.new(0, 0)
+    Frame.ClipsDescendants = true
+
+    local UICorner = Instance.new("UICorner", Frame)
+    UICorner.CornerRadius = UDim.new(0, 18)
+
+    local UIStroke = Instance.new("UIStroke", Frame)
+    UIStroke.Thickness = 2
+    UIStroke.Color = Color3.fromRGB(80, 80, 120)
+    UIStroke.Transparency = 0.2
+
+    local UIShadow = Instance.new("ImageLabel", Frame)
+    UIShadow.BackgroundTransparency = 1
+    UIShadow.Image = "rbxassetid://1316045217"
+    UIShadow.Size = UDim2.new(1, 16, 1, 16)
+    UIShadow.Position = UDim2.new(0, -8, 0, -8)
+    UIShadow.ImageTransparency = 0.7
+    UIShadow.ZIndex = 0
+
+    local Button = Instance.new("TextButton", Frame)
+    Button.Size = UDim2.new(1, -20, 1, -20)
+    Button.Position = UDim2.new(0, 10, 0, 10)
+    Button.Text = "OFF"
+    Button.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.Font = Enum.Font.GothamBold
+    Button.TextSize = 28
+    Button.AutoButtonColor = false
+    Button.ZIndex = 2
+
+    local ButtonCorner = Instance.new("UICorner", Button)
+    ButtonCorner.CornerRadius = UDim.new(0, 12)
+
+    Button.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        Button.Text = enabled and "ON" or "OFF"
+        Button.BackgroundColor3 = enabled and Color3.fromRGB(0, 170, 0) or Color3.fromRGB(60, 60, 90)
+    end)
+else
+    UserInputService.InputBegan:Connect(function(input, gpe)
+        if not gpe and input.KeyCode == Enum.KeyCode.C then
+            enabled = not enabled
+        end
+    end)
+end
+
+RunService.RenderStepped:Connect(function()
+    local mouseLocation = UserInputService:GetMouseLocation()
+    fovCircle.Position = Vector2.new(mouseLocation.X, mouseLocation.Y - 36)
+    fovCircle.Radius = FOV
+    if enabled then
+        local target = getClosestPlayer()
+        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = target.Character.HumanoidRootPart
+            local vel = hrp.Velocity * prediction
+            local predicted = hrp.Position + vel
+            local camPos = Camera.CFrame.Position
+            local direction = (predicted - camPos).Unit
+            local newCFrame = CFrame.new(camPos, camPos + direction)
+            Camera.CFrame = Camera.CFrame:Lerp(newCFrame, smoothing)
+        end
+    end
+end)
+
+
+
+
+
+    end
+})
+
+
 
 
 
@@ -371,7 +714,6 @@ local character = player.Character or player.CharacterAdded:Wait()
 
 local teleportLocation = game:GetService("Workspace").tower.sections.finish.steps.stop
 
--- Verifica se a localização de teleportação existe
 if teleportLocation then
     character:SetPrimaryPartCFrame(teleportLocation.CFrame)
 else
