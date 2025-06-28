@@ -1,11 +1,8 @@
 local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/Roblox-ui-libs-Example/refs/heads/main/OrionLib'))()
 --script zone
 
-if getgenv().Orion then return end
-getgenv().Orion = true
 
-loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource'))()
-print("Orion Loaded!")
+print("asd4raeddas")
 
 
 
