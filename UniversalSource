@@ -562,43 +562,48 @@ local UserInputService = game:GetService("UserInputService")
 
 -- CONFIGURAÇÕES
 local prediction = 0.13
-local FOV = 9999 -- opcional, aumenta pra pegar qualquer jogador visível
+local smoothing = 0.07 -- quanto menor, mais rápido segue (0.05~0.1 = bom)
+local FOV = 230
 
 -- FUNÇÃO PARA PEGAR O JOGADOR MAIS PRÓXIMO NA TELA
 local function getClosestPlayer()
-    local closestPlayer = nil
-    local shortestDistance = math.huge
-    local mouseLocation = UserInputService:GetMouseLocation()
+	local closestPlayer = nil
+	local shortestDistance = math.huge
+	local mouseLocation = UserInputService:GetMouseLocation()
 
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
-            local pos = player.Character.HumanoidRootPart.Position
-            local screenPos, onScreen = Camera:WorldToViewportPoint(pos)
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+			local pos = player.Character.HumanoidRootPart.Position
+			local screenPos, onScreen = Camera:WorldToViewportPoint(pos)
 
-            if onScreen then
-                local distance = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(mouseLocation.X, mouseLocation.Y - 36)).Magnitude
-                if distance < shortestDistance and distance <= FOV then
-                    closestPlayer = player
-                    shortestDistance = distance
-                end
-            end
-        end
-    end
+			if onScreen then
+				local distance = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(mouseLocation.X, mouseLocation.Y - 36)).Magnitude
+				if distance < shortestDistance and distance <= FOV then
+					closestPlayer = player
+					shortestDistance = distance
+				end
+			end
+		end
+	end
 
-    return closestPlayer
+	return closestPlayer
 end
 
--- TRAVAR A CÂMERA NO JOGADOR
+-- LOOP PRINCIPAL: Câmera segue suavemente o alvo
 RunService.RenderStepped:Connect(function()
-    local target = getClosestPlayer()
+	local target = getClosestPlayer()
 
-    if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-        local hrp = target.Character.HumanoidRootPart
-        local predicted = hrp.Position + hrp.Velocity * prediction
-        local camPos = Camera.CFrame.Position
-        Camera.CFrame = CFrame.new(camPos, predicted)
-    end
+	if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+		local hrp = target.Character.HumanoidRootPart
+		local predicted = hrp.Position + hrp.Velocity * prediction
+		local camPos = Camera.CFrame.Position
+		local targetCFrame = CFrame.new(camPos, predicted)
+
+		-- Suaviza a rotação da câmera
+		Camera.CFrame = Camera.CFrame:Lerp(targetCFrame, smoothing)
+	end
 end)
+
 
 
 
