@@ -554,119 +554,49 @@ MainSection:AddButton({
     Callback = function()
 
 
-
---[[
-	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
-]]
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local Camera = workspace.CurrentCamera
 local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 
-local enabled = false
-local smoothing = 0.15
+-- CONFIGURAÇÕES
 local prediction = 0.13
-local FOV = 120
+local FOV = 9999 -- opcional, aumenta pra pegar qualquer jogador visível
 
-local fovCircle = Drawing.new("Circle")
-fovCircle.Radius = FOV
-fovCircle.Thickness = 2
-fovCircle.Color = Color3.fromRGB(255,255,255)
-fovCircle.Filled = false
-fovCircle.Visible = true
-
+-- FUNÇÃO PARA PEGAR O JOGADOR MAIS PRÓXIMO NA TELA
 local function getClosestPlayer()
-    local closest, dist = nil, math.huge
-    for _, v in pairs(Players:GetPlayers()) do
-        if v ~= LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0 then
-            local pos = v.Character.HumanoidRootPart.Position
-            local screen, onScreen = Camera:WorldToViewportPoint(pos)
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local mouseLocation = UserInputService:GetMouseLocation()
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+            local pos = player.Character.HumanoidRootPart.Position
+            local screenPos, onScreen = Camera:WorldToViewportPoint(pos)
+
             if onScreen then
-                local mouseLocation = UserInputService:GetMouseLocation()
-                local mag = (Vector2.new(mouseLocation.X, mouseLocation.Y - 36) - Vector2.new(screen.X, screen.Y)).magnitude
-                if mag < dist and mag <= FOV then
-                    dist = mag
-                    closest = v
+                local distance = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(mouseLocation.X, mouseLocation.Y - 36)).Magnitude
+                if distance < shortestDistance and distance <= FOV then
+                    closestPlayer = player
+                    shortestDistance = distance
                 end
             end
         end
     end
-    return closest
+
+    return closestPlayer
 end
 
-if UserInputService.TouchEnabled then
-    local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
-    ScreenGui.Name = "AimAssistMenu"
-    local Frame = Instance.new("Frame", ScreenGui)
-    Frame.Size = UDim2.new(0, 140, 0, 60)
-    Frame.Position = UDim2.new(0, 100, 0, 100)
-    Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-    Frame.BackgroundTransparency = 0.15
-    Frame.Active = true
-    Frame.Draggable = true
-    Frame.BorderSizePixel = 0
-    Frame.AnchorPoint = Vector2.new(0, 0)
-    Frame.ClipsDescendants = true
-
-    local UICorner = Instance.new("UICorner", Frame)
-    UICorner.CornerRadius = UDim.new(0, 18)
-
-    local UIStroke = Instance.new("UIStroke", Frame)
-    UIStroke.Thickness = 2
-    UIStroke.Color = Color3.fromRGB(80, 80, 120)
-    UIStroke.Transparency = 0.2
-
-    local UIShadow = Instance.new("ImageLabel", Frame)
-    UIShadow.BackgroundTransparency = 1
-    UIShadow.Image = "rbxassetid://1316045217"
-    UIShadow.Size = UDim2.new(1, 16, 1, 16)
-    UIShadow.Position = UDim2.new(0, -8, 0, -8)
-    UIShadow.ImageTransparency = 0.7
-    UIShadow.ZIndex = 0
-
-    local Button = Instance.new("TextButton", Frame)
-    Button.Size = UDim2.new(1, -20, 1, -20)
-    Button.Position = UDim2.new(0, 10, 0, 10)
-    Button.Text = "OFF"
-    Button.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
-    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Button.Font = Enum.Font.GothamBold
-    Button.TextSize = 28
-    Button.AutoButtonColor = false
-    Button.ZIndex = 2
-
-    local ButtonCorner = Instance.new("UICorner", Button)
-    ButtonCorner.CornerRadius = UDim.new(0, 12)
-
-    Button.MouseButton1Click:Connect(function()
-        enabled = not enabled
-        Button.Text = enabled and "ON" or "OFF"
-        Button.BackgroundColor3 = enabled and Color3.fromRGB(0, 170, 0) or Color3.fromRGB(60, 60, 90)
-    end)
-else
-    UserInputService.InputBegan:Connect(function(input, gpe)
-        if not gpe and input.KeyCode == Enum.KeyCode.C then
-            enabled = not enabled
-        end
-    end)
-end
-
+-- TRAVAR A CÂMERA NO JOGADOR
 RunService.RenderStepped:Connect(function()
-    local mouseLocation = UserInputService:GetMouseLocation()
-    fovCircle.Position = Vector2.new(mouseLocation.X, mouseLocation.Y - 36)
-    fovCircle.Radius = FOV
-    if enabled then
-        local target = getClosestPlayer()
-        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-            local hrp = target.Character.HumanoidRootPart
-            local vel = hrp.Velocity * prediction
-            local predicted = hrp.Position + vel
-            local camPos = Camera.CFrame.Position
-            local direction = (predicted - camPos).Unit
-            local newCFrame = CFrame.new(camPos, camPos + direction)
-            Camera.CFrame = Camera.CFrame:Lerp(newCFrame, smoothing)
-        end
+    local target = getClosestPlayer()
+
+    if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+        local hrp = target.Character.HumanoidRootPart
+        local predicted = hrp.Position + hrp.Velocity * prediction
+        local camPos = Camera.CFrame.Position
+        Camera.CFrame = CFrame.new(camPos, predicted)
     end
 end)
 
