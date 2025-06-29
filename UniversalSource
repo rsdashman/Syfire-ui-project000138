@@ -2,7 +2,7 @@ local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsda
 --script zone
 
 
-print("asd4raeddas")
+print("V.1.1.1")
 
 
 
@@ -530,7 +530,7 @@ MainSection:AddToggle({
 -- Slider de velocidade
 MainSection:AddSlider({
 	Name = "AirWalk V2 Speed",
-	Min = 1,
+	Min = -10,
 	Max = 25,
 	Default = 5,
 	Increment = 1,
@@ -590,71 +590,141 @@ MainSection:AddSlider({
 
 
 -----/////////////////////////////////////////////////////////////
-
-
-
-
-
-MainSection:AddButton({
-    Name = "C to Aimbot",
-    Callback = function()
-
-
-local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local Camera = workspace.CurrentCamera
-local LocalPlayer = Players.LocalPlayer
-local UserInputService = game:GetService("UserInputService")
+local camera = workspace.CurrentCamera
+local players = game:GetService("Players")
+local localPlayer = players.LocalPlayer
+local mouse = localPlayer:GetMouse()
 
--- CONFIGURAÇÕES
-local prediction = 0.13
-local smoothing = 0.02 -- quanto menor, mais rápido segue (0.05~0.1 = bom)
-local FOV = 230
+local AimbotEnabled = false
+local HoldingRightClick = false
+local AimbotFOV = 250
+local AimPart = "Head"
 
--- FUNÇÃO PARA PEGAR O JOGADOR MAIS PRÓXIMO NA TELA
-local function getClosestPlayer()
-	local closestPlayer = nil
-	local shortestDistance = math.huge
-	local mouseLocation = UserInputService:GetMouseLocation()
+-- Função para pegar o jogador mais próximo do mouse
+local function GetClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = AimbotFOV
 
-	for _, player in ipairs(Players:GetPlayers()) do
-		if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
-			local pos = player.Character.HumanoidRootPart.Position
-			local screenPos, onScreen = Camera:WorldToViewportPoint(pos)
+    for _, player in pairs(players:GetPlayers()) do
+        if player ~= localPlayer and player.Character and player.Character:FindFirstChild(AimPart) and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+            local part = player.Character[AimPart]
+            local pos, onScreen = camera:WorldToViewportPoint(part.Position)
+            if onScreen then
+                local dist = (Vector2.new(mouse.X, mouse.Y) - Vector2.new(pos.X, pos.Y)).Magnitude
+                if dist < shortestDistance then
+                    shortestDistance = dist
+                    closestPlayer = part
+                end
+            end
+        end
+    end
 
-			if onScreen then
-				local distance = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(mouseLocation.X, mouseLocation.Y - 36)).Magnitude
-				if distance < shortestDistance and distance <= FOV then
-					closestPlayer = player
-					shortestDistance = distance
-				end
-			end
-		end
-	end
-
-	return closestPlayer
+    return closestPlayer
 end
 
--- LOOP PRINCIPAL: Câmera segue suavemente o alvo
+-- Mover a câmera suavemente para o alvo
 RunService.RenderStepped:Connect(function()
-	local target = getClosestPlayer()
-
-	if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-		local hrp = target.Character.HumanoidRootPart
-		local predicted = hrp.Position + hrp.Velocity * prediction
-		local camPos = Camera.CFrame.Position
-		local targetCFrame = CFrame.new(camPos, predicted)
-
-		-- Suaviza a rotação da câmera
-		Camera.CFrame = Camera.CFrame:Lerp(targetCFrame, smoothing)
-	end
+    if AimbotEnabled and HoldingRightClick then
+        local target = GetClosestPlayer()
+        if target then
+            camera.CFrame = CFrame.new(camera.CFrame.Position, target.Position)
+        end
+    end
 end)
 
+-- Detecta quando botão direito é segurado
+UIS.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        HoldingRightClick = true
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        HoldingRightClick = false
+    end
+end)
+
+-- Toggle Orion Lib
+MainSection:AddToggle({
+    Name = "Aimbot (right button)",
+    Default = false,
+    Callback = function(enabled)
+        AimbotEnabled = enabled
+    end
+})
 
 
 
+local ESPEnabled = false
+local ESPObjects = {}
+local camera = workspace.CurrentCamera
+local players = game:GetService("Players")
+local localPlayer = players.LocalPlayer
 
+-- ESP Functions
+local function CreateESP(player)
+    if player == localPlayer then return end
+    if ESPObjects[player] then return end
 
+    local text = Drawing.new("Text")
+    text.Size = 14
+    text.Center = true
+    text.Outline = true
+    text.Color = Color3.new(1, 0, 0)
+    text.Visible = false
+
+    ESPObjects[player] = text
+end
+
+local function RemoveESP(player)
+    if ESPObjects[player] then
+        ESPObjects[player]:Remove()
+        ESPObjects[player] = nil
+    end
+end
+
+for _, p in ipairs(players:GetPlayers()) do
+    CreateESP(p)
+end
+
+players.PlayerAdded:Connect(CreateESP)
+players.PlayerRemoving:Connect(RemoveESP)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    if not ESPEnabled then
+        for _, esp in pairs(ESPObjects) do
+            esp.Visible = false
+        end
+        return
+    end
+
+    for player, esp in pairs(ESPObjects) do
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local pos, onScreen = camera:WorldToViewportPoint(player.Character.HumanoidRootPart.Position)
+            if onScreen and player.Character:FindFirstChild("Humanoid").Health > 0 then
+                esp.Position = Vector2.new(pos.X, pos.Y - 15)
+                esp.Text = player.Name .. " [" .. math.floor(player.Character.Humanoid.Health) .. " HP]"
+                esp.Visible = true
+            else
+                esp.Visible = false
+            end
+        end
+    end
+end)
+
+MainSection:AddToggle({
+    Name = "ESP (Name + HP)",
+    Default = false,
+    Callback = function(enabled)
+        ESPEnabled = enabled
+        if not enabled then
+            for _, v in pairs(ESPObjects) do
+                v.Visible = false
+            end
+        end
     end
 })
 
@@ -700,16 +770,8 @@ end)
 
 
 
-
-
-
-
-
-
-
-
 local MainTab = Window:MakeTab({
-    Name = "ToH1",
+    Name = "Tower of hell",
     Icon = "link"
 })
 
@@ -889,7 +951,7 @@ local SpeedSlider = MainSection:AddSlider({
     Max = 500,
     Default = 50,
     Increment = 1,
-    ValueName = "km/h",
+    ValueName = "gh/h",
     Callback = function(Value)
         local player = game.Players.LocalPlayer
         if player.Character and player.Character:FindFirstChild("Humanoid") then
@@ -1347,5 +1409,21 @@ MainSection:AddButton({
     Name = "Anti-bang",
     Callback = function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-Bang-Script-39958"))()
+    end
+})
+
+----=========Tab10=========----
+local MainTab = Window:MakeTab({
+    Name = "Survive 99 days",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "Bring items",
+    Callback = function()
+local v0=game.Players.LocalPlayer.Character.HumanoidRootPart;local v1=Workspace:FindFirstChild("Items");if  not v1 then return;end for _,Item in v1:GetChildren() do if Item:IsA("PVInstance") then Item:PivotTo(v0.CFrame + Vector3.new((0 -0) -(1422 -(378 + 1044)) ,1427 -((893 -515) + 1044) ,0 -(0 -0) ) );end end
     end
 })
