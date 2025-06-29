@@ -2,7 +2,7 @@ local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsda
 --script zone
 
 
-print("V.1.1.1")
+print("V.1.1.2")
 
 
 
@@ -36,6 +36,42 @@ MainSection:AddButton({
 loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
     end
 })
+
+MainSection:AddButton({
+    Name = "Ctrl+click tp",
+    Callback = function()
+if _G.WRDClickTeleport == nil then
+	_G.WRDClickTeleport = true
+	
+	local player = game:GetService("Players").LocalPlayer
+	local UserInputService = game:GetService("UserInputService")
+	 --Wanted to avoid using mouse instance, but UIS^ is very tedious to get mouse hit position
+	local mouse = player:GetMouse()
+
+	--Waits until the player's mouse is found
+	repeat wait() until mouse
+	
+	UserInputService.InputBegan:Connect(function(input, gameProcessed)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			--Only click teleport if the toggle is enabled
+			if _G.WRDClickTeleport and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+				player.Character:MoveTo(Vector3.new(mouse.Hit.x, mouse.Hit.y, mouse.Hit.z)) 
+			end
+		end
+	end)
+--Just toggle instead of re-executing the script
+else
+	_G.WRDClickTeleport = not _G.WRDClickTeleport
+	--Notify
+	if _G.WRDClickTeleport then
+		game.StarterGui:SetCore("SendNotification", {Title="WeAreDevs.net"; Text="Click teleport enabled"; Duration=5;})
+	else
+		game.StarterGui:SetCore("SendNotification", {Title="WeAreDevs.net"; Text="Click teleport disabled"; Duration=5;})
+	end
+end
+    end
+})
+
 
 
 
@@ -134,6 +170,7 @@ MainSection:AddToggle({
         end
     end
 })
+
 
 
 MainSection:AddToggle({
@@ -251,7 +288,7 @@ MainSection:AddToggle({
 
 
 MainSection:AddToggle({
-    Name = "Follow",
+    Name = "to stick",
     Default = false,
     Callback = function(enabled)
         _G.FeatherTouch = enabled
@@ -287,7 +324,7 @@ MainSection:AddToggle({
                 end
 
                 if closestHRP then
-                    local offset = -closestHRP.CFrame.LookVector * 1 -- distância atrás
+                    local offset = -closestHRP.CFrame.LookVector * 0 -- distância atrás
                     local targetPos = closestHRP.Position + offset + Vector3.new(0, 0, 0) -- levemente acima
                     myHRP.CFrame = CFrame.new(targetPos, closestHRP.Position)
                 end
@@ -1427,5 +1464,35 @@ MainSection:AddButton({
     Name = "Bring items",
     Callback = function()
 local v0=game.Players.LocalPlayer.Character.HumanoidRootPart;local v1=Workspace:FindFirstChild("Items");if  not v1 then return;end for _,Item in v1:GetChildren() do if Item:IsA("PVInstance") then Item:PivotTo(v0.CFrame + Vector3.new((0 -0) -(1422 -(378 + 1044)) ,1427 -((893 -515) + 1044) ,0 -(0 -0) ) );end end
+    end
+})
+
+----=========Tab11=========----
+local MainTab = Window:MakeTab({
+    Name = "Universals",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "Orca hub",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Sirius",
+    Callback = function()
+    loadstring(game:HttpGet('https://sirius.menu/sirius'))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "wisl universal",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/wisl884/wisl-i-Universal-Project1/refs/heads/main/Wisl'i%20Universal%20Project%20new%20UI.lua", true))()
     end
 })
