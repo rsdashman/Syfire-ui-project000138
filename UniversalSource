@@ -324,7 +324,7 @@ MainSection:AddToggle({
                 end
 
                 if closestHRP then
-                    local offset = -closestHRP.CFrame.LookVector * 0 -- distância atrás
+                    local offset = -closestHRP.CFrame.LookVector * 0.5 -- distância atrás
                     local targetPos = closestHRP.Position + offset + Vector3.new(0, 0, 0) -- levemente acima
                     myHRP.CFrame = CFrame.new(targetPos, closestHRP.Position)
                 end
