@@ -46,6 +46,7 @@ local SpeedSlider = MainSection:AddSlider({
     Default = 16,
     Increment = 1,
     ValueName = "km/h",
+    Color = Color3.fromRGB(0, 255, 0),
     Callback = function(Value)
         local player = game.Players.LocalPlayer
         if player.Character and player.Character:FindFirstChild("Humanoid") then
@@ -61,6 +62,7 @@ local JumpP = MainSection:AddSlider({
     Default = 50,
     Increment = 1,
     ValueName = "H/gh",
+    Color = Color3.fromRGB(0, 255, 0),
     Callback = function(Value)
         local player = game.Players.LocalPlayer
         if player.Character and player.Character:FindFirstChild("Humanoid") then
