@@ -1,9 +1,7 @@
--- UILib.lua
--- Biblioteca simples de UI para Roblox com Tabs laterais, drag control, fundo preto, bordas brancas e search bar para pesquisar botões da tab ativa
 
 local UILib = {}
 
--- Função utilitária para drag
+
 local function makeDraggable(frame, dragHandle)
     local dragging, dragInput, mousePos, framePos
     dragHandle.InputBegan:Connect(function(input)
@@ -34,7 +32,6 @@ local function makeDraggable(frame, dragHandle)
     end)
 end
 
--- Cria uma nova janela (Frame)
 function UILib:CreateWindow(title, size, position)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = title or "UILib_Window"
@@ -68,7 +65,6 @@ function UILib:CreateWindow(title, size, position)
     return frame
 end
 
--- Cria Tabs laterais dentro de um frame, cada tab tem sua própria search bar para pesquisar botões
 function UILib:CreateTabs(parent, tabNames)
     local tabs = {}
     local tabButtons = {}
@@ -82,7 +78,7 @@ function UILib:CreateTabs(parent, tabNames)
     local tabBarTop = 32
     local tabBarHeight = #tabNames * (tabBtnHeight + tabBtnSpacing) - tabBtnSpacing
 
-    -- Barra lateral das tabs
+
     local tabBar = Instance.new("Frame")
     tabBar.Size = UDim2.new(0, 100, 0, tabBarHeight)
     tabBar.Position = UDim2.new(0, 0, 0, tabBarTop)
@@ -93,7 +89,6 @@ function UILib:CreateTabs(parent, tabNames)
     tabBar.Parent = parent
 
     for i, name in ipairs(tabNames) do
-        -- Botão da Tab
         local tabBtn = Instance.new("TextButton")
         tabBtn.Text = name
         tabBtn.Size = UDim2.new(1, 0, 0, tabBtnHeight)
@@ -108,7 +103,6 @@ function UILib:CreateTabs(parent, tabNames)
         tabBtn.Parent = tabBar
         tabButtons[i] = tabBtn
 
-        -- Frame da Tab (conteúdo)
         local tabFrame = Instance.new("Frame")
         tabFrame.Size = UDim2.new(1, -100, 1, -tabBarTop)
         tabFrame.Position = UDim2.new(0, 100, 0, tabBarTop)
@@ -120,7 +114,6 @@ function UILib:CreateTabs(parent, tabNames)
         tabFrame.Parent = parent
         tabFrames[i] = tabFrame
 
-        -- Search bar dentro do conteúdo da tab
         local searchBar = Instance.new("TextBox")
         searchBar.PlaceholderText = "Pesquisar botões..."
         searchBar.Size = UDim2.new(1, -32, 0, 28)
@@ -138,7 +131,6 @@ function UILib:CreateTabs(parent, tabNames)
         tabButtonsInFrame[i] = {}
     end
 
-    -- Função para mostrar apenas a tab selecionada
     local function showTab(idx)
         for j, f in ipairs(tabFrames) do
             f.Visible = (idx == j)
@@ -147,26 +139,22 @@ function UILib:CreateTabs(parent, tabNames)
         selectedTab = idx
     end
 
-    -- Troca de Tab ao clicar
     for i, tabBtn in ipairs(tabButtons) do
         tabBtn.MouseButton1Click:Connect(function()
             showTab(i)
         end)
     end
 
-    -- Ativa a primeira Tab por padrão
     if #tabFrames > 0 then
         showTab(1)
     end
 
-    -- Função para criar botões dentro da tab e registrar para search
     function tabs:CreateButtonInTab(tabIdx, text, position, size, callback)
         local btn = UILib:CreateButton(tabFrames[tabIdx], text, position, size, callback)
         table.insert(tabButtonsInFrame[tabIdx], btn)
         return btn
     end
 
-    -- Search bar filtra botões da tab ativa
     for i, searchBar in ipairs(tabSearchBars) do
         searchBar:GetPropertyChangedSignal("Text"):Connect(function()
             local query = string.lower(searchBar.Text)
@@ -188,7 +176,6 @@ function UILib:CreateTabs(parent, tabNames)
     return tabs
 end
 
--- Cria um botão dentro de um frame/tab
 function UILib:CreateButton(parent, text, position, size, callback)
     local button = Instance.new("TextButton")
     button.Text = text or "Botão"
@@ -209,7 +196,6 @@ function UILib:CreateButton(parent, text, position, size, callback)
     return button
 end
 
--- Cria um label dentro de um frame/tab
 function UILib:CreateLabel(parent, text, position, size)
     local label = Instance.new("TextLabel")
     label.Text = text or "Label"
