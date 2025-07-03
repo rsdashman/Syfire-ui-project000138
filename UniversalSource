@@ -1496,3 +1496,26 @@ MainSection:AddButton({
     loadstring(game:HttpGet("https://raw.githubusercontent.com/wisl884/wisl-i-Universal-Project1/refs/heads/main/Wisl'i%20Universal%20Project%20new%20UI.lua", true))()
     end
 })
+
+----=========Tab12=========----
+local MainTab = Window:MakeTab({
+    Name = "Ink game",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "InkGame X-Force",
+    Callback = function()
+    loadstring(game:HttpGet("https://gist.githubusercontent.com/KevinBak123/62b6c4c59b9583cb9993f81064842a0d/raw/f563ea418e8a948f5eb3382124a93e38806c8097/gistfile1.txt"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Tora",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/SquidGame3"))()
+    end
+})
