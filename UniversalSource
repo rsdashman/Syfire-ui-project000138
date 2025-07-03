@@ -1514,6 +1514,22 @@ MainSection:AddButton({
 })
 
 MainSection:AddButton({
+    Name = "InkGame Tora",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/InkGame"))()
+    end
+})
+
+----=========Tab13=========----
+local MainTab = Window:MakeTab({
+    Name = "Squid game season 3",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
     Name = "Tora",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/SquidGame3"))()
