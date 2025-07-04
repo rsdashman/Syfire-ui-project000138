@@ -1461,9 +1461,16 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Bring items",
+    Name = "Bring items | no key",
     Callback = function()
 local v0=game.Players.LocalPlayer.Character.HumanoidRootPart;local v1=Workspace:FindFirstChild("Items");if  not v1 then return;end for _,Item in v1:GetChildren() do if Item:IsA("PVInstance") then Item:PivotTo(v0.CFrame + Vector3.new((0 -0) -(1422 -(378 + 1044)) ,1427 -((893 -515) + 1044) ,0 -(0 -0) ) );end end
+    end
+})
+
+MainSection:AddButton({
+    Name = "H4XScripts | no key",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua", true))()
     end
 })
 
@@ -1507,14 +1514,14 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "InkGame X-Force",
+    Name = "InkGame X-Force | no key",
     Callback = function()
     loadstring(game:HttpGet("https://gist.githubusercontent.com/KevinBak123/62b6c4c59b9583cb9993f81064842a0d/raw/f563ea418e8a948f5eb3382124a93e38806c8097/gistfile1.txt"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "InkGame Tora",
+    Name = "InkGame Tora | no key",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/InkGame"))()
     end
@@ -1530,7 +1537,7 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Tora",
+    Name = "Tora | no key",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/SquidGame3"))()
     end
