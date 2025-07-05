@@ -1474,6 +1474,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/ref
     end
 })
 
+MainSection:AddButton({
+    Name = "eF Hub | no key",
+    Callback = function()
+loadstring(game:HttpGet('https://api.exploitingis.fun/loader', true))()
+    end
+})
+
 ----=========Tab11=========----
 local MainTab = Window:MakeTab({
     Name = "Universals",
