@@ -1,4 +1,4 @@
-local OrionLib = loadstring(game:HttpGet('https://gist.githubusercontent.com/rsdashman/f04ec79d19672a8e9bbaaec6174e7188/raw/69e9357b2d712d883bf632da5cb660ef2d22c85e/OrionLibary'))()
+local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UIlibs/SecretFile'))()
 --script zone
 
 
