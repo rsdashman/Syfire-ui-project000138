@@ -1,106 +1,45 @@
-local WindUI = loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/3811ad118062a64af3750be902ac3a83/raw/c65db2e65d6cd94286b19c798c699ea25c6f7b71/ui%2520lib"))()
-
--- Test
-
-
-
--- Set theme:
---WindUI:SetTheme("Light")
-
---- EXAMPLE !!!
+-- V(%5.5.5)
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 function gradient(text, startColor, endColor)
     local result = ""
     local length = #text
-
     for i = 1, length do
         local t = (i - 1) / math.max(length - 1, 1)
         local r = math.floor((startColor.R + (endColor.R - startColor.R) * t) * 255)
         local g = math.floor((startColor.G + (endColor.G - startColor.G) * t) * 255)
         local b = math.floor((startColor.B + (endColor.B - startColor.B) * t) * 255)
-
         local char = text:sub(i, i)
         result = result .. "<font color=\"rgb(" .. r ..", " .. g .. ", " .. b .. ")\">" .. char .. "</font>"
     end
-
     return result
 end
 
 local Confirmed = false
-
 WindUI:Popup({
-    Title = "Welcome! Popup Example",
+    Title = "Bem-vindo ao Syfire Hub!",
     Icon = "rbxassetid://129260712070622",
     IconThemed = true,
-    Content = "This is an Example UI for the " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
+    HideSearchBar = false,
+    Content = "Este é um Hub feito com a " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
     Buttons = {
         {
-            Title = "Cancel",
-            --Icon = "",
+            Title = "Cancelar",
             Callback = function() end,
-            Variant = "Secondary", -- Primary, Secondary, Tertiary
+            Variant = "Secondary",
         },
         {
-            Title = "Continue",
+            Title = "Continuar",
             Icon = "arrow-right",
             Callback = function() Confirmed = true end,
-            Variant = "Primary", -- Primary, Secondary, Tertiary
+            Variant = "Primary",
         }
     }
 })
+repeat task.wait() until Confirmed
 
-
-repeat wait() until Confirmed
-
-----------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-local espEnabled = false
-local flyEnabled = false
-local xrayEnabled = false
-local flySpeed = 100
-local flyLoop
+local espEnabled, flyEnabled, xrayEnabled, InfiniteJumpEnabled, noclip = false, false, false, false, false
+local flySpeed, flyLoop = 100, nil
 
 
 local function toggleESP(state)
@@ -137,33 +76,18 @@ local function toggleFly(state)
     local hrp = char:FindFirstChild("HumanoidRootPart")
     local hum = char:FindFirstChildOfClass("Humanoid")
     if not hrp or not hum then return end
-
     if state then
         hum.PlatformStand = true
         flyLoop = game:GetService("RunService").RenderStepped:Connect(function()
             local moveVector = Vector3.new()
             local uis = game:GetService("UserInputService")
-
-            if uis:IsKeyDown(Enum.KeyCode.W) then
-                moveVector = moveVector + workspace.CurrentCamera.CFrame.LookVector
-            end
-            if uis:IsKeyDown(Enum.KeyCode.S) then
-                moveVector = moveVector - workspace.CurrentCamera.CFrame.LookVector
-            end
-            if uis:IsKeyDown(Enum.KeyCode.A) then
-                moveVector = moveVector - workspace.CurrentCamera.CFrame.RightVector
-            end
-            if uis:IsKeyDown(Enum.KeyCode.D) then
-                moveVector = moveVector + workspace.CurrentCamera.CFrame.RightVector
-            end
-            if uis:IsKeyDown(Enum.KeyCode.Space) then
-                moveVector = moveVector + Vector3.new(0,1,0)
-            end
-            if uis:IsKeyDown(Enum.KeyCode.LeftShift) then
-                moveVector = moveVector - Vector3.new(0,1,0)
-            end
-
-            hrp.Velocity = moveVector.Unit * flySpeed
+            if uis:IsKeyDown(Enum.KeyCode.W) then moveVector = moveVector + workspace.CurrentCamera.CFrame.LookVector end
+            if uis:IsKeyDown(Enum.KeyCode.S) then moveVector = moveVector - workspace.CurrentCamera.CFrame.LookVector end
+            if uis:IsKeyDown(Enum.KeyCode.A) then moveVector = moveVector - workspace.CurrentCamera.CFrame.RightVector end
+            if uis:IsKeyDown(Enum.KeyCode.D) then moveVector = moveVector + workspace.CurrentCamera.CFrame.RightVector end
+            if uis:IsKeyDown(Enum.KeyCode.Space) then moveVector = moveVector + Vector3.new(0,1,0) end
+            if uis:IsKeyDown(Enum.KeyCode.LeftShift) then moveVector = moveVector - Vector3.new(0,1,0) end
+            hrp.Velocity = moveVector.Magnitude > 0 and moveVector.Unit * flySpeed or Vector3.new()
         end)
     else
         if flyLoop then flyLoop:Disconnect() end
@@ -176,25 +100,13 @@ local function toggleXray(state)
     xrayEnabled = state
     for _, part in pairs(workspace:GetDescendants()) do
         if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" and not part.Locked then
-            if state then
-                part.LocalTransparencyModifier = 0.7
-            else
-                part.LocalTransparencyModifier = 0
-            end
+            part.LocalTransparencyModifier = state and 0.7 or 0
         end
     end
 end
 
-
-
-
-
-
-local InfiniteJumpEnabled = false
-
-
-local UserInputService = game:GetService("UserInputService")
-UserInputService.JumpRequest:Connect(function()
+-- Infinite Jump
+game:GetService("UserInputService").JumpRequest:Connect(function()
     if InfiniteJumpEnabled then
         local player = game:GetService("Players").LocalPlayer
         if player and player.Character and player.Character:FindFirstChild("Humanoid") then
@@ -203,178 +115,34 @@ UserInputService.JumpRequest:Connect(function()
     end
 end)
 
+-- Noclip
 local player = game.Players.LocalPlayer
-local noclip = false
-
 local function updateCollision()
-	local character = player.Character or player.CharacterAdded:Wait()
-	for _, part in ipairs(character:GetDescendants()) do
-		if part:IsA("BasePart") then
-			if noclip then
-				part.CanCollide = false
-			else
-				
-				if part.Name == "Head" or part.Name == "Torso" or part.Name == "UpperTorso" or part.Name == "LowerTorso" then
-					part.CanCollide = true
-				else
-					part.CanCollide = false
-				end
-			end
-		end
-	end
+    local character = player.Character or player.CharacterAdded:Wait()
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            if noclip then
+                part.CanCollide = false
+            else
+                if part.Name == "Head" or part.Name == "Torso" or part.Name == "UpperTorso" or part.Name == "LowerTorso" then
+                    part.CanCollide = true
+                else
+                    part.CanCollide = false
+                end
+            end
+        end
+    end
 end
-
 game:GetService("RunService").Stepped:Connect(function()
-	if noclip then
-		updateCollision()
-	end
+    if noclip then updateCollision() end
 end)
 
-
-
-
---Others
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
---Soon/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-------------------------------------------------------
-
+-- Criação da janela principal
 local Window = WindUI:CreateWindow({
-    Title = "Syfire UI 007",
+    Title = "WindUI Library",
     Icon = "rbxassetid://129260712070622",
     IconThemed = true,
-    Author = "Syfire UI",
+    Author = "Example UI",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(580, 460),
     Transparent = true,
@@ -382,10 +150,10 @@ local Window = WindUI:CreateWindow({
     User = {
         Enabled = true, -- <- or false
         Callback = function() print("clicked") end, -- <- optional
-        Anonymous = false -- <- or true
+        Anonymous = true -- <- or true
     },
     SideBarWidth = 200,
-    -- HideSearchBar = true, -- hides searchbar
+    HideSearchBar = false, -- hides searchbar
     ScrollBarEnabled = true, -- enables scrollbar
     -- Background = "rbxassetid://13511292247", -- rbxassetid only
 
@@ -403,445 +171,141 @@ local Window = WindUI:CreateWindow({
 })
 
 
--- Window:SetBackgroundImage("rbxassetid://13511292247")
--- Window:SetBackgroundImageTransparency(0.9)
-
-
--- TopBar Edit
-
--- Disable Topbar Buttons
--- Window:DisableTopbarButtons({
---     "Close", 
---     "Minimize", 
---     "Fullscreen",
--- })
-
--- Create Custom Topbar Buttons
---                        ↓ Name             ↓ Icon          ↓ Callback                           ↓ LayoutOrder
-Window:CreateTopbarButton("MyCustomButton1", "bird",         function() print("clicked 1!") end,  990)
-Window:CreateTopbarButton("MyCustomButton2", "droplet-off",  function() print("clicked 2!") end,  989)
-Window:CreateTopbarButton("MyCustomButton3", "battery-plus", function() Window:ToggleFullscreen() end, 988)
-
+Window:CreateTopbarButton("Discord", "bird", function() setclipboard("https://discord.gg/seulink") end, 990)
+Window:CreateTopbarButton("Site", "globe", function() setclipboard("https://seusite.com") end, 989)
+Window:CreateTopbarButton("Fullscreen", "battery-plus", function() HideSearchBar = false end, 988)
 
 Window:EditOpenButton({
-    Title = "Open Example UI",
+    Title = "Abrir Hub",
     Icon = "monitor",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
-    Color = ColorSequence.new( -- gradient
-        Color3.fromHex("FF0F7B"), 
-        Color3.fromHex("F89B29")
-    ),
-    --Enabled = false,
+    Color = ColorSequence.new(Color3.fromHex("FF0F7B"), Color3.fromHex("F89B29")),
     Draggable = true,
 })
 
-
 local Tabs = {}
-
 do
-    Tabs.ElementsSection = Window:Section({
-        Title = "Elements",
-        Opened = true,
-    })
-    
-    Tabs.WindowSection = Window:Section({
-        Title = "Window Management",
-        Icon = "app-window-mac",
-        Opened = true,
-    })
-    
-    Tabs.OtherSection = Window:Section({
-        Title = "Other",
-        Opened = true,
-    })
-
-    
-    
-    Tabs.ButtonTab = Tabs.ElementsSection:Tab({ Title = "Main", Icon = "mouse-pointer-2", Desc = "Contains interactive buttons for various actions." })
-    Tabs.CodeTab = Tabs.ElementsSection:Tab({ Title = "Code", Icon = "code", Desc = "Displays and manages code snippets." })
-	Tabs.HeadTab = Tabs.ElementsSection:Tab({ Title = "Local player", Icon = "code", Desc = "Local player functions." })
-    
-    Tabs.WindowTab = Tabs.WindowSection:Tab({ 
-        Title = "Window and File Configuration", 
-        Icon = "settings", 
-        Desc = "Manage window settings and file configurations.", 
-        ShowTabTitle = true 
-    })
-    Tabs.CreateThemeTab = Tabs.WindowSection:Tab({ Title = "Create Theme", Icon = "palette", Desc = "Design and apply custom themes." })
-    
-    Tabs.LongTab = Tabs.OtherSection:Tab({ 
-        Title = "Long and empty tab. with custom icon", 
-        Icon = "rbxassetid://129260712070622", 
-        IconThemed = true, 
-        Desc = "Long Description" 
-    })
-
-    
-    Tabs.LastSection = Window:Section({
-        Title = "Section without tabs",
-        --Opened = true,
-    })
-    
-    Tabs.ConfigTab = Window:Tab({ Title = "Config", Icon = "file-cog" })
+    Tabs.Main = Window:Section({ Title = "Funções", Opened = true })
+    Tabs.Player = Window:Section({ Title = "Jogador", Icon = "user", Opened = true })
+    Tabs.Config = Window:Tab({ Title = "Config", Icon = "file-cog" })
 end
 
-
-
-Window:SelectTab(1)
-
----------------------===================---------------------
-
-Tabs.ButtonTab:Button({
-    Title = "Fly",
-    Desc = "",
+local mainTab = Tabs.Main:Tab({ Title = "Utilidades", Icon = "mouse-pointer-2" })
+mainTab:Button({
+    Title = "Fly (Script Externo)",
     Callback = function()
-	loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
-end
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))()
+    end
 })
-
-Tabs.ButtonTab:Toggle({
+mainTab:Toggle({
     Title = "Noclip",
-    Callback = function(state)
-       noclip = state
-	   updateCollision()
-    end,
+    Callback = function(state) noclip = state; updateCollision() end,
 })
-
-Tabs.ButtonTab:Toggle({
+mainTab:Toggle({
     Title = "Xray",
-    Callback = function(state)
-        toggleXray(state)
-    end,
+    Callback = function(state) toggleXray(state) end,
 })
-
-Tabs.ButtonTab:Toggle({
-    Title = "Ragdoll fly",
-    Callback = function(state)
-
-     toggleFly(state)
-
-    end,
+mainTab:Toggle({
+    Title = "Ragdoll Fly",
+    Callback = function(state) toggleFly(state) end,
 })
-
-Tabs.ButtonTab:Toggle({
+mainTab:Toggle({
     Title = "ESP",
-    Callback = function(state)
-        toggleESP(state)
-    end,
+    Callback = function(state) toggleESP(state) end,
 })
-
-Tabs.ButtonTab:Toggle({
-    Title = "INFJUMP",
-    Callback = function(state)
-        InfiniteJumpEnabled = state
-    end,
+mainTab:Toggle({
+    Title = "Infinite Jump",
+    Callback = function(state) InfiniteJumpEnabled = state end,
 })
-
-
-Tabs.ButtonTab:Button({
-    Title = "Set ToggleKey to 'L'",
+mainTab:Button({
+    Title = "Setar ToggleKey para 'L'",
     Callback = function() Window:SetToggleKey(Enum.KeyCode.L) end,
 })
-
-Tabs.ButtonTab:Divider()
-
-
-Tabs.ButtonTab:Button({
-    Title = "Locked Button",
-    Desc = "This button is locked",
+mainTab:Divider()
+mainTab:Button({
+    Title = "Botão Travado",
+    Desc = "Este botão está travado",
     Locked = true,
 })
 
-
-Tabs.CodeTab:Code({
-    Title = "example-code.luau",
-    Code = [[-- Example Luau code to test syntax highlighting
-local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
-
-local function factorial(n)
-    if n <= 1 then
-        return 1
-    else
-        return n * factorial(n - 1)
-    end
-end
-
-local result = factorial(5)
-print("Factorial of 5 is:", result)
-
-local playerName = "Player"
-local score = 100
-
-if score >= 100 then
-    print(playerName .. " earned an achievement!")
-else
-    warn("Need more points.")
-end
-
--- Table with nested values
-local playerStats = {
-    name = "Player",
-    health = 100,
-    inventory = {"sword", "shield", "potion"}
-}
-
-for i, item in ipairs(playerStats.inventory) do
-    print("Item in inventory:", item)
-end]],
-})
-
-Tabs.CodeTab:Code({
-    Code = [[print("WindUI on top!")]],
-})
-
---headtab
-
-Tabs.HeadTab:Button({
+-- Funções do jogador
+local playerTab = Tabs.Player:Tab({ Title = "Player" })
+playerTab:Button({
     Title = "Hamsterball",
-    Desc = "",
     Callback = function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
-end
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
+    end
 })
-
-
-Tabs.HeadTab:Slider({
+playerTab:Slider({
     Title = "Walkspeed",
-    Value = {
-        Min = 16,
-        Max = 100,
-        Default = 16,
-    },
+    Value = { Min = 16, Max = 100, Default = 16 },
     Callback = function(state)
-	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = state
-	end 
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = state
+    end
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-local ToggleElement = Tabs.ConfigTab:Toggle({
+-- Configurações e sistema de configs
+local ToggleElement = Tabs.Config:Toggle({
     Title = "Toggle",
     Desc = "Config Test Toggle",
     Callback = function(v) print("Toggle Changed: " .. tostring(v)) end
 })
-
-local SliderElement = Tabs.ConfigTab:Slider({
+local SliderElement = Tabs.Config:Slider({
     Title = "Slider",
     Desc = "Config Test Slider",
-    Value = {
-        Min = 0,
-        Max = 100,
-        Default = 50,
-    },
+    Value = { Min = 0, Max = 100, Default = 50 },
     Callback = function(v) print("Slider Changed: " .. v) end
 })
-
-local KeybindElement = Tabs.ConfigTab:Keybind({
+local KeybindElement = Tabs.Config:Keybind({
     Title = "Keybind",
     Desc = "Config Test Keybind",
     Value = "F",
     Callback = function(v) print("Keybind Changed/Clicked: " .. v) end
 })
-
-local DropdownElement = Tabs.ConfigTab:Dropdown({
+local DropdownElement = Tabs.Config:Dropdown({
     Title = "Dropdown",
     Desc = "Config Test Dropdown",
     Values = { "Test 1", "Test 2" },
     Value = "Test 1",
-    Callback = function(v) print("Dropdown Changed: " .. HttpService:JSONEncode(v)) end
+    Callback = function(v) print("Dropdown Changed: " .. game:GetService("HttpService"):JSONEncode(v)) end
 })
-
-local InputElement = Tabs.ConfigTab:Input({
+local InputElement = Tabs.Config:Input({
     Title = "Input",
     Desc = "Config Test Input",
     Value = "Test",
-    Placeholder = "Enter text.......",
+    Placeholder = "Digite algo...",
     Callback = function(v) print("Input Changed: " .. v) end
 })
-
-local ColorpickerElement = Tabs.ConfigTab:Colorpicker({
+local ColorpickerElement = Tabs.Config:Colorpicker({
     Title = "Colorpicker",
     Desc = "Config Test Colorpicker",
     Default = Color3.fromHex("#315dff"),
-    Transparency = 0, -- Transparency enabled
+    Transparency = 0,
     Callback = function(c,t) print("Colorpicker Changed: " .. c:ToHex() .. "\nTransparency: " .. t) end
 })
 
--- Configs
-
-
--- 1. Load ConfigManager
+-- ConfigManager
 local ConfigManager = Window.ConfigManager
-
-
--- 2. Create Config File                    ↓ Config File name
 local myConfig = ConfigManager:CreateConfig("myConfig")
+myConfig:Register("toggleNameExample", ToggleElement)
+myConfig:Register("sliderNameExample", SliderElement)
+myConfig:Register("keybindNameExample", KeybindElement)
+myConfig:Register("dropdownNameExample", DropdownElement)
+myConfig:Register("inputNameExample", InputElement)
+myConfig:Register("ColorpickerNameExample", ColorpickerElement)
 
-
--- 3. Register elements
-
---               | ↓ Element name (no spaces)  | ↓ Element          |
-myConfig:Register( "toggleNameExample",          ToggleElement      )
-myConfig:Register( "sliderNameExample",          SliderElement      ) 
-myConfig:Register( "keybindNameExample",         KeybindElement     )
-myConfig:Register( "dropdownNameExample",        DropdownElement    )
-myConfig:Register( "inputNameExample",           InputElement       )
-myConfig:Register( "ColorpickerNameExample",     ColorpickerElement )
-
-
--- Save
-
---[[ Saving at 
-    {yourExecutor}
-        /Workspace
-            /WindUI
-                /{Window.Folder}
-                    /config
-                        /myConfig.json
-                        
-                                       ]]
-                                   
--- myConfig:Save()
-
-
--- Load   
-
--- myConfig:Load()
-
-
-
--- Usage:
-
-Tabs.ConfigTab:Button({
-    Title = "Save",
-    Desc = "Saves elements to config",
-    Callback = function()
-        myConfig:Save()
-    end
+Tabs.Config:Button({
+    Title = "Salvar Config",
+    Callback = function() myConfig:Save() end
+})
+Tabs.Config:Button({
+    Title = "Carregar Config",
+    Callback = function() myConfig:Load() end
+})
+Tabs.Config:Button({
+    Title = "Printar todas configs",
+    Callback = function() print(game:GetService("HttpService"):JSONEncode(ConfigManager:AllConfigs())) end
 })
 
-Tabs.ConfigTab:Button({
-    Title = "Load",
-    Desc = "Loads elements from config",
-    Callback = function()
-        myConfig:Load()
-    end
-})
-
-Tabs.ConfigTab:Button({
-    Title = "Print all configs",
-    --Desc = "Prints configs",
-    Callback = function()
-        print(game:GetService("HttpService"):JSONEncode(ConfigManager:AllConfigs()))
-    end
-})
+-- Fim do script hub
