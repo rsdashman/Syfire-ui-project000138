@@ -1,0 +1,145 @@
+local library = loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/768aec049ff97dbf228e80bf8e098d85/raw/5b73d90e17d0be3469606553a2b2bcd23f4941c9/Source",true))()
+
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+
+local tab = library:CreateWindow("Tower of Hell")
+local folder = tab:AddFolder("Main")
+
+local alturaExtra = 0
+local manterNoAr = false
+
+task.spawn(function()
+    while true do
+        task.wait()
+        if manterNoAr then
+            local character = LocalPlayer.Character
+            if character then
+                local root = character:FindFirstChild("HumanoidRootPart")
+                if root then
+                    local pos = root.Position
+                    root.CFrame = CFrame.new(Vector3.new(pos.X, alturaExtra, pos.Z))
+                end
+            end
+        end
+    end
+end)
+
+folder:AddButton({
+    text = "Get All coils",
+    flag = "button",
+    callback = function()
+        local player = game.Players.LocalPlayer
+        local gears = {
+            game.ReplicatedStorage.Assets.Gear.jump,
+            game.ReplicatedStorage.Assets.Gear.gravity,
+            game.ReplicatedStorage.Assets.Gear.fusion,
+            game.ReplicatedStorage.Assets.Gear.speed
+        }
+
+        for _, gear in pairs(gears) do
+            if gear then
+                gear:Clone().Parent = player.Backpack
+            else
+                warn("Gear not found!")
+            end
+        end
+    end
+})
+
+folder:AddSlider({
+    text = "Walkspeed",
+    min = 16,
+    max = 100,
+    dual = true,
+    type = "slider",
+    callback = function(Value)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.WalkSpeed = Value
+        end
+    end
+})
+
+folder:AddSlider({
+    text = "JumpPower",
+    min = 16,
+    max = 100,
+    dual = true,
+    type = "slider",
+    callback = function(Value)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.JumpPower = Value
+        end
+    end
+})
+
+folder:AddBind({
+    text = "UP",
+    key = Enum.KeyCode.X,
+    hold = false,
+    callback = function()
+        local character = LocalPlayer.Character
+        if character then
+            local root = character:FindFirstChild("HumanoidRootPart")
+            if root then
+                alturaExtra = root.Position.Y + 10
+                manterNoAr = true
+            end
+        end
+    end
+})
+
+
+
+folder:AddBind({
+    text = "DOWN",
+    key = Enum.KeyCode.Z,
+    hold = false,
+    callback = function()
+        manterNoAr = false
+    end
+})
+
+folder:AddToggle({
+    text = "Auto Teleport Finish",
+    flag = "autofinish",
+    callback = function(enabled)
+        if enabled then
+            local finishPart = Workspace:FindFirstChild("tower") and Workspace.tower:FindFirstChild("sections") and Workspace.tower.sections:FindFirstChild("finish") and Workspace.tower.sections.finish:FindFirstChild("FinishGlow")
+            if not finishPart then
+                warn("FinishGlow not found!")
+                folder.flags["autofinish"] = false
+                return
+            end
+
+            local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+            local root = character:FindFirstChild("HumanoidRootPart")
+            if not root then
+                folder.flags["autofinish"] = false
+                return
+            end
+
+            for i = 1, 5 do
+                root.CFrame = CFrame.new(finishPart.Position + Vector3.new(0, 5, 0))
+                task.wait(0.1)
+            end
+
+
+            local pos = root.Position
+            local start = tick()
+            while tick() - start < 3 do
+                root.CFrame = CFrame.new(pos)
+                root.AssemblyLinearVelocity = Vector3.zero
+                task.wait()
+            end
+
+
+            folder.flags["autofinish"] = false
+        end
+    end
+})
+
+library:Init()
