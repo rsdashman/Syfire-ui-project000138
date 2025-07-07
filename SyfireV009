@@ -308,4 +308,3 @@ Tabs.Config:Button({
     Callback = function() print(game:GetService("HttpService"):JSONEncode(ConfigManager:AllConfigs())) end
 })
 
--- Fim do script hub
