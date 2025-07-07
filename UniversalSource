@@ -2,7 +2,7 @@ local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsda
 --script zone
 
 
-print("V.1.1.5")
+print("V.1.1.10")
 
 
 --script zone/
@@ -885,88 +885,13 @@ end
 end})
 
 MainSection:AddButton({
-    Name = "go to top",
+    Name = "Tower Of Hell script | no key",
     Callback = function()
-local player = game.Players.LocalPlayer
-
-if player and player.Character then
-    local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
-    
-    if humanoidRootPart then
-
-        humanoidRootPart.CFrame = CFrame.new(0, 800, 0)
-        
-
-        print("Teleportado para (0, 800, 0) com sucesso!")
-    else
-        print("Erro: HumanoidRootPart não encontrado!")
-    end
-else
-    print("Erro: Jogador ou personagem não encontrado!")
-end
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UIlibs/Games/Tower%20of%20hell%20script%20Source"))()
     end
 })
 
-local ESPToggle = MainSection:AddToggle({
-    Name = "Autofarm",
-    Default = false,
-    Callback = function(Value)
-        if Value then
 
-_G.tower = true
-spawn(function()
-	while _G.tower == true do
-		local destino = Vector3.new(-20.56, 53.75, 40.40)
-local player = game.Players.LocalPlayer
-if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
-end
-wait(5)
-		local destino = Vector3.new(-46.18, 105.75, 2.37)
-local player = game.Players.LocalPlayer
-if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
-end
-wait(9)
-		local destino = Vector3.new(34.25, 267.75, 7.81)
-local player = game.Players.LocalPlayer
-if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
-end
-		wait(9)
-	end
-end)
-
-        else
-_G.tower = false
-spawn(function()
-	while _G.tower == true do
-		local destino = Vector3.new(-20.56, 53.75, 40.40)
-local player = game.Players.LocalPlayer
-if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
-end
-wait(5)
-		local destino = Vector3.new(-46.18, 105.75, 2.37)
-local player = game.Players.LocalPlayer
-if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
-end
-wait(9)
-		local destino = Vector3.new(34.25, 267.75, 7.81)
-local player = game.Players.LocalPlayer
-if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-    player.Character.HumanoidRootPart.CFrame = CFrame.new(destino)
-end
-		wait(9)
-	end
-end)
-
-
-
-end
-    end
-})
 
 local SpeedSlider = MainSection:AddSlider({
     Name = "Walkspeed",
@@ -984,7 +909,7 @@ local SpeedSlider = MainSection:AddSlider({
 })
 
 local SpeedSlider = MainSection:AddSlider({
-    Name = "Jumpp",
+    Name = "JumpPower",
     Min = 50,
     Max = 500,
     Default = 50,
@@ -1003,7 +928,6 @@ local MainTab = Window:MakeTab({
     Icon = "link"
 })
 
--- ===== Example section =====
 local MainSection = MainTab:AddSection({
     Name = "Scripts"
 })
@@ -1021,6 +945,8 @@ MainSection:AddButton({
 loadstring(game:HttpGet('https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source'))()
     end
 })
+
+
 --------============Tab3=============-----------------
 local MainTab = Window:MakeTab({
     Name = "Grow a gardem",
@@ -1555,3 +1481,39 @@ MainSection:AddButton({
     loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/SquidGame3"))()
     end
 })
+
+----=========Tab14=========----
+local MainTab = Window:MakeTab({
+    Name = "Fling scripts",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "OPTouchFling",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/OP%20TOUCHFLING"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "OldTouchFling",
+    Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Touch-fling-27515"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "CrashPlayer",
+    Callback = function()
+    loadstring(game:HttpGet("https://gist.githubusercontent.com/SolentraXminishakk/28e5606b99480adb6f0aa82846e4ff16/raw/03487f4a04364a912ffc93e3987d372b4a98df39/gistfile1.txt"))()
+    end
+})
+
+
+
+
+
+
