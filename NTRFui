@@ -1,0 +1,547 @@
+-- UI Library Rewrite
+-- Improved version with better organization and modern practices
+
+local library = {
+    flags = {},
+    ActiveSlider = nil,
+    Count = 0,
+    windows = {},
+    callbacks = {},
+    binds = {},
+    open = true
+}
+
+-- Services
+local RunService = game:GetService("RunService")
+local Heartbeat = RunService.Heartbeat
+local RenderStepped = RunService.RenderStepped
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local mouse = Players.LocalPlayer:GetMouse()
+
+-- Utility Functions
+local function Tween(Object, Goal, Direction, Style, Time, WaitForTween)
+    Style = Style or {}
+    local Tween = TweenService:Create(Object, TweenInfo.new(Time, Style, Direction), Goal)
+    Tween:Play()
+    if WaitForTween then
+        Tween.Completed:wait()
+    end
+end
+
+local function ScreenGUIName(length)
+    local str = ""
+    for i = 1, length do 
+        if i % 6 == 0 then
+            str = str .. '-'
+        else
+            str = str .. string.char(math.random(65, 90))
+        end
+    end
+    return str
+end
+
+-- Global Rainbow Color System
+local GlobalRainbowColor = Color3.new()
+local GlobalHueColor = 0
+
+spawn(function()
+    while true do
+        for i = 0, 1, 1 / 300 do
+            GlobalRainbowColor = Color3.fromHSV(i, 1, 1)
+            GlobalHueColor = i
+            wait()
+        end
+    end
+end)
+
+-- Library Methods
+function library:Create(class, properties)
+    local inst = Instance.new(class)
+    for property, value in next, properties do
+        inst[property] = value
+    end
+    return inst
+end
+
+-- Main ScreenGUI
+local ScreenGUI = library:Create('ScreenGui', {
+    Name = ScreenGUIName(29),
+    Parent = game.CoreGui
+})
+
+-- Window Creation
+function library:CreateWindow(Name)
+    self.Toggled = true
+    library.Count = library.Count + 1
+    
+    -- Top Bar
+    local TopBar = library:Create("ImageLabel", {
+        Name = "TopBar",
+        Parent = ScreenGUI,
+        BackgroundColor3 = Color3.fromRGB(114, 137, 218),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(114, 137, 218),
+        BorderSizePixel = 0,
+        Position = UDim2.new((library.Count * 0.0155038759), ((library.Count - 1) * 208), 0.0246913582, 0),
+        Size = UDim2.new(0, 208, 0, 35),
+        ZIndex = 2,
+        Image = "http://www.roblox.com/asset/?id=4846149319",
+        ImageColor3 = Color3.fromRGB(0, 0, 0),
+        Active = true,
+        Draggable = true,
+    })
+    
+    -- Window Name
+    local WindowName = library:Create("TextLabel", {
+        Name = "WindowName",
+        Parent = TopBar,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(27, 42, 53),
+        Position = UDim2.new(0.0500000007, 0, 0.0282485969, 0),
+        Size = UDim2.new(0.829987586, 0, 1, 0),
+        ZIndex = 3,
+        Font = Enum.Font.GothamSemibold,
+        Text = Name,
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 20.000,
+        TextWrapped = true,
+        TextXAlignment = Enum.TextXAlignment.Left,
+    })
+    
+    -- Window Toggle Button
+    local WindowToggle = library:Create("TextButton", {
+        Name = "WindowToggle",
+        Parent = TopBar,
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        BorderSizePixel = 0,
+        Position = UDim2.new(0.847619057, 0, 0.142857149, 0),
+        Size = UDim2.new(0, 25, 0, 25),
+        ZIndex = 4,
+        Font = Enum.Font.GothamSemibold,
+        Text = "-",
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        TextSize = 30.000,
+    })
+    
+    -- Window Toggle Background
+    local WindowToggleBackground = library:Create("ImageLabel", {
+        Name = "WindowToggleBackground",
+        Parent = WindowToggle,
+        Active = true,
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+        BackgroundTransparency = 1.000,
+        Position = UDim2.new(0.5, 0, 0.5, 0),
+        Selectable = true,
+        Size = UDim2.new(1, 0, 1, 0),
+        ZIndex = 3,
+        Image = "rbxassetid://3570695787",
+        ImageColor3 = Color3.fromRGB(31, 30, 31),
+        ScaleType = Enum.ScaleType.Slice,
+        SliceCenter = Rect.new(100, 100, 100, 100),
+        SliceScale = 0.060,
+    })
+    
+    -- Container
+    local Container = library:Create("Frame", {
+        Name = "Container",
+        Parent = TopBar,
+        BackgroundColor3 = Color3.fromRGB(116, 166, 253),
+        BackgroundTransparency = 1.000,
+        BorderColor3 = Color3.fromRGB(114, 137, 218),
+        BorderSizePixel = 0,
+        ClipsDescendants = true,
+        Position = UDim2.new(0, 0, 0.861375749, 0),
+        Size = UDim2.new(0, 208, 0, 350),
+    })
+    
+    local ContainerUIListLayout = library:Create("UIListLayout", {
+        Name = "ContainerUIListLayout",
+        Parent = Container,
+        SortOrder = Enum.SortOrder.LayoutOrder,
+    })
+    
+    -- Dragging System
+    local dragging, dragInput, dragStart, startPos, dragObject
+
+    local function update(input)
+        if not startPos then return end
+        local delta = input.Position - dragStart
+        local yPos = (startPos.Y.Offset + delta.Y) < -36 and -36 or startPos.Y.Offset + delta.Y
+        dragObject:TweenPosition(UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, yPos), "Out", "Quint", 0.1, true)
+    end
+    
+    TopBar.InputBegan:connect(function(input)
+        if input.UserInputType.Name == "MouseButton1" then
+            dragObject = TopBar
+            dragging = true
+            dragStart = input.Position
+            startPos = dragObject.Position
+        end
+    end)
+    
+    TopBar.InputChanged:connect(function(input)
+        if dragging and input.UserInputType.Name == "MouseMovement" then
+            dragInput = input
+        end
+    end)
+    
+    TopBar.InputEnded:connect(function(input)
+        if input.UserInputType.Name == "MouseButton1" then
+            dragging = false
+        end
+    end)
+    
+    UserInputService.InputChanged:connect(function(input)
+        if input.UserInputType.Name == "MouseMovement" then
+            if input == dragInput and dragging then
+                update(input)
+            end
+        end
+    end)
+
+    -- Window Toggle Functionality
+    WindowToggle.MouseButton1Click:Connect(function()
+        self.Toggled = not self.Toggled
+        if self.Toggled then
+            Tween(Container, {Size = UDim2.new(0, 208, 0, ContainerUIListLayout.AbsoluteContentSize.Y)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.2, true)
+            WindowToggle.Text = "-"
+        else
+            Tween(Container, {Size = UDim2.new(0, 208, 0, 0)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.2, true)
+            WindowToggle.Text = "+"
+        end
+    end)
+
+    -- Section System
+    local Sections = {}
+    
+    function Sections:Section(Name)
+        self.Toggled = false
+        local Section = {}
+        table.insert(self, Section)
+
+        -- Section UI Components
+        local SectionPart = library:Create("Frame", {
+            Name = "SectionPart",
+            Parent = Container,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderSizePixel = 0,
+            ClipsDescendants = true,
+            Size = UDim2.new(1, 0, 0, 35),
+        })
+        
+        local SectionContainer = library:Create("Frame", {
+            Name = "SectionContainer",
+            Parent = SectionPart,
+            BackgroundColor3 = Color3.fromRGB(19, 19, 19),
+            BorderSizePixel = 0,
+            ClipsDescendants = true,
+            Position = UDim2.new(0, 0, 0, 30),
+            Size = UDim2.new(0, 208, 0, 0),
+        })
+        
+        local SectionUIListLayout = library:Create("UIListLayout", {
+            Name = "SectionUIListLayout",
+            Parent = SectionContainer,
+            SortOrder = Enum.SortOrder.LayoutOrder,
+        })
+        
+        local SectionButton = library:Create("ImageButton", {
+            Name = "SectionButton",
+            Parent = SectionPart,
+            BackgroundColor3 = Color3.fromRGB(114, 137, 218),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(114, 137, 218),
+            Size = UDim2.new(1, 0, 0, 35),
+            Image = "http://www.roblox.com/asset/?id=4846243410",
+            ImageColor3 = Color3.fromRGB(30, 30, 30),
+        })
+        
+        local SectionTEXT = library:Create("TextLabel", {
+            Name = "SectionTEXT",
+            Parent = SectionButton,
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BackgroundTransparency = 1.000,
+            BorderColor3 = Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = 0,
+            Position = UDim2.new(0.0500000007, 0, -0.0571428575, 0),
+            Size = UDim2.new(0, 189, 1, 0),
+            Font = Enum.Font.GothamSemibold,
+            Text = Name,
+            TextColor3 = Color3.fromRGB(255, 48, 51),
+            TextSize = 18.000,
+            TextXAlignment = Enum.TextXAlignment.Left,
+        })
+        
+        library:Create("UIPadding", {
+            Parent = SectionContainer,
+            PaddingBottom = UDim.new(0, 5),
+            PaddingTop = UDim.new(0, 6),
+        })
+
+        -- Section Toggle Functionality
+        SectionButton.MouseButton1Click:Connect(function()
+            self.Toggled = not self.Toggled
+            if self.Toggled then
+                Tween(SectionContainer, {Size = UDim2.new(0, 208, 0, 0)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.15, false)
+                Tween(SectionPart, {Size = UDim2.new(0, 208, 0, 35)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.15, false)
+                Tween(SectionTEXT, {TextColor3 = Color3.fromRGB(255, 48, 51)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.15, false)
+            else
+                Tween(SectionContainer, {Size = UDim2.new(0, 208, 0, SectionUIListLayout.AbsoluteContentSize.Y + 10)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.15, false)
+                Tween(SectionPart, {Size = UDim2.new(0, 208, 0, SectionUIListLayout.AbsoluteContentSize.Y + 35)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.15, false)
+                Tween(SectionTEXT, {TextColor3 = Color3.fromRGB(145, 255, 71)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.15, true)
+                Tween(Container, {Size = UDim2.new(0, 208, 0, ContainerUIListLayout.AbsoluteContentSize.Y)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.1, true)
+            end
+        end)
+
+        -- Section Methods
+        function Section:Label(Name)
+            local LabelFrame = library:Create("Frame", {
+                Name = "LabelFrame",
+                Parent = SectionContainer,
+                BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+                BackgroundTransparency = 0.75,
+                BorderSizePixel = 0,
+                Size = UDim2.new(1, 0, 0, 20)
+            })
+
+            local TextLabel = library:Create("TextLabel", {
+                Parent = LabelFrame,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                Position = UDim2.new(0.0689999983, 0, 0, -3),
+                Size = UDim2.new(0.882000029, 0, 0, 25),
+                Font = Enum.Font.GothamSemibold,
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                TextSize = 15.000,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                Text = Name,
+                BorderSizePixel = 0,
+            })
+        end
+
+        function Section:Button(Name, Function)
+            local ButtonFrame = library:Create("Frame", {
+                Name = "ButtonFrame",
+                Parent = SectionContainer,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                Size = UDim2.new(1, 0, 0, 35),
+            })
+            
+            local Button = library:Create("TextButton", {
+                Name = "Button",
+                Parent = ButtonFrame,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                BorderSizePixel = 0,
+                Size = UDim2.new(1, 0, 0, 35),
+                ZIndex = 3,
+                Font = Enum.Font.GothamSemibold,
+                Text = Name,
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                TextSize = 15.000,
+            })
+            
+            local ButtonBackground = library:Create("ImageLabel", {
+                Name = "ButtonBackground",
+                Parent = Button,
+                Active = true,
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                Position = UDim2.new(0.499760836, 0, 0.485714287, 0),
+                Selectable = true,
+                Size = UDim2.new(0.90861249, 0, 0.879999995, 0),
+                ZIndex = 2,
+                Image = "rbxassetid://3570695787",
+                ImageColor3 = Color3.fromRGB(28, 28, 28),
+                ScaleType = Enum.ScaleType.Slice,
+                SliceCenter = Rect.new(100, 100, 100, 100),
+                SliceScale = 0.075,
+            })
+            
+            Button.MouseButton1Click:connect(Function)
+        end
+
+        function Section:Toggle(Name, Options, callback)
+            if not library.flags then
+                library.flags = {}
+            end
+
+            local Toggle = library:Create("Frame", {
+                Name = "Toggle",
+                Parent = SectionContainer,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                BorderColor3 = Color3.fromRGB(27, 42, 53),
+                Position = UDim2.new(0, 0, 0.103244841, 0),
+                Size = UDim2.new(1, 0, 0, 35),
+            })
+            
+            local ToggleTextBackground = library:Create("ImageLabel", {
+                Name = "ToggleTextBackground",
+                Parent = Toggle,
+                Active = true,
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                Position = UDim2.new(0.339941978, 0, 0.485714287, 0),
+                Selectable = true,
+                Size = UDim2.new(0.588999987, 0, 0.75, 0),
+                Image = "rbxassetid://3570695787",
+                ImageColor3 = Color3.fromRGB(28, 28, 28),
+                ScaleType = Enum.ScaleType.Slice,
+                SliceCenter = Rect.new(100, 100, 100, 100),
+                SliceScale = 0.075,
+            })
+            
+            local ToggleText = library:Create("TextLabel", {
+                Name = "ToggleText",
+                Parent = ToggleTextBackground,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                Position = UDim2.new(0.0568663031, 0, -0.0324675329, 0),
+                Size = UDim2.new(0.959999979, 0, 1, 0),
+                Font = Enum.Font.GothamSemibold,
+                Text = Name,
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                TextSize = 15.000,
+                TextScaled = (string.len(tostring(Name)) > 10 and true) or false,
+                TextXAlignment = Enum.TextXAlignment.Left,
+            })
+            
+            local ToggleButtonOutline = library:Create("ImageButton", {
+                Name = "ToggleButtonOutline",
+                Parent = Toggle,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                Position = UDim2.new(0.668269217, 0, 0.0285714287, 0),
+                Size = UDim2.new(0.177000001, 25, 0.75, 0),
+                Image = "http://www.roblox.com/asset/?id=4875185102",
+                ImageColor3 = Color3.fromRGB(28, 28, 28),
+            })
+            
+            local ToggleInsideColor = library:Create("ImageLabel", {
+                Name = "ToggleInsideColor",
+                Parent = ToggleButtonOutline,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                Position = UDim2.new(0, 0, 0.190476194, 0),
+                Size = UDim2.new(0.949999988, 0, 0.876999974, 0),
+                Image = "http://www.roblox.com/asset/?id=4875187236",
+            })
+            
+            local ColorGradient = library:Create("UIGradient", {
+                Color = ColorSequence.new{
+                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 48, 51)), 
+                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 225, 100))
+                },
+                Offset = Vector2.new(1, 0),
+                Parent = ToggleInsideColor,
+            })
+            
+            local CirclePart = library:Create("ImageLabel", {
+                Name = "CirclePart",
+                Parent = ToggleInsideColor,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                BorderColor3 = Color3.fromRGB(255, 255, 255),
+                Position = UDim2.new(0.0170000009, 0, 0.0399999991, 0),
+                Size = UDim2.new(0, 22, 0, 22),
+            })
+            
+            local CircleText = library:Create("TextLabel", {
+                Name = "CircleText",
+                Parent = CirclePart,
+                Active = true,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                Size = UDim2.new(1, 0, 1, 0),
+                SizeConstraint = Enum.SizeConstraint.RelativeYY,
+                ZIndex = 2,
+                Font = Enum.Font.GothamSemibold,
+                Text = "X",
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                TextSize = 20.000,
+            })
+            
+            local check = library:Create("ImageLabel", {
+                Name = "check",
+                Parent = CirclePart,
+                Active = true,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BackgroundTransparency = 1.000,
+                BorderSizePixel = 0,
+                Position = UDim2.new(0.5, -9, 0.5, -9),
+                Size = UDim2.new(0.75, 0, 0.75, 0),
+                Image = "http://www.roblox.com/asset/?id=4555411759",
+                ImageColor3 = Color3.fromRGB(0, 0, 0),
+                ImageTransparency = 1.000,
+            })
+
+            local location = Options.location or library.flags
+            local flagName = Options.flag or ""
+            location[flagName] = Options.Default or false
+
+            ToggleButtonOutline.MouseButton1Click:Connect(function()
+                if callback then callback(not location[flagName]) end
+                if location[flagName] then 
+                    Tween(CirclePart, {Position = UDim2.new(0.017, 0, 0.05, 0)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.1, false)
+                    Tween(ColorGradient, {Offset = Vector2.new(1, 0)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.1, true)
+                    CircleText.TextTransparency = 0
+                    check.ImageTransparency = 1
+                    location[flagName] = false
+                else
+                    Tween(CirclePart, {Position = UDim2.new(0.6, 0, 0.05, 0)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.1, false)
+                    Tween(ColorGradient, {Offset = Vector2.new(-1, 0)}, Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0.1, true)
+                    CircleText.TextTransparency = 1
+                    check.ImageTransparency = 0
+                    location[flagName] = true
+                end
+            end)
+        end
+
+        -- Additional methods would continue here...
+        -- (Box, Bind, Slider, Dropdown, ColorPicker)
+        
+        return Section
+    end
+    
+    return Sections
+end
+
+-- Input Handling
+local function isreallypressed(bind, inp)
+    local key = bind
+    if typeof(key) == "Instance" then
+        if key.UserInputType == Enum.UserInputType.Keyboard and inp.KeyCode == key.KeyCode then
+            return true
+        elseif tostring(key.UserInputType):find('MouseButton') and inp.UserInputType == key.UserInputType then
+            return true
+        end
+    end
+    if tostring(key):find'MouseButton1' then
+        return key == inp.UserInputType
+    else
+        return key == inp.KeyCode
+    end
+end
+
+UserInputService.InputBegan:connect(function(input)
+    if not library.binding then
+        for idx, binds in next, library.binds do
+            local real_binding = binds.location[idx]
+            if real_binding and isreallypressed(real_binding, input) then
+                binds.callback()
+            end
+        end
+    end
+end)
+
+return library
