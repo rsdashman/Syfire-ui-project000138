@@ -1528,4 +1528,25 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Venom-devX/ChaosHub/m
     end
 })
 
+----=========Tab16=========----
+local MainTab = Window:MakeTab({
+    Name = "Steal a brainrot",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "AV Hub",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Ayvathion/AV-On-Top/refs/heads/main/Loader.lua"))()
+
+    end
+})
+
+
+
+
+
 
