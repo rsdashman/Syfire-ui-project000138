@@ -1545,7 +1545,22 @@ loadstring(game:HttpGet("https://get-avth-ontop.netlify.app/my-paste/script.lua"
     end
 })
 
+----=========Tab17=========----
+local MainTab = Window:MakeTab({
+    Name = "Blox fruits",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
 
+MainSection:AddButton({
+    Name = "Redz hub",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))()
+
+    end
+})
 
 
 
