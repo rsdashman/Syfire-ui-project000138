@@ -2,7 +2,22 @@ local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsda
 --script zone
 
 
-print("V.1.1.10")
+print("V.1.1.15")
+
+
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+
+local tpwalking = false
+local tpwalkConnection = nil
+
+
+
+
+
 
 
 --script zone/
@@ -582,7 +597,64 @@ MainSection:AddSlider({
 
 
 
+local TpwalkToggle = MainTab:AddToggle({
+	Name = "Tpwalk",
+	Default = false,
+	Callback = function(Value)
+		tpwalking = Value
+		
+		if Value then
+			-- Start tpwalk
+			local chr = LocalPlayer.Character
+			local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
+			
+			if chr and hum then
+				tpwalkConnection = RunService.Heartbeat:Connect(function(delta)
+					if tpwalking and chr and hum and hum.Parent then
+						if hum.MoveDirection.Magnitude > 0 then
+							chr:TranslateBy(hum.MoveDirection * delta * 10)
+						end
+					end
+				end)
+			end
+		else
+			-- Stop tpwalk
+			if tpwalkConnection then
+				tpwalkConnection:Disconnect()
+				tpwalkConnection = nil
+			end
+		end
+	end
+})
 
+-- Speed Slider
+local SpeedSlider = MainTab:AddSlider({
+	Name = "Tpwalk Speed",
+	Min = 1,
+	Max = 200,
+	Default = 16,
+	Increment = 1,
+	ValueName = "Speed",
+	Callback = function(Value)
+		-- Update speed if tpwalk is active
+		if tpwalking and tpwalkConnection then
+			tpwalkConnection:Disconnect()
+			
+			local chr = LocalPlayer.Character
+			local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
+			
+			if chr and hum then
+				tpwalkConnection = RunService.Heartbeat:Connect(function(delta)
+					if tpwalking and chr and hum and hum.Parent then
+						if hum.MoveDirection.Magnitude > 0 then
+							chr:TranslateBy(hum.MoveDirection * delta * Value)
+						end
+					end
+				end)
+			end
+		end
+	end
+})
 
 
 
@@ -1561,7 +1633,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/h
 
     end
 })
-
 
 
 
