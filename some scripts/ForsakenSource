@@ -1,0 +1,126 @@
+local library = loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/768aec049ff97dbf228e80bf8e098d85/raw/5b73d90e17d0be3469606553a2b2bcd23f4941c9/Source",true))()
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+
+local tpwalking = false
+local tpwalkConnection = nil
+
+
+
+
+
+local tab = library:CreateWindow("Forsaken")
+local folder = tab:AddFolder("Main")
+
+
+
+
+local tpwalking = false
+local tpwalkConnection = nil
+
+folder:AddButton({
+    text = "Generator",
+    flag = "button",
+    callback = function()
+
+local RunService = game:GetService("RunService")
+
+local function executeRemoteCommand()
+    local success, error = pcall(function()
+
+        workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator"):WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
+    end)
+    
+    if success then
+        print("!!!")
+    else
+        warn("!: " .. tostring(error))
+    end
+end
+
+local function startAutoExecution()
+    executeRemoteCommand()
+
+    spawn(function()
+        while true do
+            wait(4) 
+            executeRemoteCommand()
+        end
+    end)
+end
+
+
+startAutoExecution()
+
+    end
+})
+
+folder:AddSlider({
+    text = "Walkspeed",
+    min = 16,
+    max = 100,
+    dual = true,
+    type = "slider",
+    callback = function(Value)
+
+if tpwalking and tpwalkConnection then
+			tpwalkConnection:Disconnect()
+			
+			local chr = LocalPlayer.Character
+			local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
+			
+			if chr and hum then
+				tpwalkConnection = RunService.Heartbeat:Connect(function(delta)
+					if tpwalking and chr and hum and hum.Parent then
+						if hum.MoveDirection.Magnitude > 0 then
+							chr:TranslateBy(hum.MoveDirection * delta * Value)
+						end
+					end
+				end)
+			end
+		end
+
+
+
+    end
+})
+
+
+folder:AddToggle({
+    text = "Enable TPWalk",
+    flag = "nothinh",
+    callback = function(Value)
+tpwalking = Value
+		
+		if Value then
+			-- Start tpwalk
+			local chr = LocalPlayer.Character
+			local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
+			
+			if chr and hum then
+				tpwalkConnection = RunService.Heartbeat:Connect(function(delta)
+					if tpwalking and chr and hum and hum.Parent then
+						if hum.MoveDirection.Magnitude > 0 then
+							chr:TranslateBy(hum.MoveDirection * delta * 10)
+						end
+					end
+				end)
+			end
+		else
+			-- Stop tpwalk
+			if tpwalkConnection then
+				tpwalkConnection:Disconnect()
+				tpwalkConnection = nil
+			end
+		end
+    end
+})
+
+
+
+
+
+library:Init()
