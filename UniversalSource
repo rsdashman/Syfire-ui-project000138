@@ -2,7 +2,7 @@ local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsda
 --script zone
 
 
-print("V.1.1.15")
+print("V.1.1.20")
 
 
 
@@ -1633,6 +1633,30 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/h
 
     end
 })
+
+----=========Tab17=========----
+local MainTab = Window:MakeTab({
+    Name = "Forsaken",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "NovaZhub",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NovaZHub/Yield/main/Forsaken.lua"))()
+
+    end
+})
+
+
+
+
+
+
+
 
 
 
