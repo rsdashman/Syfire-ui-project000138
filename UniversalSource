@@ -14,7 +14,60 @@ local LocalPlayer = Players.LocalPlayer
 local tpwalking = false
 local tpwalkConnection = nil
 
+--esp//
 
+
+local ESPEnabled = false
+local Highlights = {}
+
+local function highlightCharacter(player)
+    if not ESPEnabled then return end
+    if player == game.Players.LocalPlayer then return end
+
+    local function applyHighlight(char)
+        if not ESPEnabled or not char then return end
+        if Highlights[player] then return end
+
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "ESP_Highlight"
+        highlight.FillColor = Color3.fromRGB(255, 0, 0)
+        highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+        highlight.FillTransparency = 0.5
+        highlight.OutlineTransparency = 0.2
+        highlight.Adornee = char
+        highlight.Parent = char
+
+        Highlights[player] = highlight
+    end
+
+    if player.Character then
+        applyHighlight(player.Character)
+    end
+
+    player.CharacterAdded:Connect(function(char)
+        task.wait(1)
+        applyHighlight(char)
+    end)
+end
+
+local function removeHighlight(player)
+    if Highlights[player] then
+        Highlights[player]:Destroy()
+        Highlights[player] = nil
+    end
+end
+
+for _, player in pairs(game.Players:GetPlayers()) do
+    if player ~= game.Players.LocalPlayer then
+        highlightCharacter(player)
+    end
+end
+
+game.Players.PlayerRemoving:Connect(removeHighlight)
+
+
+
+--<esp/>
 
 
 
@@ -352,44 +405,22 @@ MainSection:AddToggle({
 
 
 MainSection:AddToggle({
-    Name = "ESP (Box)",
+    Name = "ESP",
     Default = false,
     Callback = function(enabled)
-        _G.ESPEnabled = enabled
-
-        if not enabled then
-            for _, v in pairs(game:GetService("Workspace"):GetChildren()) do
-                if v:FindFirstChild("ESPBox") then
-                    v:FindFirstChild("ESPBox"):Destroy()
+	 ESPEnabled = Value
+        if ESPEnabled then
+            for _, player in pairs(game.Players:GetPlayers()) do
+                if player ~= game.Players.LocalPlayer then
+                    highlightCharacter(player)
                 end
             end
-            return
+        else
+            for _, v in pairs(Highlights) do
+                v:Destroy()
+            end
+            Highlights = {}
         end
-
-        spawn(function()
-            while _G.ESPEnabled do
-                for _, player in pairs(game.Players:GetPlayers()) do
-                    if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                        local char = player.Character
-
-                        if not char:FindFirstChild("ESPBox") then
-                            local esp = Instance.new("BillboardGui", char)
-                            esp.Name = "ESPBox"
-                            esp.Adornee = char:FindFirstChild("HumanoidRootPart")
-                            esp.Size = UDim2.new(4, 0, 5, 0)
-                            esp.AlwaysOnTop = true
-
-                            local frame = Instance.new("Frame", esp)
-                            frame.Size = UDim2.new(1, 0, 1, 0)
-                            frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-                            frame.BackgroundTransparency = 0.3
-                            frame.BorderSizePixel = 0
-                        end
-                    end
-                end
-                wait(1)
-            end
-        end)
     end
 })
 
