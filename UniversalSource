@@ -1672,6 +1672,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NovaZHub/Yield/main/F
     end
 })
 
+MainSection:AddButton({
+    Name = "NTRF Hub",
+    Callback = function()
+loadstring(game:HttpGet("https://github.com/rsdashman/Advanced-Scripthub-kit/raw/refs/heads/main/Games/Forsaken"))()
+    end
+})
+
 ----=========Tab18=========----
 local MainTab = Window:MakeTab({
     Name = "FE scripts",
