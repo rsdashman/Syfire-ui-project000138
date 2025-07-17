@@ -1638,6 +1638,14 @@ loadstring(game:HttpGet("https://get-avth-ontop.netlify.app/my-paste/script.lua"
     end
 })
 
+MainSection:AddButton({
+    Name = "LunaFyer Hub",
+    Callback = function()
+loadstring(game:HttpGet("https://lunafyer.onrender.com/initialize"))()
+    end
+})
+
+
 ----=========Tab17=========----
 local MainTab = Window:MakeTab({
     Name = "Blox fruits",
