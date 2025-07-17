@@ -2,7 +2,7 @@ local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsda
 --script zone
 
 
-print("V.1.1.20")
+print("V.1.1.25")
 
 
 
@@ -1621,6 +1621,13 @@ local MainTab = Window:MakeTab({
 })
 local MainSection = MainTab:AddSection({
     Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "Steal a Brain rot Hub",
+    Callback = function()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ffdfeadf0af798741806ea404682a938.lua"))()
+    end
 })
 
 MainSection:AddButton({
