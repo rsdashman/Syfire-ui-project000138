@@ -1103,6 +1103,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/S
 })
 
 MainSection:AddButton({
+    Name = "Dex Working",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/BypassedDarkDexV3.lua", true))()
+    end
+})
+
+MainSection:AddButton({
     Name = "Dark dex v3",
     Callback = function()
 if game:GetService'CoreGui':FindFirstChild'Dex' then game:GetService'CoreGui'.Dex:Destroy(); end
@@ -1411,6 +1418,13 @@ MainSection:AddButton({
     end
 })
 
+MainSection:AddButton({
+    Name = "Orbit player",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/long191910/all-my-roblox-script/refs/heads/main/orbit.lua"))()
+    end
+})
+
 ----=========Tab9=========----
 local MainTab = Window:MakeTab({
     Name = "Bang/troll",
@@ -1534,7 +1548,7 @@ MainSection:AddButton({
 MainSection:AddButton({
     Name = "Siff | no key",
     Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/NysaDanielle/games/refs/heads/main/inkgame.lua"))()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/284c7c5eb4a430a82162018c617e9aa0.lua"))()
     end
 })
 
@@ -1651,9 +1665,42 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NovaZHub/Yield/main/F
     end
 })
 
+----=========Tab18=========----
+local MainTab = Window:MakeTab({
+    Name = "FE scripts",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
 
+MainSection:AddButton({
+    Name = "[FE] Jerk off",
+    Callback = function()
+loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+    end
+})
 
+MainSection:AddButton({
+    Name = "[FE] Invisible",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Gon900p/script/refs/heads/main/invisible"))()
+    end
+})
 
+MainSection:AddButton({
+    Name = "[Fe] Laser Arm [PalHair]",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/b07Nxyh0/raw"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "[FE] BackFlip",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/FE-Backflip"))()
+    end
+})
 
 
 
