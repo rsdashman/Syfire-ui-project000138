@@ -13,7 +13,6 @@ if isfile and isfile(FAVORITOS_FILE) then
     end
 end
 
--- Função para salvar favoritos no arquivo
 local function salvarFavoritos()
     if writefile then
         writefile(FAVORITOS_FILE, HttpService:JSONEncode(favoritos))
@@ -27,13 +26,13 @@ OrionLib.FavoriteEvent.Event:Connect(function(nomeOriginal)
         salvarFavoritos()
         OrionLib:MakeNotification({
             Name = "Favorito salvo!",
-            Content = nomeOriginal .. " foi adicionado aos favoritos.",
+            Content = nomeOriginal .. " got added to favs.",
             Time = 2
         })
     else
         OrionLib:MakeNotification({
-            Name = "Já está salvo!",
-            Content = nomeOriginal .. " já está nos favoritos.",
+            Name = "alred saved!",
+            Content = nomeOriginal .. " in favorites files.",
             Time = 2
         })
     end
