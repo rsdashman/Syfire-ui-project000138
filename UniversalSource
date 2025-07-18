@@ -1523,6 +1523,13 @@ loadstring(game:HttpGet('https://api.exploitingis.fun/loader', true))()
     end
 })
 
+MainSection:AddButton({
+    Name = "Ringta | no key",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/wefwef127382/99daysloader.github.io/refs/heads/main/ringta.lua"))()
+    end
+})
+
 ----=========Tab11=========----
 local MainTab = Window:MakeTab({
     Name = "Universals",
@@ -1655,14 +1662,14 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Steal a Brain rot Hub",
+    Name = "Steal a Brain rot Hub| no key",
     Callback = function()
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ffdfeadf0af798741806ea404682a938.lua"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "AV Hub",
+    Name = "AV Hub| no key",
     Callback = function()
 loadstring(game:HttpGet("https://get-avth-ontop.netlify.app/my-paste/script.lua"))()
 
@@ -1670,7 +1677,7 @@ loadstring(game:HttpGet("https://get-avth-ontop.netlify.app/my-paste/script.lua"
 })
 
 MainSection:AddButton({
-    Name = "LunaFyer Hub",
+    Name = "LunaFyer Hub| Whitelist system",
     Callback = function()
 loadstring(game:HttpGet("https://lunafyer.onrender.com/initialize"))()
     end
