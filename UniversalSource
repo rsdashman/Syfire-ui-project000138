@@ -1,5 +1,53 @@
 local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UIlibs/SecretFile'))()
 --script zone
+local HttpService = game:GetService("HttpService")
+local FAVORITOS_FILE = "myFav.txt"
+local favoritos = {}
+
+if isfile and isfile(FAVORITOS_FILE) then
+    local ok, data = pcall(function()
+        return HttpService:JSONDecode(readfile(FAVORITOS_FILE))
+    end)
+    if ok and type(data) == "table" then
+        favoritos = data
+    end
+end
+
+-- Função para salvar favoritos no arquivo
+local function salvarFavoritos()
+    if writefile then
+        writefile(FAVORITOS_FILE, HttpService:JSONEncode(favoritos))
+    end
+end
+
+
+OrionLib.FavoriteEvent.Event:Connect(function(nomeOriginal)
+    if not table.find(favoritos, nomeOriginal) then
+        table.insert(favoritos, nomeOriginal)
+        salvarFavoritos()
+        OrionLib:MakeNotification({
+            Name = "Favorito salvo!",
+            Content = nomeOriginal .. " foi adicionado aos favoritos.",
+            Time = 2
+        })
+    else
+        OrionLib:MakeNotification({
+            Name = "Já está salvo!",
+            Content = nomeOriginal .. " já está nos favoritos.",
+            Time = 2
+        })
+    end
+end)
+
+
+
+
+
+
+
+
+
+
 
 
 print("V.1.1.25")
@@ -1735,33 +1783,32 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "[FE] Jerk off",
+    Name = "[FE] Jerk off / [FE] Jerk off",
     Callback = function()
 loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "[FE] Invisible",
+    Name = "[FE] Invisible / [FE] Invisible",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Gon900p/script/refs/heads/main/invisible"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "[Fe] Laser Arm [PalHair]",
+    Name = "[Fe] Laser Arm [PalHair] / [Fe] Laser Arm [PalHair]",
     Callback = function()
         loadstring(game:HttpGet("https://pastefy.app/b07Nxyh0/raw"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "[FE] BackFlip",
+    Name = "[FE] BackFlip / [FE] BackFlip",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/FE-Backflip"))()
     end
 })
-
 
 
 
