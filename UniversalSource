@@ -1809,7 +1809,21 @@ MainSection:AddButton({
     end
 })
 
+----=========Tab19=========----
+local MainTab = Window:MakeTab({
+    Name = "mm2",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
 
+MainSection:AddButton({
+    Name = "Tora hub / Tora isme",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/mm2"))()
+    end
+})
 
 
 
