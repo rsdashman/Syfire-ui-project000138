@@ -1617,23 +1617,30 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "InkGame X-Force | no key",
+    Name = "InkGame X-Force | no key / InkGame X-Force | no key",
     Callback = function()
     loadstring(game:HttpGet("https://gist.githubusercontent.com/KevinBak123/62b6c4c59b9583cb9993f81064842a0d/raw/f563ea418e8a948f5eb3382124a93e38806c8097/gistfile1.txt"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "InkGame Tora | no key",
+    Name = "InkGame Tora | no key / InkGame Tora",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/InkGame"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Siff | no key",
+    Name = "Siff | no key / Siff | no key",
     Callback = function()
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/284c7c5eb4a430a82162018c617e9aa0.lua"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "Tuff | no key / Tuff | no key",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/TuffGuys/TuffGuys/refs/heads/main/Loader"))()
     end
 })
 
@@ -1647,7 +1654,7 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Tora | no key",
+    Name = "s / Tora | no key",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/SquidGame3"))()
     end
@@ -1663,21 +1670,21 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "OPTouchFling",
+    Name = "s / OPTouchFling",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/OP%20TOUCHFLING"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "OldTouchFling",
+    Name = "s / OldTouchFling",
     Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Touch-fling-27515"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "CrashPlayer",
+    Name = "s / CrashPlayer",
     Callback = function()
     loadstring(game:HttpGet("https://gist.githubusercontent.com/SolentraXminishakk/28e5606b99480adb6f0aa82846e4ff16/raw/03487f4a04364a912ffc93e3987d372b4a98df39/gistfile1.txt"))()
     end
@@ -1693,7 +1700,7 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Chaos Hub",
+    Name = "s / Chaos Hub",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Venom-devX/ChaosHub/main/loader.lua"))();
     end
