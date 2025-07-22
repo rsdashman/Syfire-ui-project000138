@@ -145,7 +145,7 @@ local MainSection = MainTab:AddSection({
 
 
 MainSection:AddButton({
-    Name = "s/ FLY Universal",
+    Name = "s / FLY Universal",
     Callback = function()
 loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
     end
@@ -1716,14 +1716,14 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "s/ Steal a Brain rot Hub| no key",
+    Name = "s / Steal a Brain rot Hub| no key",
     Callback = function()
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ffdfeadf0af798741806ea404682a938.lua"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "s/ AV Hub | no key",
+    Name = "s / AV Hub | no key",
     Callback = function()
 loadstring(game:HttpGet("https://get-avth-ontop.netlify.app/my-paste/script.lua"))()
 
@@ -1731,21 +1731,21 @@ loadstring(game:HttpGet("https://get-avth-ontop.netlify.app/my-paste/script.lua"
 })
 
 MainSection:AddButton({
-    Name = "s/ LunaFyer Hub | Whitelist system",
+    Name = "s / LunaFyer Hub | Whitelist system",
     Callback = function()
 loadstring(game:HttpGet("https://lunafyer.onrender.com/initialize"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "s/ ArbixHub | no key",
+    Name = "s / ArbixHub | no key",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Youifpg/Steal-a-Brainrot-op/refs/heads/main/Arbixhub-obfuscated.lua"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "s/ Chilli hub | no key",
+    Name = "s / Chilli hub | no key",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()
     end
@@ -1761,7 +1761,7 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "s/ Redz hub",
+    Name = "s / Redz hub",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))()
 
@@ -1778,7 +1778,7 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "s/ NovaZhub",
+    Name = "s / NovaZhub",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NovaZHub/Yield/main/Forsaken.lua"))()
 
@@ -1786,7 +1786,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NovaZHub/Yield/main/F
 })
 
 MainSection:AddButton({
-    Name = "s/ NTRF Hub",
+    Name = "s / NTRF Hub",
     Callback = function()
 loadstring(game:HttpGet("https://github.com/rsdashman/Advanced-Scripthub-kit/raw/refs/heads/main/Games/Forsaken"))()
     end
