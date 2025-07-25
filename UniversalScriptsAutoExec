@@ -1,0 +1,21 @@
+local function onGameLoaded()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource'))()
+end
+
+if game:IsLoaded() then
+    onGameLoaded()
+else
+    game.Loaded:Wait()
+    onGameLoaded()
+end
+
+local TeleportService = game:GetService("TeleportService")
+TeleportService.TeleportInitFailed:Connect(function()
+    onGameLoaded()
+end)
+
+if syn and syn.queue_on_teleport then
+    syn.queue_on_teleport"loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource'))()"
+elseif queue_on_teleport then
+    queue_on_teleport"loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UniversalSource'))()"
+end
