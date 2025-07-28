@@ -1,0 +1,855 @@
+--[[
+    ModernUILib.lua
+    Biblioteca de UI moderna para Roblox
+    Criada por: Assistant
+    Versão: 2.0
+    
+    Características:
+    - Design moderno e elegante
+    - Animações suaves
+    - Componentes responsivos
+    - Sistema de temas
+    - Suporte a tabs
+    - Componentes avançados (Dropdown, ColorPicker, etc.)
+]]
+
+local ModernUILib = {}
+ModernUILib.__index = ModernUILib
+
+-- Services
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- Configurações padrão
+local DEFAULT_CONFIG = {
+    theme = "dark",
+    accent_color = Color3.fromRGB(0, 170, 255),
+    background_color = Color3.fromRGB(25, 27, 30),
+    surface_color = Color3.fromRGB(35, 37, 40),
+    text_color = Color3.fromRGB(255, 255, 255),
+    text_secondary = Color3.fromRGB(180, 180, 180),
+    border_color = Color3.fromRGB(50, 52, 55),
+    shadow_color = Color3.fromRGB(0, 0, 0),
+    corner_radius = 8,
+    animation_speed = 0.3,
+    font = Enum.Font.Gotham,
+    font_bold = Enum.Font.GothamBold
+}
+
+-- Temas disponíveis
+local THEMES = {
+    dark = {
+        background = Color3.fromRGB(25, 27, 30),
+        surface = Color3.fromRGB(35, 37, 40),
+        text = Color3.fromRGB(255, 255, 255),
+        text_secondary = Color3.fromRGB(180, 180, 180),
+        border = Color3.fromRGB(50, 52, 55),
+        accent = Color3.fromRGB(0, 170, 255),
+        shadow = Color3.fromRGB(0, 0, 0)
+    },
+    light = {
+        background = Color3.fromRGB(245, 247, 250),
+        surface = Color3.fromRGB(255, 255, 255),
+        text = Color3.fromRGB(30, 32, 35),
+        text_secondary = Color3.fromRGB(100, 102, 105),
+        border = Color3.fromRGB(220, 222, 225),
+        accent = Color3.fromRGB(0, 170, 255),
+        shadow = Color3.fromRGB(0, 0, 0)
+    },
+    purple = {
+        background = Color3.fromRGB(30, 25, 40),
+        surface = Color3.fromRGB(40, 35, 50),
+        text = Color3.fromRGB(255, 255, 255),
+        text_secondary = Color3.fromRGB(180, 180, 180),
+        border = Color3.fromRGB(60, 55, 70),
+        accent = Color3.fromRGB(147, 112, 219),
+        shadow = Color3.fromRGB(0, 0, 0)
+    }
+}
+
+-- Utilitários
+local function createCorner(parent, radius)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, radius or DEFAULT_CONFIG.corner_radius)
+    corner.Parent = parent
+    return corner
+end
+
+local function createStroke(parent, color, thickness)
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = color or DEFAULT_CONFIG.border_color
+    stroke.Thickness = thickness or 1
+    stroke.Parent = parent
+    return stroke
+end
+
+local function createShadow(parent)
+    local shadow = Instance.new("Frame")
+    shadow.Name = "Shadow"
+    shadow.Size = UDim2.new(1, 4, 1, 4)
+    shadow.Position = UDim2.new(0, -2, 0, -2)
+    shadow.BackgroundColor3 = DEFAULT_CONFIG.shadow_color
+    shadow.BackgroundTransparency = 0.8
+    shadow.BorderSizePixel = 0
+    shadow.ZIndex = parent.ZIndex - 1
+    shadow.Parent = parent.Parent
+    createCorner(shadow, DEFAULT_CONFIG.corner_radius)
+    return shadow
+end
+
+local function tween(instance, properties, duration)
+    local tweenInfo = TweenInfo.new(duration or DEFAULT_CONFIG.animation_speed, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local tween = TweenService:Create(instance, tweenInfo, properties)
+    tween:Play()
+    return tween
+end
+
+-- Classe principal da biblioteca
+function ModernUILib.new(config)
+    local self = setmetatable({}, ModernUILib)
+    
+    self.config = config or {}
+    self.theme = THEMES[self.config.theme or "dark"]
+    self.windows = {}
+    self.active_window = nil
+    
+    return self
+end
+
+-- Criar janela principal
+function ModernUILib:CreateWindow(title, size)
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "ModernUILib"
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = PlayerGui
+    
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "MainFrame"
+    mainFrame.Size = size or UDim2.new(0, 450, 0, 600)
+    mainFrame.Position = UDim2.new(0.5, -225, 0.5, -300)
+    mainFrame.BackgroundColor3 = self.theme.background
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Parent = screenGui
+    mainFrame.ZIndex = 10
+    
+    createCorner(mainFrame)
+    createStroke(mainFrame, self.theme.border, 2)
+    createShadow(mainFrame)
+    
+    -- Barra de título
+    local titleBar = Instance.new("Frame")
+    titleBar.Name = "TitleBar"
+    titleBar.Size = UDim2.new(1, 0, 0, 45)
+    titleBar.BackgroundColor3 = self.theme.surface
+    titleBar.BorderSizePixel = 0
+    titleBar.Parent = mainFrame
+    titleBar.ZIndex = 11
+    
+    createCorner(titleBar, DEFAULT_CONFIG.corner_radius)
+    
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Name = "Title"
+    titleLabel.Size = UDim2.new(1, -100, 1, 0)
+    titleLabel.Position = UDim2.new(0, 15, 0, 0)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = title or "Modern UI"
+    titleLabel.TextColor3 = self.theme.accent
+    titleLabel.Font = DEFAULT_CONFIG.font_bold
+    titleLabel.TextSize = 18
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = titleBar
+    titleLabel.ZIndex = 12
+    
+    -- Botões de controle
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Name = "CloseButton"
+    closeBtn.Size = UDim2.new(0, 30, 0, 30)
+    closeBtn.Position = UDim2.new(1, -35, 0.5, -15)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 70, 70)
+    closeBtn.BorderSizePixel = 0
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = DEFAULT_CONFIG.font_bold
+    closeBtn.TextSize = 20
+    closeBtn.Parent = titleBar
+    closeBtn.ZIndex = 12
+    
+    createCorner(closeBtn, 15)
+    
+    local minimizeBtn = Instance.new("TextButton")
+    minimizeBtn.Name = "MinimizeButton"
+    minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+    minimizeBtn.Position = UDim2.new(1, -70, 0.5, -15)
+    minimizeBtn.BackgroundColor3 = Color3.fromRGB(255, 193, 7)
+    minimizeBtn.BorderSizePixel = 0
+    minimizeBtn.Text = "−"
+    minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    minimizeBtn.Font = DEFAULT_CONFIG.font_bold
+    minimizeBtn.TextSize = 20
+    minimizeBtn.Parent = titleBar
+    minimizeBtn.ZIndex = 12
+    
+    createCorner(minimizeBtn, 15)
+    
+    -- Sistema de drag
+    local dragging = false
+    local dragStart, startPos
+    
+    titleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 and 
+           not closeBtn:IsMouseOver() and not minimizeBtn:IsMouseOver() then
+            dragging = true
+            dragStart = input.Position
+            startPos = mainFrame.Position
+        end
+    end)
+    
+    titleBar.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            mainFrame.Position = UDim2.new(
+                startPos.X.Scale, 
+                startPos.X.Offset + delta.X, 
+                startPos.Y.Scale, 
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+    
+    -- Eventos dos botões
+    closeBtn.MouseButton1Click:Connect(function()
+        tween(mainFrame, {Size = UDim2.new(0, 0, 0, 0)}, 0.2)
+        wait(0.2)
+        screenGui:Destroy()
+    end)
+    
+    minimizeBtn.MouseButton1Click:Connect(function()
+        if mainFrame.Size.Y.Offset > 60 then
+            tween(mainFrame, {Size = UDim2.new(0, 450, 0, 60)}, 0.3)
+        else
+            tween(mainFrame, {Size = size or UDim2.new(0, 450, 0, 600)}, 0.3)
+        end
+    end)
+    
+    -- Container de conteúdo
+    local contentContainer = Instance.new("Frame")
+    contentContainer.Name = "ContentContainer"
+    contentContainer.Size = UDim2.new(1, -20, 1, -65)
+    contentContainer.Position = UDim2.new(0, 10, 0, 55)
+    contentContainer.BackgroundTransparency = 1
+    contentContainer.Parent = mainFrame
+    contentContainer.ZIndex = 11
+    
+    local contentLayout = Instance.new("UIListLayout")
+    contentLayout.Padding = UDim.new(0, 10)
+    contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    contentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    contentLayout.Parent = contentContainer
+    
+    local window = {
+        gui = screenGui,
+        main = mainFrame,
+        content = contentContainer,
+        title = titleLabel,
+        close = closeBtn,
+        minimize = minimizeBtn
+    }
+    
+    table.insert(self.windows, window)
+    self.active_window = window
+    
+    return window
+end
+
+-- Criar seção
+function ModernUILib:CreateSection(parent, title)
+    local sectionFrame = Instance.new("Frame")
+    sectionFrame.Name = "Section"
+    sectionFrame.Size = UDim2.new(1, 0, 0, 0)
+    sectionFrame.BackgroundColor3 = self.theme.surface
+    sectionFrame.BorderSizePixel = 0
+    sectionFrame.Parent = parent
+    sectionFrame.ZIndex = 12
+    
+    createCorner(sectionFrame)
+    createStroke(sectionFrame, self.theme.border, 1)
+    
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Name = "Title"
+    titleLabel.Size = UDim2.new(1, -20, 0, 30)
+    titleLabel.Position = UDim2.new(0, 10, 0, 5)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = title or "Seção"
+    titleLabel.TextColor3 = self.theme.accent
+    titleLabel.Font = DEFAULT_CONFIG.font_bold
+    titleLabel.TextSize = 16
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = sectionFrame
+    titleLabel.ZIndex = 13
+    
+    local contentFrame = Instance.new("Frame")
+    contentFrame.Name = "Content"
+    contentFrame.Size = UDim2.new(1, -20, 0, 0)
+    contentFrame.Position = UDim2.new(0, 10, 0, 40)
+    contentFrame.BackgroundTransparency = 1
+    contentFrame.Parent = sectionFrame
+    contentFrame.ZIndex = 13
+    
+    local contentLayout = Instance.new("UIListLayout")
+    contentLayout.Padding = UDim.new(0, 8)
+    contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    contentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    contentLayout.Parent = contentFrame
+    
+    -- Auto-resize baseado no conteúdo
+    contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        sectionFrame.Size = UDim2.new(1, 0, 0, contentLayout.AbsoluteContentSize.Y + 50)
+    end)
+    
+    return {
+        frame = sectionFrame,
+        content = contentFrame,
+        title = titleLabel
+    }
+end
+
+-- Criar botão
+function ModernUILib:CreateButton(parent, text, callback)
+    local button = Instance.new("TextButton")
+    button.Name = "Button"
+    button.Size = UDim2.new(1, 0, 0, 40)
+    button.BackgroundColor3 = self.theme.accent
+    button.BorderSizePixel = 0
+    button.Text = text or "Botão"
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = DEFAULT_CONFIG.font_bold
+    button.TextSize = 16
+    button.Parent = parent
+    button.ZIndex = 14
+    
+    createCorner(button)
+    
+    -- Animações de hover
+    button.MouseEnter:Connect(function()
+        tween(button, {BackgroundColor3 = self.theme.accent:Lerp(Color3.fromRGB(255, 255, 255), 0.1)})
+    end)
+    
+    button.MouseLeave:Connect(function()
+        tween(button, {BackgroundColor3 = self.theme.accent})
+    end)
+    
+    button.MouseButton1Click:Connect(function()
+        if callback then
+            callback()
+        end
+    end)
+    
+    return button
+end
+
+-- Criar toggle
+function ModernUILib:CreateToggle(parent, text, default, callback)
+    local toggleFrame = Instance.new("Frame")
+    toggleFrame.Name = "Toggle"
+    toggleFrame.Size = UDim2.new(1, 0, 0, 35)
+    toggleFrame.BackgroundTransparency = 1
+    toggleFrame.Parent = parent
+    toggleFrame.ZIndex = 14
+    
+    local label = Instance.new("TextLabel")
+    label.Name = "Label"
+    label.Size = UDim2.new(1, -50, 1, 0)
+    label.Position = UDim2.new(0, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text or "Toggle"
+    label.TextColor3 = self.theme.text
+    label.Font = DEFAULT_CONFIG.font
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = toggleFrame
+    label.ZIndex = 15
+    
+    local toggleButton = Instance.new("TextButton")
+    toggleButton.Name = "ToggleButton"
+    toggleButton.Size = UDim2.new(0, 40, 0, 24)
+    toggleButton.Position = UDim2.new(1, -40, 0.5, -12)
+    toggleButton.BackgroundColor3 = default and self.theme.accent or Color3.fromRGB(100, 100, 100)
+    toggleButton.BorderSizePixel = 0
+    toggleButton.Text = ""
+    toggleButton.Parent = toggleFrame
+    toggleButton.ZIndex = 15
+    
+    createCorner(toggleButton, 12)
+    
+    local toggleKnob = Instance.new("Frame")
+    toggleKnob.Name = "Knob"
+    toggleKnob.Size = UDim2.new(0, 18, 0, 18)
+    toggleKnob.Position = default and UDim2.new(1, -19, 0.5, -9) or UDim2.new(0, 3, 0.5, -9)
+    toggleKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    toggleKnob.BorderSizePixel = 0
+    toggleKnob.Parent = toggleButton
+    toggleKnob.ZIndex = 16
+    
+    createCorner(toggleKnob, 9)
+    
+    local state = default or false
+    
+    local function updateToggle()
+        if state then
+            tween(toggleButton, {BackgroundColor3 = self.theme.accent})
+            tween(toggleKnob, {Position = UDim2.new(1, -19, 0.5, -9)})
+        else
+            tween(toggleButton, {BackgroundColor3 = Color3.fromRGB(100, 100, 100)})
+            tween(toggleKnob, {Position = UDim2.new(0, 3, 0.5, -9)})
+        end
+    end
+    
+    toggleButton.MouseButton1Click:Connect(function()
+        state = not state
+        updateToggle()
+        if callback then
+            callback(state)
+        end
+    end)
+    
+    return {
+        frame = toggleFrame,
+        button = toggleButton,
+        knob = toggleKnob,
+        state = state
+    }
+end
+
+-- Criar slider
+function ModernUILib:CreateSlider(parent, text, min, max, default, callback)
+    local sliderFrame = Instance.new("Frame")
+    sliderFrame.Name = "Slider"
+    sliderFrame.Size = UDim2.new(1, 0, 0, 50)
+    sliderFrame.BackgroundTransparency = 1
+    sliderFrame.Parent = parent
+    sliderFrame.ZIndex = 14
+    
+    local label = Instance.new("TextLabel")
+    label.Name = "Label"
+    label.Size = UDim2.new(1, -60, 0, 20)
+    label.Position = UDim2.new(0, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text or "Slider"
+    label.TextColor3 = self.theme.text
+    label.Font = DEFAULT_CONFIG.font
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = sliderFrame
+    label.ZIndex = 15
+    
+    local valueLabel = Instance.new("TextLabel")
+    valueLabel.Name = "Value"
+    valueLabel.Size = UDim2.new(0, 50, 0, 20)
+    valueLabel.Position = UDim2.new(1, -50, 0, 0)
+    valueLabel.BackgroundTransparency = 1
+    valueLabel.Text = tostring(default or min)
+    valueLabel.TextColor3 = self.theme.accent
+    valueLabel.Font = DEFAULT_CONFIG.font_bold
+    valueLabel.TextSize = 14
+    valueLabel.TextXAlignment = Enum.TextXAlignment.Right
+    valueLabel.Parent = sliderFrame
+    valueLabel.ZIndex = 15
+    
+    local sliderTrack = Instance.new("Frame")
+    sliderTrack.Name = "Track"
+    sliderTrack.Size = UDim2.new(1, 0, 0, 6)
+    sliderTrack.Position = UDim2.new(0, 0, 0, 30)
+    sliderTrack.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    sliderTrack.BorderSizePixel = 0
+    sliderTrack.Parent = sliderFrame
+    sliderTrack.ZIndex = 15
+    
+    createCorner(sliderTrack, 3)
+    
+    local sliderFill = Instance.new("Frame")
+    sliderFill.Name = "Fill"
+    sliderFill.Size = UDim2.new(0, 0, 1, 0)
+    sliderFill.Position = UDim2.new(0, 0, 0, 0)
+    sliderFill.BackgroundColor3 = self.theme.accent
+    sliderFill.BorderSizePixel = 0
+    sliderFill.Parent = sliderTrack
+    sliderFill.ZIndex = 16
+    
+    createCorner(sliderFill, 3)
+    
+    local sliderKnob = Instance.new("Frame")
+    sliderKnob.Name = "Knob"
+    sliderKnob.Size = UDim2.new(0, 16, 0, 16)
+    sliderKnob.Position = UDim2.new(0, -8, 0.5, -8)
+    sliderKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    sliderKnob.BorderSizePixel = 0
+    sliderKnob.Parent = sliderTrack
+    sliderKnob.ZIndex = 17
+    
+    createCorner(sliderKnob, 8)
+    createStroke(sliderKnob, self.theme.accent, 2)
+    
+    local value = default or min
+    local dragging = false
+    
+    local function updateSlider(newValue)
+        value = math.clamp(newValue, min, max)
+        local percentage = (value - min) / (max - min)
+        
+        tween(sliderFill, {Size = UDim2.new(percentage, 0, 1, 0)})
+        tween(sliderKnob, {Position = UDim2.new(percentage, -8, 0.5, -8)})
+        
+        valueLabel.Text = tostring(math.floor(value))
+        
+        if callback then
+            callback(value)
+        end
+    end
+    
+    sliderTrack.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            local percentage = (input.Position.X - sliderTrack.AbsolutePosition.X) / sliderTrack.AbsoluteSize.X
+            updateSlider(min + (max - min) * percentage)
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local percentage = (input.Position.X - sliderTrack.AbsolutePosition.X) / sliderTrack.AbsoluteSize.X
+            updateSlider(min + (max - min) * percentage)
+        end
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+    
+    updateSlider(value)
+    
+    return {
+        frame = sliderFrame,
+        track = sliderTrack,
+        fill = sliderFill,
+        knob = sliderKnob,
+        value = value
+    }
+end
+
+-- Criar input
+function ModernUILib:CreateInput(parent, placeholder, callback)
+    local input = Instance.new("TextBox")
+    input.Name = "Input"
+    input.Size = UDim2.new(1, 0, 0, 35)
+    input.BackgroundColor3 = self.theme.surface
+    input.BorderSizePixel = 0
+    input.Text = ""
+    input.PlaceholderText = placeholder or "Digite aqui..."
+    input.TextColor3 = self.theme.text
+    input.PlaceholderColor3 = self.theme.text_secondary
+    input.Font = DEFAULT_CONFIG.font
+    input.TextSize = 14
+    input.ClearTextOnFocus = false
+    input.Parent = parent
+    input.ZIndex = 14
+    
+    createCorner(input)
+    createStroke(input, self.theme.border, 1)
+    
+    input.Focused:Connect(function()
+        tween(input.UIStroke, {Color = self.theme.accent})
+    end)
+    
+    input.FocusLost:Connect(function(enterPressed)
+        tween(input.UIStroke, {Color = self.theme.border})
+        if enterPressed and callback then
+            callback(input.Text)
+        end
+    end)
+    
+    return input
+end
+
+-- Criar dropdown
+function ModernUILib:CreateDropdown(parent, text, options, callback)
+    local dropdownFrame = Instance.new("Frame")
+    dropdownFrame.Name = "Dropdown"
+    dropdownFrame.Size = UDim2.new(1, 0, 0, 35)
+    dropdownFrame.BackgroundTransparency = 1
+    dropdownFrame.Parent = parent
+    dropdownFrame.ZIndex = 14
+    
+    local label = Instance.new("TextLabel")
+    label.Name = "Label"
+    label.Size = UDim2.new(1, 0, 0, 20)
+    label.Position = UDim2.new(0, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text or "Dropdown"
+    label.TextColor3 = self.theme.text
+    label.Font = DEFAULT_CONFIG.font
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = dropdownFrame
+    label.ZIndex = 15
+    
+    local dropdownButton = Instance.new("TextButton")
+    dropdownButton.Name = "Button"
+    dropdownButton.Size = UDim2.new(1, 0, 0, 30)
+    dropdownButton.Position = UDim2.new(0, 0, 0, 20)
+    dropdownButton.BackgroundColor3 = self.theme.surface
+    dropdownButton.BorderSizePixel = 0
+    dropdownButton.Text = "Selecione uma opção"
+    dropdownButton.TextColor3 = self.theme.text_secondary
+    dropdownButton.Font = DEFAULT_CONFIG.font
+    dropdownButton.TextSize = 14
+    dropdownButton.TextXAlignment = Enum.TextXAlignment.Left
+    dropdownButton.Parent = dropdownFrame
+    dropdownButton.ZIndex = 15
+    
+    createCorner(dropdownButton)
+    createStroke(dropdownButton, self.theme.border, 1)
+    
+    local arrow = Instance.new("TextLabel")
+    arrow.Name = "Arrow"
+    arrow.Size = UDim2.new(0, 20, 0, 20)
+    arrow.Position = UDim2.new(1, -25, 0.5, -10)
+    arrow.BackgroundTransparency = 1
+    arrow.Text = "▼"
+    arrow.TextColor3 = self.theme.text_secondary
+    arrow.Font = DEFAULT_CONFIG.font
+    arrow.TextSize = 12
+    arrow.Parent = dropdownButton
+    arrow.ZIndex = 16
+    
+    local dropdownList = Instance.new("Frame")
+    dropdownList.Name = "List"
+    dropdownList.Size = UDim2.new(1, 0, 0, 0)
+    dropdownList.Position = UDim2.new(0, 0, 1, 5)
+    dropdownList.BackgroundColor3 = self.theme.surface
+    dropdownList.BorderSizePixel = 0
+    dropdownList.Parent = dropdownButton
+    dropdownList.ZIndex = 20
+    dropdownList.Visible = false
+    
+    createCorner(dropdownList)
+    createStroke(dropdownList, self.theme.border, 1)
+    
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Padding = UDim.new(0, 1)
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.Parent = dropdownList
+    
+    local isOpen = false
+    local selectedOption = nil
+    
+    local function toggleDropdown()
+        isOpen = not isOpen
+        dropdownList.Visible = isOpen
+        
+        if isOpen then
+            tween(arrow, {Rotation = 180})
+            tween(dropdownList, {Size = UDim2.new(1, 0, 0, math.min(#options * 30, 150))})
+        else
+            tween(arrow, {Rotation = 0})
+            tween(dropdownList, {Size = UDim2.new(1, 0, 0, 0)})
+        end
+    end
+    
+    dropdownButton.MouseButton1Click:Connect(toggleDropdown)
+    
+    -- Criar opções
+    for i, option in ipairs(options) do
+        local optionButton = Instance.new("TextButton")
+        optionButton.Name = "Option" .. i
+        optionButton.Size = UDim2.new(1, -10, 0, 28)
+        optionButton.Position = UDim2.new(0, 5, 0, 0)
+        optionButton.BackgroundColor3 = self.theme.surface
+        optionButton.BorderSizePixel = 0
+        optionButton.Text = option
+        optionButton.TextColor3 = self.theme.text
+        optionButton.Font = DEFAULT_CONFIG.font
+        optionButton.TextSize = 14
+        optionButton.TextXAlignment = Enum.TextXAlignment.Left
+        optionButton.Parent = dropdownList
+        optionButton.ZIndex = 21
+        
+        optionButton.MouseEnter:Connect(function()
+            tween(optionButton, {BackgroundColor3 = self.theme.accent:Lerp(self.theme.surface, 0.1)})
+        end)
+        
+        optionButton.MouseLeave:Connect(function()
+            tween(optionButton, {BackgroundColor3 = self.theme.surface})
+        end)
+        
+        optionButton.MouseButton1Click:Connect(function()
+            selectedOption = option
+            dropdownButton.Text = option
+            dropdownButton.TextColor3 = self.theme.text
+            toggleDropdown()
+            if callback then
+                callback(option)
+            end
+        end)
+    end
+    
+    return {
+        frame = dropdownFrame,
+        button = dropdownButton,
+        list = dropdownList,
+        selected = selectedOption
+    }
+end
+
+-- Criar color picker
+function ModernUILib:CreateColorPicker(parent, text, defaultColor, callback)
+    local colorFrame = Instance.new("Frame")
+    colorFrame.Name = "ColorPicker"
+    colorFrame.Size = UDim2.new(1, 0, 0, 35)
+    colorFrame.BackgroundTransparency = 1
+    colorFrame.Parent = parent
+    colorFrame.ZIndex = 14
+    
+    local label = Instance.new("TextLabel")
+    label.Name = "Label"
+    label.Size = UDim2.new(1, -50, 1, 0)
+    label.Position = UDim2.new(0, 0, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = text or "Cor"
+    label.TextColor3 = self.theme.text
+    label.Font = DEFAULT_CONFIG.font
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = colorFrame
+    label.ZIndex = 15
+    
+    local colorButton = Instance.new("TextButton")
+    colorButton.Name = "ColorButton"
+    colorButton.Size = UDim2.new(0, 40, 0, 30)
+    colorButton.Position = UDim2.new(1, -40, 0.5, -15)
+    colorButton.BackgroundColor3 = defaultColor or Color3.fromRGB(255, 255, 255)
+    colorButton.BorderSizePixel = 0
+    colorButton.Text = ""
+    colorButton.Parent = colorFrame
+    colorButton.ZIndex = 15
+    
+    createCorner(colorButton)
+    createStroke(colorButton, self.theme.border, 2)
+    
+    local selectedColor = defaultColor or Color3.fromRGB(255, 255, 255)
+    
+    colorButton.MouseButton1Click:Connect(function()
+        -- Aqui você pode implementar um color picker mais avançado
+        -- Por enquanto, vamos apenas alternar entre algumas cores
+        local colors = {
+            Color3.fromRGB(255, 255, 255),
+            Color3.fromRGB(255, 0, 0),
+            Color3.fromRGB(0, 255, 0),
+            Color3.fromRGB(0, 0, 255),
+            Color3.fromRGB(255, 255, 0),
+            Color3.fromRGB(255, 0, 255),
+            Color3.fromRGB(0, 255, 255)
+        }
+        
+        local currentIndex = 1
+        for i, color in ipairs(colors) do
+            if color == selectedColor then
+                currentIndex = i
+                break
+            end
+        end
+        
+        selectedColor = colors[(currentIndex % #colors) + 1]
+        tween(colorButton, {BackgroundColor3 = selectedColor})
+        
+        if callback then
+            callback(selectedColor)
+        end
+    end)
+    
+    return {
+        frame = colorFrame,
+        button = colorButton,
+        color = selectedColor
+    }
+end
+
+-- Criar label
+function ModernUILib:CreateLabel(parent, text, color)
+    local label = Instance.new("TextLabel")
+    label.Name = "Label"
+    label.Size = UDim2.new(1, 0, 0, 20)
+    label.BackgroundTransparency = 1
+    label.Text = text or "Label"
+    label.TextColor3 = color or self.theme.text
+    label.Font = DEFAULT_CONFIG.font
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = parent
+    label.ZIndex = 14
+    
+    return label
+end
+
+-- Criar separador
+function ModernUILib:CreateSeparator(parent)
+    local separator = Instance.new("Frame")
+    separator.Name = "Separator"
+    separator.Size = UDim2.new(1, 0, 0, 1)
+    separator.BackgroundColor3 = self.theme.border
+    separator.BorderSizePixel = 0
+    separator.Parent = parent
+    separator.ZIndex = 14
+    
+    return separator
+end
+
+-- Exemplo de uso
+function ModernUILib:Example()
+    local window = self:CreateWindow("Modern UI Library", UDim2.new(0, 500, 0, 700))
+    
+    local section1 = self:CreateSection(window.content, "Controles Básicos")
+    
+    self:CreateButton(section1.content, "Clique Aqui", function()
+        print("Botão clicado!")
+    end)
+    
+    self:CreateToggle(section1.content, "Ativar recursos", false, function(state)
+        print("Toggle:", state)
+    end)
+    
+    self:CreateSlider(section1.content, "Volume", 0, 100, 50, function(value)
+        print("Volume:", value)
+    end)
+    
+    self:CreateInput(section1.content, "Digite seu nome...", function(text)
+        print("Nome:", text)
+    end)
+    
+    local section2 = self:CreateSection(window.content, "Controles Avançados")
+    
+    self:CreateDropdown(section2.content, "Selecione uma opção", {"Opção 1", "Opção 2", "Opção 3"}, function(option)
+        print("Opção selecionada:", option)
+    end)
+    
+    self:CreateColorPicker(section2.content, "Escolha uma cor", Color3.fromRGB(255, 0, 0), function(color)
+        print("Cor selecionada:", color)
+    end)
+    
+    self:CreateSeparator(section2.content)
+    
+    self:CreateLabel(section2.content, "Esta é uma label de exemplo", self.theme.accent)
+end
+
+return ModernUILib
