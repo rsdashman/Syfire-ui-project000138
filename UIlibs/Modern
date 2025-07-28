@@ -7,7 +7,8 @@ local defaultSettings = {
     Font = Enum.Font.SourceSans,
     TextSize = 14,
     WindowSize = UDim2.new(0, 400, 0, 300),
-    WindowPosition = UDim2.new(0.5, -200, 0.5, -150)
+    WindowPosition = UDim2.new(0.5, -200, 0.5, -150),
+    BackgroundTransparency = 0.3
 }
 
 -- Função para criar uma nova janela
@@ -22,30 +23,46 @@ function UILib:CreateWindow(title, settings)
     
     -- Criação dos elementos da UI
     local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "UILibWindow"
+    screenGui.Name = "UILibWindow_" .. tostring(math.random(1, 10000))
     screenGui.ResetOnSpawn = false
-    screenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-    
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.Parent = game:GetService("CoreGui") -- Usamos CoreGui para executores
+
     local mainFrame = Instance.new("Frame")
     mainFrame.Name = "MainFrame"
     mainFrame.Size = settings.WindowSize
     mainFrame.Position = settings.WindowPosition
     mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-    mainFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    mainFrame.BackgroundTransparency = settings.BackgroundTransparency
     mainFrame.BorderSizePixel = 0
     mainFrame.ClipsDescendants = true
     mainFrame.Parent = screenGui
-    
+
+    -- Adiciona sombra (opcional)
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "Shadow"
+    shadow.Size = UDim2.new(1, 10, 1, 10)
+    shadow.Position = UDim2.new(0, -5, 0, -5)
+    shadow.Image = "rbxassetid://1316045217"
+    shadow.ImageColor3 = Color3.new(0, 0, 0)
+    shadow.ImageTransparency = 0.8
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+    shadow.BackgroundTransparency = 1
+    shadow.Parent = mainFrame
+    shadow.ZIndex = -1
+
     local titleBar = Instance.new("Frame")
     titleBar.Name = "TitleBar"
     titleBar.Size = UDim2.new(1, 0, 0, 30)
     titleBar.BackgroundColor3 = settings.ThemeColor
     titleBar.BorderSizePixel = 0
     titleBar.Parent = mainFrame
-    
+
     local titleText = Instance.new("TextLabel")
     titleText.Name = "TitleText"
-    titleText.Size = UDim2.new(1, -10, 1, 0)
+    titleText.Size = UDim2.new(1, -40, 1, 0)
     titleText.Position = UDim2.new(0, 10, 0, 0)
     titleText.BackgroundTransparency = 1
     titleText.Text = title or "Window"
@@ -54,29 +71,39 @@ function UILib:CreateWindow(title, settings)
     titleText.TextSize = settings.TextSize + 2
     titleText.TextXAlignment = Enum.TextXAlignment.Left
     titleText.Parent = titleBar
-    
+
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
     closeButton.Size = UDim2.new(0, 30, 1, 0)
     closeButton.Position = UDim2.new(1, -30, 0, 0)
-    closeButton.BackgroundTransparency = 1
+    closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
     closeButton.Text = "X"
     closeButton.TextColor3 = settings.TextColor
-    closeButton.Font = settings.Font
+    closeButton.Font = Enum.Font.SourceSansBold
     closeButton.TextSize = settings.TextSize + 2
     closeButton.Parent = titleBar
-    
+
     local contentFrame = Instance.new("Frame")
     contentFrame.Name = "ContentFrame"
-    contentFrame.Size = UDim2.new(1, 0, 1, -30)
-    contentFrame.Position = UDim2.new(0, 0, 0, 30)
+    contentFrame.Size = UDim2.new(1, -10, 1, -40)
+    contentFrame.Position = UDim2.new(0, 5, 0, 35)
     contentFrame.BackgroundTransparency = 1
     contentFrame.Parent = mainFrame
-    
-    -- Adicionar funcionalidade de arrastar
-    local dragging = false
-    local dragInput, dragStart, startPos
-    
+
+    -- Adiciona lista de elementos (para organização)
+    local uiList = Instance.new("UIListLayout")
+    uiList.Padding = UDim.new(0, 5)
+    uiList.SortOrder = Enum.SortOrder.LayoutOrder
+    uiList.Parent = contentFrame
+
+    -- Adicionar padding
+    local padding = Instance.new("UIPadding")
+    padding.PaddingLeft = UDim.new(0, 5)
+    padding.PaddingTop = UDim.new(0, 5)
+    padding.Parent = contentFrame
+
+    -- Função para arrastar a janela
+    local dragging, dragInput, dragStart, startPos
     titleBar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
@@ -113,28 +140,28 @@ function UILib:CreateWindow(title, settings)
     closeButton.MouseButton1Click:Connect(function()
         screenGui:Destroy()
     end)
-    
+
     -- Métodos para a janela
     local windowMethods = {}
-    
+
     function windowMethods:Destroy()
         screenGui:Destroy()
     end
-    
+
     function windowMethods:ToggleVisibility()
         screenGui.Enabled = not screenGui.Enabled
     end
-    
+
     function windowMethods:CreateButton(buttonName, callback)
         local button = Instance.new("TextButton")
         button.Name = buttonName or "Button"
-        button.Size = UDim2.new(1, -20, 0, 30)
-        button.Position = UDim2.new(0, 10, 0, #contentFrame:GetChildren() * 35 + 10)
+        button.Size = UDim2.new(1, -10, 0, 30)
         button.BackgroundColor3 = settings.ThemeColor
         button.TextColor3 = settings.TextColor
         button.Font = settings.Font
         button.TextSize = settings.TextSize
         button.Text = buttonName or "Button"
+        button.LayoutOrder = #contentFrame:GetChildren()
         button.Parent = contentFrame
         
         if callback then
@@ -143,39 +170,89 @@ function UILib:CreateWindow(title, settings)
         
         return button
     end
-    
+
     function windowMethods:CreateLabel(labelText)
         local label = Instance.new("TextLabel")
         label.Name = "Label"
-        label.Size = UDim2.new(1, -20, 0, 20)
-        label.Position = UDim2.new(0, 10, 0, #contentFrame:GetChildren() * 25 + 10)
+        label.Size = UDim2.new(1, -10, 0, 20)
         label.BackgroundTransparency = 1
         label.TextColor3 = settings.TextColor
         label.Font = settings.Font
         label.TextSize = settings.TextSize
         label.Text = labelText or "Label"
         label.TextXAlignment = Enum.TextXAlignment.Left
+        label.LayoutOrder = #contentFrame:GetChildren()
         label.Parent = contentFrame
         
         return label
     end
-    
+
     function windowMethods:CreateTextBox(placeholder)
         local textBox = Instance.new("TextBox")
         textBox.Name = "TextBox"
-        textBox.Size = UDim2.new(1, -20, 0, 30)
-        textBox.Position = UDim2.new(0, 10, 0, #contentFrame:GetChildren() * 35 + 10)
-        textBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        textBox.Size = UDim2.new(1, -10, 0, 30)
+        textBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         textBox.TextColor3 = settings.TextColor
         textBox.Font = settings.Font
         textBox.TextSize = settings.TextSize
         textBox.PlaceholderText = placeholder or "Type here..."
         textBox.ClearTextOnFocus = false
+        textBox.LayoutOrder = #contentFrame:GetChildren()
         textBox.Parent = contentFrame
         
         return textBox
     end
-    
+
+    function windowMethods:CreateToggle(toggleName, default, callback)
+        local toggleFrame = Instance.new("Frame")
+        toggleFrame.Name = "ToggleFrame"
+        toggleFrame.Size = UDim2.new(1, -10, 0, 25)
+        toggleFrame.BackgroundTransparency = 1
+        toggleFrame.LayoutOrder = #contentFrame:GetChildren()
+        toggleFrame.Parent = contentFrame
+
+        local toggleButton = Instance.new("TextButton")
+        toggleButton.Name = "ToggleButton"
+        toggleButton.Size = UDim2.new(0, 40, 0, 20)
+        toggleButton.Position = UDim2.new(1, -40, 0.5, -10)
+        toggleButton.BackgroundColor3 = default and settings.ThemeColor or Color3.fromRGB(80, 80, 80)
+        toggleButton.Text = ""
+        toggleButton.Parent = toggleFrame
+
+        local toggleLabel = Instance.new("TextLabel")
+        toggleLabel.Name = "ToggleLabel"
+        toggleLabel.Size = UDim2.new(1, -50, 1, 0)
+        toggleLabel.BackgroundTransparency = 1
+        toggleLabel.TextColor3 = settings.TextColor
+        toggleLabel.Font = settings.Font
+        toggleLabel.TextSize = settings.TextSize
+        toggleLabel.Text = toggleName or "Toggle"
+        toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+        toggleLabel.Parent = toggleFrame
+
+        local currentValue = default or false
+
+        toggleButton.MouseButton1Click:Connect(function()
+            currentValue = not currentValue
+            toggleButton.BackgroundColor3 = currentValue and settings.ThemeColor or Color3.fromRGB(80, 80, 80)
+            if callback then callback(currentValue) end
+        end)
+
+        local toggleMethods = {}
+
+        function toggleMethods:SetValue(value)
+            currentValue = value
+            toggleButton.BackgroundColor3 = currentValue and settings.ThemeColor or Color3.fromRGB(80, 80, 80)
+            if callback then callback(currentValue) end
+        end
+
+        function toggleMethods:GetValue()
+            return currentValue
+        end
+
+        return toggleMethods
+    end
+
     return windowMethods
 end
 
