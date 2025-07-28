@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scripts Hub</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #121212, #1f1f1f);
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #0f0f0f;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      color: #00ffcc;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      background: #191919;
+      padding: 1rem;
+      box-shadow: inset 0 -1px 0 #333;
+    }
+
+    nav button {
+      background: #2a2a2a;
+      color: white;
+      border: 1px solid #444;
+      padding: 0.6rem 1.2rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    nav button:hover {
+      background: #3a3a3a;
+      transform: scale(1.05);
+    }
+
+    nav button.active {
+      background: #00ffcc;
+      color: black;
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    #searchBar {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 1rem;
+      border: none;
+      display: block;
+    }
+
+    .posts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background-color: #282828;
+      padding: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px #00ffcc88;
+    }
+
+    .card h2 {
+      margin: 0 0 0.5rem;
+      font-size: 1.4rem;
+      color: #00ffcc;
+    }
+
+    .card p {
+      color: #ccc;
+    }
+
+    .no-results {
+      text-align: center;
+      color: #888;
+    }
+
+    .loadstring-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .loadstring-box {
+      background: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      color: #0f0;
+      font-family: monospace;
+      border: 1px solid #0f0;
+      max-width: 90%;
+      max-height: 80%;
+      overflow: auto;
+      box-shadow: 0 0 20px #0f08;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Scripts Hub</h1>
+  </header>
+
+  <nav>
+    <button onclick="showTab('home', event)" class="active">Home</button>
+    <button onclick="showTab('popular', event)">Populares</button>
+    <button onclick="showTab('favoritos', event)">Favoritos</button>
+  </nav>
+
+
+  <main>
+    <input type="text" id="searchBar" placeholder="Buscar scripts..." onkeyup="filterPosts()" />
+    <div class="posts" id="postsContainer"></div>
+  </main>
+
+  <div id="loadstringModal" class="loadstring-modal" style="display:none;" onclick="hideLoadstring()">
+    <div class="loadstring-box" id="loadstringBox"></div>
+  </div>
+
+
+
+
+  <script>
+    const posts = [
+      { title: "NTRF Hub", description: "TOP 1 SCRIPT HUB", loadstring: "loadstring(\"AutoFarmScript()\")()", category: "home" },
+      { title: "ESP para Roblox", description: "Veja todos os jogadores no mapa.", loadstring: "loadstring(\"ESPViewer()\")()", category: "popular" },
+      { title: "Script de Aimbot", description: "Aimbot para melhorar sua mira.", loadstring: "loadstring(\"AimbotPlus()\")()", category: "home" },
+      { title: "Fly Script", description: "Permite voar pelo mapa livremente.", loadstring: "loadstring(\"EnableFly()\")()", category: "favoritos" },
+      { title: "Speed Hack", description: "Aumenta sua velocidade de movimento.", loadstring: "loadstring(\"SpeedHackScript()\")()", category: "home" },
+      { title: "Teleport Script", description: "Teleporte instantâneo para locais.", loadstring: "loadstring(\"TeleportAnywhere()\")()", category: "favoritos" },
+      { title: "NoClip Script", description: "Atravesse paredes com facilidade.", loadstring: "loadstring(\"NoClipOn()\")()", category: "popular" },
+      { title: "Script de Farm Automático 2.0", description: "Versão aprimorada com GUI.", loadstring: "loadstring(\"AutoFarmV2()\")()", category: "home" }
+    ];
+
+
+    let currentTab = 'home';
+
+
+
+
+
+    function renderPosts(filteredPosts) {
+      const container = document.getElementById('postsContainer');
+      container.innerHTML = '';
+
+
+
+      if (filteredPosts.length === 0) {
+        container.innerHTML = '<p class="no-results">Nenhum script encontrado.</p>';
+        return;
+      }
+
+
+
+
+      filteredPosts.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<h2>${post.title}</h2><p>${post.description}</p>`;
+        card.onclick = () => showLoadstring(post.loadstring);
+        container.appendChild(card);
+      });
+    }
+
+    function filterPosts() {
+      const query = document.getElementById('searchBar').value.toLowerCase();
+      const filtered = posts.filter(post =>
+        (post.category === currentTab) &&
+        (post.title.toLowerCase().includes(query) ||
+         post.description.toLowerCase().includes(query))
+      );
+      renderPosts(filtered);
+    }
+
+    function showTab(tab, event) {
+      currentTab = tab;
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      filterPosts();
+    }
+
+    function showLoadstring(code) {
+      const modal = document.getElementById('loadstringModal');
+      const box = document.getElementById('loadstringBox');
+      box.textContent = code;
+      modal.style.display = 'flex';
+    }
+
+    function hideLoadstring() {
+      document.getElementById('loadstringModal').style.display = 'none';
+    }
+
+    filterPosts();
+  </script>
+</body>
+</html>
