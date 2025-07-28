@@ -4,72 +4,109 @@ local UILib = {}
 local defaultSettings = {
     ThemeColor = Color3.fromRGB(0, 120, 215),
     TextColor = Color3.fromRGB(255, 255, 255),
-    Font = Enum.Font.SourceSans,
+    Font = Enum.Font.Gotham,
     TextSize = 14,
-    WindowSize = UDim2.new(0, 400, 0, 300),
-    WindowPosition = UDim2.new(0.5, -200, 0.5, -150),
-    BackgroundTransparency = 0.3
+    WindowSize = UDim2.new(0, 400, 0, 450),
+    WindowPosition = UDim2.new(0.5, -200, 0.5, -225),
+    BackgroundTransparency = 0.15,
+    CornerRadius = UDim.new(0, 8)
 }
 
--- Função para criar uma nova janela
-function UILib:CreateWindow(title, settings)
-    -- Combinar configurações padrão com as personalizadas
-    settings = settings or {}
-    for k, v in pairs(defaultSettings) do
-        if settings[k] == nil then
-            settings[k] = v
-        end
-    end
-    
-    -- Criação dos elementos da UI
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "UILibWindow_" .. tostring(math.random(1, 10000))
-    screenGui.ResetOnSpawn = false
-    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    screenGui.Parent = game:GetService("CoreGui") -- Usamos CoreGui para executores
+-- Função para criar gradiente
+local function createGradient(color)
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, color),
+        ColorSequenceKeypoint.new(1, Color3.new(color.R * 0.7, color.G * 0.7, color.B * 0.7))
+    })
+    gradient.Rotation = 90
+    return gradient
+end
 
-    local mainFrame = Instance.new("Frame")
-    mainFrame.Name = "MainFrame"
-    mainFrame.Size = settings.WindowSize
-    mainFrame.Position = settings.WindowPosition
-    mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-    mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    mainFrame.BackgroundTransparency = settings.BackgroundTransparency
-    mainFrame.BorderSizePixel = 0
-    mainFrame.ClipsDescendants = true
-    mainFrame.Parent = screenGui
-
-    -- Adiciona sombra (opcional)
+-- Função para criar sombra
+local function createShadow(parent)
     local shadow = Instance.new("ImageLabel")
     shadow.Name = "Shadow"
-    shadow.Size = UDim2.new(1, 10, 1, 10)
-    shadow.Position = UDim2.new(0, -5, 0, -5)
+    shadow.Size = UDim2.new(1, 12, 1, 12)
+    shadow.Position = UDim2.new(0, -6, 0, -6)
     shadow.Image = "rbxassetid://1316045217"
     shadow.ImageColor3 = Color3.new(0, 0, 0)
     shadow.ImageTransparency = 0.8
     shadow.ScaleType = Enum.ScaleType.Slice
     shadow.SliceCenter = Rect.new(10, 10, 118, 118)
     shadow.BackgroundTransparency = 1
-    shadow.Parent = mainFrame
     shadow.ZIndex = -1
+    shadow.Parent = parent
+    return shadow
+end
 
+-- Função para criar janela
+function UILib:CreateWindow(title, settings)
+    -- Combinar configurações
+    settings = table.clone(defaultSettings)
+    if settings then
+        for k, v in pairs(settings) do
+            if defaultSettings[k] ~= nil then
+                settings[k] = v
+            end
+        end
+    end
+
+    -- Criar instâncias
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "UILibWindow_" .. tostring(math.random(1, 10000))
+    screenGui.ResetOnSpawn = false
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.Parent = game:GetService("CoreGui")
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "MainFrame"
+    mainFrame.Size = settings.WindowSize
+    mainFrame.Position = settings.WindowPosition
+    mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    mainFrame.BackgroundTransparency = settings.BackgroundTransparency
+    mainFrame.BorderSizePixel = 0
+    mainFrame.ClipsDescendants = true
+    mainFrame.Parent = screenGui
+
+    -- Adicionar cantos arredondados
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = settings.CornerRadius
+    corner.Parent = mainFrame
+
+    createShadow(mainFrame)
+
+    -- Barra de título
     local titleBar = Instance.new("Frame")
     titleBar.Name = "TitleBar"
-    titleBar.Size = UDim2.new(1, 0, 0, 30)
-    titleBar.BackgroundColor3 = settings.ThemeColor
-    titleBar.BorderSizePixel = 0
+    titleBar.Size = UDim2.new(1, 0, 0, 36)
+    titleBar.BackgroundTransparency = 1
     titleBar.Parent = mainFrame
+
+    local titleGradient = Instance.new("Frame")
+    titleGradient.Size = UDim2.new(1, 0, 1, 0)
+    titleGradient.BackgroundTransparency = 0
+    titleGradient.BorderSizePixel = 0
+    titleGradient.ZIndex = 0
+    createGradient(settings.ThemeColor).Parent = titleGradient
+    titleGradient.Parent = titleBar
+
+    local titleCorner = Instance.new("UICorner")
+    titleCorner.CornerRadius = UDim.new(0, settings.CornerRadius.Offset)
+    titleCorner.Parent = titleGradient
 
     local titleText = Instance.new("TextLabel")
     titleText.Name = "TitleText"
     titleText.Size = UDim2.new(1, -40, 1, 0)
-    titleText.Position = UDim2.new(0, 10, 0, 0)
+    titleText.Position = UDim2.new(0, 15, 0, 0)
     titleText.BackgroundTransparency = 1
     titleText.Text = title or "Window"
     titleText.TextColor3 = settings.TextColor
-    titleText.Font = settings.Font
-    titleText.TextSize = settings.TextSize + 2
+    titleText.Font = Enum.Font.GothamBold
+    titleText.TextSize = 16
     titleText.TextXAlignment = Enum.TextXAlignment.Left
+    titleText.ZIndex = 2
     titleText.Parent = titleBar
 
     local closeButton = Instance.new("TextButton")
@@ -77,32 +114,37 @@ function UILib:CreateWindow(title, settings)
     closeButton.Size = UDim2.new(0, 30, 1, 0)
     closeButton.Position = UDim2.new(1, -30, 0, 0)
     closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-    closeButton.Text = "X"
+    closeButton.BackgroundTransparency = 0.7
+    closeButton.Text = "×"
     closeButton.TextColor3 = settings.TextColor
-    closeButton.Font = Enum.Font.SourceSansBold
-    closeButton.TextSize = settings.TextSize + 2
+    closeButton.Font = Enum.Font.GothamBold
+    closeButton.TextSize = 20
+    closeButton.ZIndex = 2
     closeButton.Parent = titleBar
 
+    local cornerClose = Instance.new("UICorner")
+    cornerClose.CornerRadius = UDim.new(0, settings.CornerRadius.Offset)
+    cornerClose.Parent = closeButton
+
+    -- Área de conteúdo
     local contentFrame = Instance.new("Frame")
     contentFrame.Name = "ContentFrame"
-    contentFrame.Size = UDim2.new(1, -10, 1, -40)
-    contentFrame.Position = UDim2.new(0, 5, 0, 35)
+    contentFrame.Size = UDim2.new(1, -20, 1, -50)
+    contentFrame.Position = UDim2.new(0, 10, 0, 45)
     contentFrame.BackgroundTransparency = 1
     contentFrame.Parent = mainFrame
 
-    -- Adiciona lista de elementos (para organização)
     local uiList = Instance.new("UIListLayout")
-    uiList.Padding = UDim.new(0, 5)
+    uiList.Padding = UDim.new(0, 10)
     uiList.SortOrder = Enum.SortOrder.LayoutOrder
     uiList.Parent = contentFrame
 
-    -- Adicionar padding
     local padding = Instance.new("UIPadding")
-    padding.PaddingLeft = UDim.new(0, 5)
     padding.PaddingTop = UDim.new(0, 5)
+    padding.PaddingLeft = UDim.new(0, 5)
     padding.Parent = contentFrame
 
-    -- Função para arrastar a janela
+    -- Função para arrastar
     local dragging, dragInput, dragStart, startPos
     titleBar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -136,12 +178,12 @@ function UILib:CreateWindow(title, settings)
         end
     end)
     
-    -- Fechar a janela
+    -- Fechar janela
     closeButton.MouseButton1Click:Connect(function()
         screenGui:Destroy()
     end)
 
-    -- Métodos para a janela
+    -- Métodos da janela
     local windowMethods = {}
 
     function windowMethods:Destroy()
@@ -152,89 +194,152 @@ function UILib:CreateWindow(title, settings)
         screenGui.Enabled = not screenGui.Enabled
     end
 
-    function windowMethods:CreateButton(buttonName, callback)
+    -- Elementos UI
+    function windowMethods:CreateSection(name)
+        local sectionFrame = Instance.new("Frame")
+        sectionFrame.Name = "Section"
+        sectionFrame.Size = UDim2.new(1, 0, 0, 30)
+        sectionFrame.BackgroundTransparency = 1
+        sectionFrame.LayoutOrder = #contentFrame:GetChildren()
+        sectionFrame.Parent = contentFrame
+
+        local sectionLabel = Instance.new("TextLabel")
+        sectionLabel.Name = "SectionLabel"
+        sectionLabel.Size = UDim2.new(1, 0, 1, 0)
+        sectionLabel.BackgroundTransparency = 1
+        sectionLabel.Text = " " .. (name or "SECTION")
+        sectionLabel.TextColor3 = settings.ThemeColor
+        sectionLabel.Font = Enum.Font.GothamBold
+        sectionLabel.TextSize = 14
+        sectionLabel.TextXAlignment = Enum.TextXAlignment.Left
+        sectionLabel.Parent = sectionFrame
+
+        local line = Instance.new("Frame")
+        line.Name = "Line"
+        line.Size = UDim2.new(1, 0, 0, 1)
+        line.Position = UDim2.new(0, 0, 1, -1)
+        line.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+        line.BorderSizePixel = 0
+        line.Parent = sectionFrame
+
+        return sectionFrame
+    end
+
+    function windowMethods:CreateButton(name, callback)
         local button = Instance.new("TextButton")
-        button.Name = buttonName or "Button"
-        button.Size = UDim2.new(1, -10, 0, 30)
-        button.BackgroundColor3 = settings.ThemeColor
-        button.TextColor3 = settings.TextColor
-        button.Font = settings.Font
-        button.TextSize = settings.TextSize
-        button.Text = buttonName or "Button"
+        button.Name = name or "Button"
+        button.Size = UDim2.new(1, 0, 0, 35)
+        button.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+        button.AutoButtonColor = false
+        button.Text = ""
         button.LayoutOrder = #contentFrame:GetChildren()
         button.Parent = contentFrame
-        
+
+        local buttonCorner = Instance.new("UICorner")
+        buttonCorner.CornerRadius = UDim.new(0, 5)
+        buttonCorner.Parent = button
+
+        local buttonTitle = Instance.new("TextLabel")
+        buttonTitle.Name = "Title"
+        buttonTitle.Size = UDim2.new(1, 0, 1, 0)
+        buttonTitle.BackgroundTransparency = 1
+        buttonTitle.Text = name or "Button"
+        buttonTitle.TextColor3 = settings.TextColor
+        buttonTitle.Font = settings.Font
+        buttonTitle.TextSize = settings.TextSize
+        buttonTitle.Parent = button
+
+        local buttonHighlight = Instance.new("Frame")
+        buttonHighlight.Name = "Highlight"
+        buttonHighlight.Size = UDim2.new(1, 0, 1, 0)
+        buttonHighlight.BackgroundColor3 = settings.ThemeColor
+        buttonHighlight.BackgroundTransparency = 0.9
+        buttonHighlight.Visible = false
+        buttonHighlight.Parent = button
+
+        local highlightCorner = Instance.new("UICorner")
+        highlightCorner.CornerRadius = UDim.new(0, 5)
+        highlightCorner.Parent = buttonHighlight
+
+        button.MouseEnter:Connect(function()
+            buttonHighlight.Visible = true
+        end)
+
+        button.MouseLeave:Connect(function()
+            buttonHighlight.Visible = false
+        end)
+
         if callback then
-            button.MouseButton1Click:Connect(callback)
+            button.MouseButton1Click:Connect(function()
+                createGradient(settings.ThemeColor).Parent = buttonHighlight
+                buttonHighlight.BackgroundTransparency = 0.7
+                task.wait(0.1)
+                buttonHighlight.BackgroundTransparency = 0.9
+                callback()
+            end)
         end
-        
+
         return button
     end
 
-    function windowMethods:CreateLabel(labelText)
-        local label = Instance.new("TextLabel")
-        label.Name = "Label"
-        label.Size = UDim2.new(1, -10, 0, 20)
-        label.BackgroundTransparency = 1
-        label.TextColor3 = settings.TextColor
-        label.Font = settings.Font
-        label.TextSize = settings.TextSize
-        label.Text = labelText or "Label"
-        label.TextXAlignment = Enum.TextXAlignment.Left
-        label.LayoutOrder = #contentFrame:GetChildren()
-        label.Parent = contentFrame
-        
-        return label
-    end
-
-    function windowMethods:CreateTextBox(placeholder)
-        local textBox = Instance.new("TextBox")
-        textBox.Name = "TextBox"
-        textBox.Size = UDim2.new(1, -10, 0, 30)
-        textBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-        textBox.TextColor3 = settings.TextColor
-        textBox.Font = settings.Font
-        textBox.TextSize = settings.TextSize
-        textBox.PlaceholderText = placeholder or "Type here..."
-        textBox.ClearTextOnFocus = false
-        textBox.LayoutOrder = #contentFrame:GetChildren()
-        textBox.Parent = contentFrame
-        
-        return textBox
-    end
-
-    function windowMethods:CreateToggle(toggleName, default, callback)
+    function windowMethods:CreateToggle(name, default, callback)
         local toggleFrame = Instance.new("Frame")
-        toggleFrame.Name = "ToggleFrame"
-        toggleFrame.Size = UDim2.new(1, -10, 0, 25)
+        toggleFrame.Name = "Toggle"
+        toggleFrame.Size = UDim2.new(1, 0, 0, 30)
         toggleFrame.BackgroundTransparency = 1
         toggleFrame.LayoutOrder = #contentFrame:GetChildren()
         toggleFrame.Parent = contentFrame
 
-        local toggleButton = Instance.new("TextButton")
-        toggleButton.Name = "ToggleButton"
-        toggleButton.Size = UDim2.new(0, 40, 0, 20)
-        toggleButton.Position = UDim2.new(1, -40, 0.5, -10)
-        toggleButton.BackgroundColor3 = default and settings.ThemeColor or Color3.fromRGB(80, 80, 80)
-        toggleButton.Text = ""
-        toggleButton.Parent = toggleFrame
-
         local toggleLabel = Instance.new("TextLabel")
-        toggleLabel.Name = "ToggleLabel"
-        toggleLabel.Size = UDim2.new(1, -50, 1, 0)
+        toggleLabel.Name = "Label"
+        toggleLabel.Size = UDim2.new(0.7, 0, 1, 0)
         toggleLabel.BackgroundTransparency = 1
+        toggleLabel.Text = name or "Toggle"
         toggleLabel.TextColor3 = settings.TextColor
         toggleLabel.Font = settings.Font
         toggleLabel.TextSize = settings.TextSize
-        toggleLabel.Text = toggleName or "Toggle"
         toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
         toggleLabel.Parent = toggleFrame
 
+        local toggleOuter = Instance.new("Frame")
+        toggleOuter.Name = "ToggleOuter"
+        toggleOuter.Size = UDim2.new(0, 50, 0, 25)
+        toggleOuter.Position = UDim2.new(1, -50, 0.5, -12.5)
+        toggleOuter.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+        toggleOuter.Parent = toggleFrame
+
+        local outerCorner = Instance.new("UICorner")
+        outerCorner.CornerRadius = UDim.new(1, 0)
+        outerCorner.Parent = toggleOuter
+
+        local toggleInner = Instance.new("Frame")
+        toggleInner.Name = "ToggleInner"
+        toggleInner.Size = UDim2.new(0, 21, 0, 21)
+        toggleInner.Position = UDim2.new(0, 2, 0.5, -10.5)
+        toggleInner.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+        toggleInner.Parent = toggleOuter
+
+        local innerCorner = Instance.new("UICorner")
+        innerCorner.CornerRadius = UDim.new(1, 0)
+        innerCorner.Parent = toggleInner
+
         local currentValue = default or false
 
-        toggleButton.MouseButton1Click:Connect(function()
+        local function updateToggle()
+            if currentValue then
+                toggleInner:TweenPosition(UDim2.new(1, -23, 0.5, -10.5), "Out", "Quad", 0.2, true)
+                toggleInner.BackgroundColor3 = settings.ThemeColor
+            else
+                toggleInner:TweenPosition(UDim2.new(0, 2, 0.5, -10.5), "Out", "Quad", 0.2, true)
+                toggleInner.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+            end
+        end
+
+        updateToggle()
+
+        toggleOuter.MouseButton1Click:Connect(function()
             currentValue = not currentValue
-            toggleButton.BackgroundColor3 = currentValue and settings.ThemeColor or Color3.fromRGB(80, 80, 80)
+            updateToggle()
             if callback then callback(currentValue) end
         end)
 
@@ -242,7 +347,7 @@ function UILib:CreateWindow(title, settings)
 
         function toggleMethods:SetValue(value)
             currentValue = value
-            toggleButton.BackgroundColor3 = currentValue and settings.ThemeColor or Color3.fromRGB(80, 80, 80)
+            updateToggle()
             if callback then callback(currentValue) end
         end
 
@@ -251,6 +356,163 @@ function UILib:CreateWindow(title, settings)
         end
 
         return toggleMethods
+    end
+
+    function windowMethods:CreateSlider(name, min, max, default, callback)
+        local sliderFrame = Instance.new("Frame")
+        sliderFrame.Name = "Slider"
+        sliderFrame.Size = UDim2.new(1, 0, 0, 50)
+        sliderFrame.BackgroundTransparency = 1
+        sliderFrame.LayoutOrder = #contentFrame:GetChildren()
+        sliderFrame.Parent = contentFrame
+
+        local sliderLabel = Instance.new("TextLabel")
+        sliderLabel.Name = "Label"
+        sliderLabel.Size = UDim2.new(1, 0, 0, 20)
+        sliderLabel.BackgroundTransparency = 1
+        sliderLabel.Text = name or "Slider"
+        sliderLabel.TextColor3 = settings.TextColor
+        sliderLabel.Font = settings.Font
+        sliderLabel.TextSize = settings.TextSize
+        sliderLabel.TextXAlignment = Enum.TextXAlignment.Left
+        sliderLabel.Parent = sliderFrame
+
+        local sliderValue = Instance.new("TextLabel")
+        sliderValue.Name = "Value"
+        sliderValue.Size = UDim2.new(0, 60, 0, 20)
+        sliderValue.Position = UDim2.new(1, -60, 0, 0)
+        sliderValue.BackgroundTransparency = 1
+        sliderValue.Text = tostring(default or min)
+        sliderValue.TextColor3 = settings.TextColor
+        sliderValue.Font = Enum.Font.GothamBold
+        sliderValue.TextSize = settings.TextSize
+        sliderValue.TextXAlignment = Enum.TextXAlignment.Right
+        sliderValue.Parent = sliderFrame
+
+        local sliderTrack = Instance.new("Frame")
+        sliderTrack.Name = "Track"
+        sliderTrack.Size = UDim2.new(1, 0, 0, 5)
+        sliderTrack.Position = UDim2.new(0, 0, 0, 30)
+        sliderTrack.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+        sliderTrack.Parent = sliderFrame
+
+        local trackCorner = Instance.new("UICorner")
+        trackCorner.CornerRadius = UDim.new(1, 0)
+        trackCorner.Parent = sliderTrack
+
+        local sliderFill = Instance.new("Frame")
+        sliderFill.Name = "Fill"
+        sliderFill.Size = UDim2.new(0, 0, 1, 0)
+        sliderFill.BackgroundColor3 = settings.ThemeColor
+        sliderFill.Parent = sliderTrack
+
+        local fillCorner = Instance.new("UICorner")
+        fillCorner.CornerRadius = UDim.new(1, 0)
+        fillCorner.Parent = sliderFill
+
+        local sliderButton = Instance.new("TextButton")
+        sliderButton.Name = "Button"
+        sliderButton.Size = UDim2.new(0, 15, 0, 15)
+        sliderButton.Position = UDim2.new(0, 0, 0.5, -7.5)
+        sliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        sliderButton.Text = ""
+        sliderButton.ZIndex = 2
+        sliderButton.Parent = sliderTrack
+
+        local buttonCorner = Instance.new("UICorner")
+        buttonCorner.CornerRadius = UDim.new(1, 0)
+        buttonCorner.Parent = sliderButton
+
+        local currentValue = math.clamp(default or min, min, max)
+        local sliding = false
+
+        local function updateSlider(value)
+            currentValue = math.clamp(value, min, max)
+            local percent = (currentValue - min) / (max - min)
+            sliderFill.Size = UDim2.new(percent, 0, 1, 0)
+            sliderButton.Position = UDim2.new(percent, -7.5, 0.5, -7.5)
+            sliderValue.Text = string.format("%.1f", currentValue)
+            if callback then callback(currentValue) end
+        end
+
+        updateSlider(currentValue)
+
+        sliderButton.MouseButton1Down:Connect(function()
+            sliding = true
+        end)
+
+        game:GetService("UserInputService").InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                sliding = false
+            end
+        end)
+
+        game:GetService("UserInputService").InputChanged:Connect(function(input)
+            if sliding and input.UserInputType == Enum.UserInputType.MouseMovement then
+                local mousePos = game:GetService("UserInputService"):GetMouseLocation()
+                local trackPos = sliderTrack.AbsolutePosition.X
+                local trackSize = sliderTrack.AbsoluteSize.X
+                local percent = math.clamp((mousePos.X - trackPos) / trackSize, 0, 1)
+                local value = min + (max - min) * percent
+                updateSlider(value)
+            end
+        end)
+
+        local sliderMethods = {}
+
+        function sliderMethods:SetValue(value)
+            updateSlider(value)
+        end
+
+        function sliderMethods:GetValue()
+            return currentValue
+        end
+
+        return sliderMethods
+    end
+
+    function windowMethods:CreateTextBox(placeholder, callback)
+        local textBoxFrame = Instance.new("Frame")
+        textBoxFrame.Name = "TextBox"
+        textBoxFrame.Size = UDim2.new(1, 0, 0, 35)
+        textBoxFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+        textBoxFrame.LayoutOrder = #contentFrame:GetChildren()
+        textBoxFrame.Parent = contentFrame
+
+        local boxCorner = Instance.new("UICorner")
+        boxCorner.CornerRadius = UDim.new(0, 5)
+        boxCorner.Parent = textBoxFrame
+
+        local textBox = Instance.new("TextBox")
+        textBox.Name = "Input"
+        textBox.Size = UDim2.new(1, -20, 1, 0)
+        textBox.Position = UDim2.new(0, 10, 0, 0)
+        textBox.BackgroundTransparency = 1
+        textBox.TextColor3 = settings.TextColor
+        textBox.Font = settings.Font
+        textBox.TextSize = settings.TextSize
+        textBox.PlaceholderText = placeholder or "Type here..."
+        textBox.ClearTextOnFocus = false
+        textBox.Text = ""
+        textBox.Parent = textBoxFrame
+
+        if callback then
+            textBox.FocusLost:Connect(function(enterPressed)
+                callback(textBox.Text, enterPressed)
+            end)
+        end
+
+        local textBoxMethods = {}
+
+        function textBoxMethods:SetText(text)
+            textBox.Text = text or ""
+        end
+
+        function textBoxMethods:GetText()
+            return textBox.Text
+        end
+
+        return textBoxMethods
     end
 
     return windowMethods
