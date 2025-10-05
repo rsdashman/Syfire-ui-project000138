@@ -49,7 +49,7 @@ end)
 
 
 
-print("V.1.1.30")
+print("V.1.2.1")
 
 
 
@@ -1844,6 +1844,35 @@ MainSection:AddButton({
 loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/mm2"))()
     end
 })
+
+----=========Tab20=========----
+local MainTab = Window:MakeTab({
+    Name = "Plants vs Brainrots",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "BlessedHubX / BlessedHubX",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/mynamewendel-ctrl/Blessed-Hub-X-/refs/heads/main/Plants-Vs-Brainrots.lua"))()
+    end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
