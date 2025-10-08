@@ -1,12 +1,12 @@
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
 local Window = WindUI:CreateWindow({
-    Title = "loc:WINDUI_EXAMPLE",
-    Icon = "geist:window",
-    Author = "loc:WELCOME",
+    Title = "Th4ms.Vip : Universal scripts",
+    Icon = "moon",
+    Author = "Th4mKrs",
     Folder = "WindUI_Example",
-    Size = UDim2.fromOffset(580, 490),
-    Theme = "Dark",
+    Size = UDim2.fromOffset(230, 300),
+    Theme = "Violet",
     
     HidePanelBackground = false,
     NewElements = false,
@@ -19,7 +19,7 @@ local Window = WindUI:CreateWindow({
     --Background = "video:https://cdn.discordapp.com/attachments/1337368451865645096/1402703845657673878/VID_20250616_180732_158.webm?ex=68958a01&is=68943881&hm=164c5b04d1076308b38055075f7eb0653c1d73bec9bcee08e918a31321fe3058&",
     User = {
         Enabled = true,
-        Anonymous = true,
+        Anonymous = false,
         Callback = function()
             WindUI:Notify({
                 Title = "User Profile",
@@ -32,4 +32,542 @@ local Window = WindUI:CreateWindow({
     HideSearchBar = false,
     SideBarWidth = 200,
 
+})
+
+--[[
+
+icons--
+
+https://raw.githubusercontent.com/Footagesus/Icons/refs/heads/main/lucide/dist/Icons.lua
+
+--
+
+]]
+
+Window:CreateTopbarButton("theme-switcher", "moon", function()
+    WindUI:SetTheme(WindUI:GetCurrentTheme() == "Dark" and "Light" or "Dark")
+    WindUI:Notify({
+        Title = "Theme Changed",
+        Content = "Current theme: "..WindUI:GetCurrentTheme(),
+        Duration = 2
+    })
+end, 990)
+
+local Sections = {
+    Main = Window:Section({ Title = "Main", Opened = true }),
+    Settings = Window:Section({ Title = "SETTINGS", Opened = true }),
+    Utilities = Window:Section({ Title = "UTILITIES", Opened = true })
+}
+
+local Tabs = {
+    Elements = Sections.Main:Tab({ Title = "Main", Icon = "layout-grid", Desc = "UI Elements Example" }),
+    Appearance = Sections.Settings:Tab({ Title = "More scripts", Icon = "anvil" }),
+    Config = Sections.Utilities:Tab({ Title = "CONFIGURATION", Icon = "settings" }),
+
+}
+
+
+----------------
+----------------ELEMENTS
+----------------
+
+Tabs.Elements:Section({
+    Title = "Interactive Components",
+    TextSize = 20,
+})
+
+Tabs.Elements:Section({
+    Title = "Explore WindUI's powerful elements",
+    TextSize = 16,
+    TextTransparency = .25,
+})
+
+Tabs.Elements:Divider()
+
+local ElementsSection = Tabs.Elements:Section({
+    Title = "Section Example",
+    Icon = "bird",
+})
+
+local toggleState = false
+local featureToggle = ElementsSection:Toggle({
+    Title = "Enable Features",
+    --Desc = "Unlocks additional functionality",
+    Value = false,
+    Callback = function(state) 
+        toggleState = state
+        WindUI:Notify({
+            Title = "Features",
+            Content = state and "Features Enabled" or "Features Disabled",
+            Icon = state and "check" or "x",
+            Duration = 2
+        })
+    end
+})
+
+local intensitySlider = ElementsSection:Slider({
+    Title = "Effect Intensity",
+    Desc = "Adjust the effect strength",
+    Value = { Min = 0, Max = 100, Default = 50 },
+    Callback = function(value)
+        print("Intensity set to:", value)
+    end
+})
+
+local values = {}
+
+for i = 1, 40 do
+    table.insert(values, "Test " .. i)
+end
+
+ElementsSection:Space()
+
+
+local testDropdown = ElementsSection:Dropdown({
+    Title = "Dropdown test",
+    Values = values,
+    Value = "Test 1",
+    Callback = function(option)
+        -- WindUI:Notify({
+        --     Title = "Dropdown",
+        --     Content = "Selected: "..option,
+        --     Duration = 2
+        -- })
+    end
+})
+
+testDropdown:Refresh(values)
+
+ElementsSection:Divider()
+
+ElementsSection:Button({
+    Title = "Show Notification",
+    Icon = "bell",
+    Callback = function()
+        WindUI:Notify({
+            Title = "Hello WindUI!",
+            Content = "This is a sample notification",
+            Icon = "bell",
+            Duration = 3
+        })
+    end
+})
+
+ElementsSection:Colorpicker({
+    Title = "Select Color",
+    --Desc = "Select coloe",
+    Default = Color3.fromHex("#30ff6a"),
+    Transparency = 0, -- enable transparency
+    Callback = function(color, transparency)
+        WindUI:Notify({
+            Title = "Color Changed",
+            Content = "New color: "..color:ToHex().."\nTransparency: "..transparency,
+            Duration = 2
+        })
+    end
+})
+
+ElementsSection:Code({
+    Title = "my_code.luau",
+    Code = [[print("Hello world!")]],
+    OnCopy = function()
+        print("Copied to clipboard!")
+    end
+})
+
+
+
+----------------
+----------------ELEMENTS
+----------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---SETTINGS---
+
+
+Tabs.Config:Paragraph({
+    Title = "Configuration Manager",
+    Desc = "Save and load your settings",
+    Image = "save",
+    ImageSize = 20,
+    Color = "White"
+})
+
+local configName = "default"
+local configFile = nil
+local MyPlayerData = {
+    name = "Player1",
+    level = 1,
+    inventory = { "sword", "shield", "potion" }
+}
+
+Tabs.Config:Input({
+    Title = "Config Name",
+    Value = configName,
+    Callback = function(value)
+        configName = value or "default"
+    end
+})
+
+local ConfigManager = Window.ConfigManager
+if ConfigManager then
+    ConfigManager:Init(Window)
+    
+    Tabs.Config:Button({
+        Title = "loc:SAVE_CONFIG",
+        Icon = "save",
+        Variant = "Primary",
+        Callback = function()
+            configFile = ConfigManager:CreateConfig(configName)
+            
+            configFile:Register("featureToggle", featureToggle)
+            configFile:Register("intensitySlider", intensitySlider)
+            configFile:Register("testDropdown", testDropdown)
+            configFile:Register("themeDropdown", themeDropdown)
+            configFile:Register("transparencySlider", transparencySlider)
+            
+            configFile:Set("playerData", MyPlayerData)
+            configFile:Set("lastSave", os.date("%Y-%m-%d %H:%M:%S"))
+            
+            if configFile:Save() then
+                WindUI:Notify({ 
+                    Title = "loc:SAVE_CONFIG", 
+                    Content = "Saved as: "..configName,
+                    Icon = "check",
+                    Duration = 3
+                })
+            else
+                WindUI:Notify({ 
+                    Title = "Error", 
+                    Content = "Failed to save config",
+                    Icon = "x",
+                    Duration = 3
+                })
+            end
+        end
+    })
+
+    Tabs.Config:Button({
+        Title = "loc:LOAD_CONFIG",
+        Icon = "folder",
+        Callback = function()
+            configFile = ConfigManager:CreateConfig(configName)
+            local loadedData = configFile:Load()
+            
+            if loadedData then
+                if loadedData.playerData then
+                    MyPlayerData = loadedData.playerData
+                end
+                
+                local lastSave = loadedData.lastSave or "Unknown"
+                WindUI:Notify({ 
+                    Title = "loc:LOAD_CONFIG", 
+                    Content = "Loaded: "..configName.."\nLast save: "..lastSave,
+                    Icon = "refresh-cw",
+                    Duration = 5
+                })
+                
+                Tabs.Config:Paragraph({
+                    Title = "Player Data",
+                    Desc = string.format("Name: %s\nLevel: %d\nInventory: %s", 
+                        MyPlayerData.name, 
+                        MyPlayerData.level, 
+                        table.concat(MyPlayerData.inventory, ", "))
+                })
+            else
+                WindUI:Notify({ 
+                    Title = "Error", 
+                    Content = "Failed to load config",
+                    Icon = "x",
+                    Duration = 3
+                })
+            end
+        end
+    })
+else
+    Tabs.Config:Paragraph({
+        Title = "Config Manager Not Available",
+        Desc = "This feature requires ConfigManager",
+        Image = "alert-triangle",
+        ImageSize = 20,
+        Color = "White"
+    })
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Tabs.Config:Paragraph({
+    Title = "Customize Interface",
+    Desc = "Personalize your experience",
+    Image = "palette",
+    ImageSize = 20,
+    Color = "White"
+})
+
+local themes = {}
+for themeName, _ in pairs(WindUI:GetThemes()) do
+    table.insert(themes, themeName)
+end
+table.sort(themes)
+
+local canchangetheme = true
+local canchangedropdown = true
+
+
+
+local themeDropdown = Tabs.Config:Dropdown({
+    Title = "loc:THEME_SELECT",
+    Values = themes,
+    SearchBarEnabled = true,
+    MenuWidth = 280,
+    Value = "Dark",
+    Callback = function(theme)
+        canchangedropdown = false
+        WindUI:SetTheme(theme)
+        WindUI:Notify({
+            Title = "Theme Applied",
+            Content = theme,
+            Icon = "palette",
+            Duration = 2
+        })
+        canchangedropdown = true
+    end
+})
+
+local transparencySlider = Tabs.Config:Slider({
+    Title = "loc:TRANSPARENCY",
+    Value = { 
+        Min = 0,
+        Max = 1,
+        Default = 0.2,
+    },
+    Step = 0.1,
+    Callback = function(value)
+        WindUI.TransparencyValue = tonumber(value)
+        Window:ToggleTransparency(tonumber(value) > 0)
+    end
+})
+
+local ThemeToggle = Tabs.Config:Toggle({
+    Title = "Enable Dark Mode",
+    Desc = "Use dark color scheme",
+    Value = true,
+    Callback = function(state)
+        if canchangetheme then
+            WindUI:SetTheme(state and "Dark" or "Light")
+        end
+        if canchangedropdown then
+            themeDropdown:Select(state and "Dark" or "Light")
+        end
+    end
+})
+
+WindUI:OnThemeChange(function(theme)
+    canchangetheme = false
+    ThemeToggle:Set(theme == "Dark")
+    canchangetheme = true
+end)
+
+
+Tabs.Config:Button({
+    Title = "Create New Theme",
+    Icon = "plus",
+    Callback = function()
+        Window:Dialog({
+            Title = "Create Theme",
+            Content = "This feature is coming soon!",
+            Buttons = {
+                {
+                    Title = "OK",
+                    Variant = "Primary"
+                }
+            }
+        })
+    end
 })
