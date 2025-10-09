@@ -1,120 +1,89 @@
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
+--<script's zone>
 
-local Window = WindUI:CreateWindow({
-    Title = "Th4ms.Vip : Universal scripts",
-    Icon = "moon",
-    Author = "Th4mKrs",
-    Folder = "WindUI_Example",
-    Size = UDim2.fromOffset(230, 300),
-    Theme = "Violet",
-    
-    HidePanelBackground = false,
-    NewElements = false,
-    -- Background = WindUI:Gradient({
-    --     ["0"] = { Color = Color3.fromHex("#0f0c29"), Transparency = 1 },
-    --     ["100"] = { Color = Color3.fromHex("#302b63"), Transparency = 0.9 },
-    -- }, {
-    --     Rotation = 45,
-    -- }),
-    --Background = "video:https://cdn.discordapp.com/attachments/1337368451865645096/1402703845657673878/VID_20250616_180732_158.webm?ex=68958a01&is=68943881&hm=164c5b04d1076308b38055075f7eb0653c1d73bec9bcee08e918a31321fe3058&",
-    User = {
-        Enabled = true,
-        Anonymous = false,
-        Callback = function()
-            WindUI:Notify({
-                Title = "User Profile",
-                Content = "User profile clicked!",
-                Duration = 3
-            })
-        end
-    },
-    Acrylic = false,
-    HideSearchBar = false,
-    SideBarWidth = 200,
 
-})
+
+
+
+
+
+print("Release 0")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--<script's zone/>
+
+
+
+--controls
+
+
+
 
 --[[
+toggle
 
-icons--
 
-https://raw.githubusercontent.com/Footagesus/Icons/refs/heads/main/lucide/dist/Icons.lua
 
---
+local featureToggle = ElementsSection:Toggle({
+    Title = "Fly",
+    --Desc = "Unlocks additional functionality",
+    Value = false,
+    Callback = function(enabled) 
+        
+
+    end
+})
+
+
+
 
 ]]
 
-Window:CreateTopbarButton("theme-switcher", "moon", function()
-    WindUI:SetTheme(WindUI:GetCurrentTheme() == "Dark" and "Light" or "Dark")
-    WindUI:Notify({
-        Title = "Theme Changed",
-        Content = "Current theme: "..WindUI:GetCurrentTheme(),
-        Duration = 2
-    })
-end, 990)
 
-local Sections = {
-    Main = Window:Section({ Title = "Main", Opened = true }),
-    Settings = Window:Section({ Title = "SETTINGS", Opened = true }),
-    Utilities = Window:Section({ Title = "UTILITIES", Opened = true })
-}
+--[[
+other examples
 
-local Tabs = {
-    Elements = Sections.Main:Tab({ Title = "Main", Icon = "layout-grid", Desc = "UI Elements Example" }),
-    Appearance = Sections.Settings:Tab({ Title = "More scripts", Icon = "anvil" }),
-    Config = Sections.Utilities:Tab({ Title = "CONFIGURATION", Icon = "settings" }),
-
-}
-
-
-----------------
-----------------ELEMENTS
-----------------
-
-Tabs.Elements:Section({
-    Title = "Interactive Components",
-    TextSize = 20,
-})
-
-Tabs.Elements:Section({
-    Title = "Explore WindUI's powerful elements",
-    TextSize = 16,
-    TextTransparency = .25,
-})
-
-Tabs.Elements:Divider()
-
-local ElementsSection = Tabs.Elements:Section({
-    Title = "Section Example",
-    Icon = "bird",
-})
-
-local toggleState = false
-local featureToggle = ElementsSection:Toggle({
-    Title = "Enable Features",
-    --Desc = "Unlocks additional functionality",
-    Value = false,
-    Callback = function(state) 
-        toggleState = state
-        WindUI:Notify({
-            Title = "Features",
-            Content = state and "Features Enabled" or "Features Disabled",
-            Icon = state and "check" or "x",
-            Duration = 2
-        })
-    end
-})
-
-local intensitySlider = ElementsSection:Slider({
-    Title = "Effect Intensity",
-    Desc = "Adjust the effect strength",
-    Value = { Min = 0, Max = 100, Default = 50 },
-    Callback = function(value)
-        print("Intensity set to:", value)
-    end
-})
-
-local values = {}
 
 for i = 1, 40 do
     table.insert(values, "Test " .. i)
@@ -170,17 +139,313 @@ ElementsSection:Colorpicker({
 ElementsSection:Code({
     Title = "my_code.luau",
     Code = [[print("Hello world!")]],
-    OnCopy = function()
-        print("Copied to clipboard!")
-    end
+--    OnCopy = function()
+--        print("Copied to clipboard!")
+--    end
+--})
+
+
+
+--]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--controls/
+
+
+
+local Window = WindUI:CreateWindow({
+    Title = "Th4ms.Vip : Universal scripts",
+    Icon = "moon",
+    Author = "Th4mKrs",
+    Folder = "WindUI_Example",
+    Size = UDim2.fromOffset(230, 300),
+    Theme = "Violet",
+
+    
+    HidePanelBackground = false,
+    NewElements = false,
+    -- Background = WindUI:Gradient({
+    --     ["0"] = { Color = Color3.fromHex("#0f0c29"), Transparency = 1 },
+    --     ["100"] = { Color = Color3.fromHex("#302b63"), Transparency = 0.9 },
+    -- }, {
+    --     Rotation = 45,
+    -- }),
+    --Background = "video:https://cdn.discordapp.com/attachments/1337368451865645096/1402703845657673878/VID_20250616_180732_158.webm?ex=68958a01&is=68943881&hm=164c5b04d1076308b38055075f7eb0653c1d73bec9bcee08e918a31321fe3058&",
+    User = {
+        Enabled = true,
+        Anonymous = false,
+        Callback = function()
+            WindUI:Notify({
+                Title = "User Profile",
+                Content = "User profile clicked!",
+                Duration = 3
+            })
+        end
+    },
+    Acrylic = false,
+    HideSearchBar = false,
+    SideBarWidth = 200,
+
 })
 
+--[[
+
+icons--
+
+https://raw.githubusercontent.com/Footagesus/Icons/refs/heads/main/lucide/dist/Icons.lua
+
+--
+
+]]
+
+Window:CreateTopbarButton("theme-switcher", "moon", function()
+    WindUI:SetTheme(WindUI:GetCurrentTheme() == "Dark" and "Light" or "Dark")
+    WindUI:Notify({
+        Title = "Theme Changed",
+        Content = "Current theme: "..WindUI:GetCurrentTheme(),
+        Duration = 2
+    })
+end, 990)
+
+local Sections = {
+    Main = Window:Section({ Title = "Main", Opened = true }),
+    Settings = Window:Section({ Title = "SETTINGS", Opened = true }),
+    Utilities = Window:Section({ Title = "MORE", Opened = true })
+}
+
+local Tabs = {
+    Elements = Sections.Main:Tab({ Title = "Main", Icon = "layout-grid", Desc = "UI Elements Example" }),
+    scripts1 = Sections.Settings:Tab({ Title = "More scripts", Icon = "anvil" }),
+    Config = Sections.Utilities:Tab({ Title = "CONFIGURATION", Icon = "settings" }),
+
+}
 
 
 ----------------
 ----------------ELEMENTS
 ----------------
 
+Tabs.Elements:Section({
+    Title = "Interactive Components",
+    TextSize = 20,
+})
+
+Tabs.Elements:Section({
+    Title = "Explore Th4m's hub with powerful elements",
+    TextSize = 16,
+    TextTransparency = .25,
+})
+
+Tabs.Elements:Divider()
+
+local ElementsSection = Tabs.Elements:Section({
+    Title = "Control Painel",
+    Icon = "game",
+})
+
+local toggleState = false
+local featureToggle = ElementsSection:Toggle({
+    Title = "Fly",
+    --Desc = "Unlocks additional functionality",
+    Value = false,
+    Callback = function(enabled) 
+        
+       _G.FlyEnabled = enabled
+
+        if _G._FlyConn then
+            _G._FlyConn:Disconnect()
+            _G._FlyConn = nil
+        end
+
+        if not enabled then
+            local char = game.Players.LocalPlayer.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                char.HumanoidRootPart.Velocity = Vector3.zero
+            end
+            return
+        end
+
+        local UIS = game:GetService("UserInputService")
+        local RunService = game:GetService("RunService")
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local hrp = character:WaitForChild("HumanoidRootPart")
+
+        local speed = 60
+        local flying = true
+        local direction = Vector3.zero
+
+        local keysDown = {}
+
+        _G._FlyConn = RunService.RenderStepped:Connect(function()
+            if not _G.FlyEnabled then return end
+
+            direction = Vector3.zero
+            local cam = workspace.CurrentCamera
+
+            if keysDown["W"] then direction = direction + cam.CFrame.LookVector end
+            if keysDown["S"] then direction = direction - cam.CFrame.LookVector end
+            if keysDown["A"] then direction = direction - cam.CFrame.RightVector end
+            if keysDown["D"] then direction = direction + cam.CFrame.RightVector end
+            if keysDown["Space"] then direction = direction + cam.CFrame.UpVector end
+            if keysDown["LeftShift"] then direction = direction - cam.CFrame.UpVector end
+
+            if direction.Magnitude > 0 then
+                hrp.Velocity = direction.Unit * speed
+            else
+                hrp.Velocity = Vector3.zero
+            end
+        end)
+
+        UIS.InputBegan:Connect(function(input, gpe)
+            if not gpe then
+                keysDown[input.KeyCode.Name] = true
+            end
+        end)
+
+        UIS.InputEnded:Connect(function(input, gpe)
+            if not gpe then
+                keysDown[input.KeyCode.Name] = false
+            end
+        end)
+
+
+    end
+})
+
+--slider
+local intensitySlider = ElementsSection:Slider({
+    Title = "WalkSpeed",
+    Desc = "Adjust the walkspeed",
+    Value = { Min = 16, Max = 250, Default = 16 },
+    Callback = function(Value)
+        
+
+
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.WalkSpeed = Value
+        end
+
+
+    end
+})
+--slider
+local values = {}
+
+local intensitySlider = ElementsSection:Slider({
+    Title = "Jump Power",
+    Desc = "Adjust the JPP",
+    Value = { Min = 16, Max = 250, Default = 16 },
+    Callback = function(Value)
+        
+
+
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.JumpPower = Value
+        end
+
+
+    end
+})
+
+
+
+local featureToggle = ElementsSection:Toggle({
+    Title = "Inf Jump",
+    --Desc = "Unlocks additional functionality",
+    Value = false,
+    Callback = function(enabled) 
+        
+        _G.InfJumpEnabled = enabled
+
+        if _G._InfJumpConn then
+            _G._InfJumpConn:Disconnect()
+            _G._InfJumpConn = nil
+        end
+
+        if enabled then
+            local UserInputService = game:GetService("UserInputService")
+            _G._InfJumpConn = UserInputService.JumpRequest:Connect(function()
+                local player = game.Players.LocalPlayer
+                if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+                    player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        end
+    end
+})
+
+local featureToggle = ElementsSection:Toggle({
+    Title = "Noclip",
+    --Desc = "Unlocks additional functionality",
+    Value = false,
+    Callback = function(enabled) 
+        
+		       _G.NoClipEnabled = enabled
+
+        -- Parar qualquer loop anterior
+        if _G._NoClipLoop then
+            _G._NoClipLoop:Disconnect()
+            _G._NoClipLoop = nil
+        end
+
+        -- Ativar noclip
+        if enabled then
+            local RunService = game:GetService("RunService")
+
+            _G._NoClipLoop = RunService.Stepped:Connect(function()
+                local character = game.Players.LocalPlayer.Character
+                if character then
+                    for _, part in pairs(character:GetDescendants()) do
+                        if part:IsA("BasePart") and (part.Name == "Head" or part.Name == "Torso" or part.Name == "UpperTorso" or part.Name == "LowerTorso" or part.Name == "HumanoidRootPart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        else
+            -- Restaurar colisão
+            local character = game.Players.LocalPlayer.Character
+            if character then
+                for _, part in pairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") and (part.Name == "Head" or part.Name == "Torso" or part.Name == "UpperTorso" or part.Name == "LowerTorso" or part.Name == "HumanoidRootPart") then
+                        part.CanCollide = true
+                    end
+                end
+            end
+        end
+
+    end
+})
+
+
+
+
+
+
+
+----------------
+----------------ELEMENTS/////
+----------------
 
 
 
@@ -190,8 +455,38 @@ ElementsSection:Code({
 
 
 
+Tabs.scripts1:Section({
+    Title = "Interactive Components",
+    TextSize = 20,
+})
+
+Tabs.scripts1:Section({
+    Title = "Explore WindUI's powerful elements",
+    TextSize = 16,
+    TextTransparency = .25,
+})
+
+Tabs.scripts1:Divider()
+
+local scripts1sel = Tabs.scripts1:Section({
+    Title = "Section Example",
+    Icon = "clock",
+})
 
 
+local intensitySlider = scripts1sel:Slider({
+    Title = "WalkSpeed",
+    Desc = "Adjust the walkspeed",
+    Value = { Min = 16, Max = 250, Default = 16 },
+    Callback = function(value)
+        
+
+
+
+
+
+    end
+})
 
 
 
@@ -502,7 +797,7 @@ local canchangedropdown = true
 
 
 local themeDropdown = Tabs.Config:Dropdown({
-    Title = "loc:THEME_SELECT",
+    Title = "THEME_SELECT",
     Values = themes,
     SearchBarEnabled = true,
     MenuWidth = 280,
@@ -521,7 +816,7 @@ local themeDropdown = Tabs.Config:Dropdown({
 })
 
 local transparencySlider = Tabs.Config:Slider({
-    Title = "loc:TRANSPARENCY",
+    Title = "TRANSPARENCY",
     Value = { 
         Min = 0,
         Max = 1,
