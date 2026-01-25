@@ -1096,23 +1096,6 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/FilteringEnabled/Name
     end
 })
 
-
---------============Tab3=============-----------------
-local MainTab = Window:MakeTab({
-    Name = "Grow a gardem",
-    Icon = "link"
-})
-local MainSection = MainTab:AddSection({
-    Name = "Scripts"
-})
-
-MainSection:AddButton({
-    Name = "Soon",
-    Callback = function()
-print("Soon")
-    end
-})
-
 ----=========Tab4=========----
 local MainTab = Window:MakeTab({
     Name = "Esp and aimbot",
@@ -1503,6 +1486,15 @@ MainSection:AddButton({
     end
 })
 
+
+MainSection:AddButton({
+    Name = "Advanced Fling",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/GoldenCheats/natural-disaster-script/refs/heads/main/Natural%20Disaster%20Survival%20Script", true))()
+    end
+})
+
+
 ----=========Tab9=========----
 local MainTab = Window:MakeTab({
     Name = "Bang/troll",
@@ -1607,59 +1599,6 @@ MainSection:AddButton({
     end
 })
 
-----=========Tab12=========----
-local MainTab = Window:MakeTab({
-    Name = "Ink game",
-    Icon = "link"
-})
-local MainSection = MainTab:AddSection({
-    Name = "Scripts"
-})
-
-MainSection:AddButton({
-    Name = "InkGame X-Force | no key / InkGame X-Force | no key",
-    Callback = function()
-    loadstring(game:HttpGet("https://gist.githubusercontent.com/KevinBak123/62b6c4c59b9583cb9993f81064842a0d/raw/f563ea418e8a948f5eb3382124a93e38806c8097/gistfile1.txt"))()
-    end
-})
-
-MainSection:AddButton({
-    Name = "InkGame Tora | no key / InkGame Tora",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/InkGame"))()
-    end
-})
-
-MainSection:AddButton({
-    Name = "Siff | no key / Siff | no key",
-    Callback = function()
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/284c7c5eb4a430a82162018c617e9aa0.lua"))()
-    end
-})
-
-MainSection:AddButton({
-    Name = "Tuff | no key / Tuff | no key",
-    Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/TuffGuys/TuffGuys/refs/heads/main/Loader"))()
-    end
-})
-
-----=========Tab13=========----
-local MainTab = Window:MakeTab({
-    Name = "Squid game season 3",
-    Icon = "link"
-})
-local MainSection = MainTab:AddSection({
-    Name = "Scripts"
-})
-
-MainSection:AddButton({
-    Name = "s / Tora | no key",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/SquidGame3"))()
-    end
-})
-
 ----=========Tab14=========----
 local MainTab = Window:MakeTab({
     Name = "Fling scripts",
@@ -1690,6 +1629,15 @@ MainSection:AddButton({
     end
 })
 
+MainSection:AddButton({
+    Name = "s / Advanced Fling",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GoldenCheats/natural-disaster-script/refs/heads/main/Natural%20Disaster%20Survival%20Script", true))()
+    end
+})
+
+
+
 ----=========Tab15=========----
 local MainTab = Window:MakeTab({
     Name = "Brookhaven",
@@ -1706,50 +1654,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Venom-devX/ChaosHub/m
     end
 })
 
-----=========Tab16=========----
-local MainTab = Window:MakeTab({
-    Name = "Steal a brainrot",
-    Icon = "link"
-})
-local MainSection = MainTab:AddSection({
-    Name = "Scripts"
-})
 
-MainSection:AddButton({
-    Name = "s / Steal a Brain rot Hub| no key",
-    Callback = function()
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ffdfeadf0af798741806ea404682a938.lua"))()
-    end
-})
-
-MainSection:AddButton({
-    Name = "s / AV Hub | no key",
-    Callback = function()
-loadstring(game:HttpGet("https://get-avth-ontop.netlify.app/my-paste/script.lua"))()
-
-    end
-})
-
-MainSection:AddButton({
-    Name = "s / LunaFyer Hub | Whitelist system",
-    Callback = function()
-loadstring(game:HttpGet("https://lunafyer.onrender.com/initialize"))()
-    end
-})
-
-MainSection:AddButton({
-    Name = "s / ArbixHub | no key",
-    Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Youifpg/Steal-a-Brainrot-op/refs/heads/main/Arbixhub-obfuscated.lua"))()
-    end
-})
-
-MainSection:AddButton({
-    Name = "s / Chilli hub | no key",
-    Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()
-    end
-})
 
 ----=========Tab17=========----
 local MainTab = Window:MakeTab({
@@ -1768,6 +1673,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/h
     end
 })
 
+MainSection:AddButton({
+    Name = "s / SpeedHubX",
+    Callback = function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/artas01/robscript/refs/heads/main/loader.lua'))()
+
+    end
+})
 ----=========Tab17=========----
 local MainTab = Window:MakeTab({
     Name = "Forsaken",
@@ -1829,20 +1741,6 @@ MainSection:AddButton({
     end
 })
 
-----=========Tab19=========----
-local MainTab = Window:MakeTab({
-    Name = "mm2",
-    Icon = "link"
-})
-local MainSection = MainTab:AddSection({
-    Name = "Scripts"
-})
 
-MainSection:AddButton({
-    Name = "Tora hub / Tora isme",
-    Callback = function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/mm2"))()
-    end
-})
 
 
