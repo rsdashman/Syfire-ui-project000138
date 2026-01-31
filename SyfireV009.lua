@@ -159,8 +159,8 @@ local Window = WindUI:CreateWindow({
 
     -- remove it below if you don't want to use the key system in your script.
     KeySystem = { -- <- keysystem enabled
-        Key = { "1234", "5678" },
-        Note = "Example Key System. \n\nThe Key is '1234' or '5678",
+        Key = { "$lue", "Glu3", "glue" },
+        Note = "Free Key: Glu3",
         -- Thumbnail = {
         --     Image = "rbxassetid://18220445082", -- rbxassetid only
         --     Title = "Thumbnail"
@@ -176,7 +176,7 @@ Window:CreateTopbarButton("Site", "globe", function() setclipboard("https://seus
 Window:CreateTopbarButton("Fullscreen", "battery-plus", function() HideSearchBar = false end, 988)
 
 Window:EditOpenButton({
-    Title = "Abrir Hub",
+    Title = "Hub",
     Icon = "monitor",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
@@ -186,8 +186,8 @@ Window:EditOpenButton({
 
 local Tabs = {}
 do
-    Tabs.Main = Window:Section({ Title = "Funções", Opened = true })
-    Tabs.Player = Window:Section({ Title = "Jogador", Icon = "user", Opened = true })
+    Tabs.Main = Window:Section({ Title = "Functions", Opened = true })
+    Tabs.Player = Window:Section({ Title = "Player", Icon = "user", Opened = true })
     Tabs.Config = Window:Tab({ Title = "Config", Icon = "file-cog" })
 end
 
