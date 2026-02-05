@@ -25,7 +25,7 @@ OrionLib.FavoriteEvent.Event:Connect(function(nomeOriginal)
         table.insert(favoritos, nomeOriginal)
         salvarFavoritos()
         OrionLib:MakeNotification({
-            Name = "Favorito salvo!",
+            Name = "Favorite saved!",
             Content = nomeOriginal .. " got added to favs.",
             Time = 2
         })
@@ -49,7 +49,7 @@ end)
 
 
 
-print("V.1.1.30")
+print("V.1.2.10")
 
 
 
@@ -1035,7 +1035,7 @@ end
 end})
 
 MainSection:AddButton({
-    Name = "Tower Of Hell script | no key",
+    Name = "s / Tower Of Hell script | no key",
     Callback = function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UIlibs/Games/Tower%20of%20hell%20script%20Source"))()
     end
@@ -1083,14 +1083,14 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "s/ IY",
+    Name = "s / IY",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "s/ N/A admin",
+    Name = "s / N/A admin",
     Callback = function()
 loadstring(game:HttpGet('https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source'))()
     end
@@ -1106,42 +1106,42 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Owl hub",
+    Name = "s / Owl hub",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"))();
     end
 })
 
 MainSection:AddButton({
-    Name = "Open aimbot and esp",
+    Name = "s / Open aimbot and esp",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ttwizz/Open-Aimbot/master/source.lua", true))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Vocano aimbot",
+    Name = "s / Vocano aimbot",
     Callback = function()
 loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Volcano-universal-aimbot-36995"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Aimbot arena",
+    Name = "s / Aimbot arena",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/TOP%20UNIVERSAL/aimbot%20Arena%20%5Bnot%20mine%5D", true))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Acc age esp",
+    Name = "s / Acc age esp",
     Callback = function()
 loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Account-Age-ESP-41401", true))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Friend esp",
+    Name = "s / Friend esp",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/itsryp/roblox-scripts/main/friendviewer.lua"))()
     end
@@ -1157,21 +1157,21 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Rspy",
+    Name = "s / Rspy",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/SimpleSpyV3/main.lua"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Dex Working",
+    Name = "s / Dex Working",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/BypassedDarkDexV3.lua", true))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Dark dex v3",
+    Name = "s / Dark dex v3",
     Callback = function()
 if game:GetService'CoreGui':FindFirstChild'Dex' then game:GetService'CoreGui'.Dex:Destroy(); end
 
@@ -1192,11 +1192,19 @@ Load(Dex)
 })
 
 MainSection:AddButton({
-    Name = "Better Save instance",
+    Name = "s / Better Save instance",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/save%20instance"))()
     end
 })
+
+MainSection:AddButton({
+    Name = "s / Better Decompiler",
+    Callback = function()
+loadstring(game:HttpGet("https://github.com/OfficiallyMelon/BetterDecompiler/raw/main/dex_betterdecompiler.lua"))()
+    end
+})
+
 
 ----=========Tab6=========----
 local MainTab = Window:MakeTab({
@@ -1208,28 +1216,28 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "TPtool",
+    Name = "s / TPtool",
     Callback = function()
         loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/8def4101f93a3bb65779346593442026/raw/fef58863e216ebb3686dcc983a8dd5737bf0fe59/gistfile1.txt"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Btools",
+    Name = "s / Btools",
     Callback = function()
         loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/BTools.txt"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "F3X",
+    Name = "s / F3X",
     Callback = function()
         loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)()
     end
 })
 
 MainSection:AddButton({
-    Name = "Float tool",
+    Name = "s / Float tool",
     Callback = function()
         local floatTool = Instance.new("Tool")
 floatTool.Name = "Float tool"
@@ -1294,14 +1302,14 @@ end)
 })
 
 MainSection:AddButton({
-    Name = "Minecraft tools",
+    Name = "s / Minecraft tools",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Ahma174/Tool/refs/heads/main/Minecraft%20Tools"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Bang",
+    Name = "s / Bang",
     Callback = function()
         
 local Players = game:GetService("Players")
@@ -1422,21 +1430,21 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Flappy bird",
+    Name = "s / Flappy bird",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/%5Bnot%20mine%5D%20flappy%20bird"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Dino game Admin",
+    Name = "s / Dino game Admin",
     Callback = function()
         loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/e80987558087d802d05aebc56eea1029/raw/c6d5bc9e930233e5ac048d12b4705c898af53a0f/gistfile1.txt"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Dino game",
+    Name = "s / Dino game",
     Callback = function()
         loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/826a570a68894562bb121eee1d1c0d91/raw/47839dc45d0ffc6c20448880a2ec5a11a4150f73/gistfile1.txt"))()
     end
@@ -1452,35 +1460,35 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Hamster ball",
+    Name = "s / Hamster ball",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Super ring",
+    Name = "s / Super ring",
     Callback = function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-ring-parts-V6-Open-source-No-chat-26899"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Fake lag",
+    Name = "s / Fake lag",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Face bang",
+    Name = "s / Face bang",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Orbit player",
+    Name = "s / Orbit player",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/long191910/all-my-roblox-script/refs/heads/main/orbit.lua"))()
     end
@@ -1488,7 +1496,7 @@ MainSection:AddButton({
 
 
 MainSection:AddButton({
-    Name = "Advanced Fling",
+    Name = "s / Advanced Fling",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/GoldenCheats/natural-disaster-script/refs/heads/main/Natural%20Disaster%20Survival%20Script", true))()
     end
@@ -1505,28 +1513,28 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Jerk",
+    Name = "s / Jerk",
     Callback = function()
         loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Face bang",
+    Name = "s / Face bang",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/AKadminlol/Facefuck/refs/heads/main/CreditsbyAK"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Bang",
+    Name = "s / Bang",
     Callback = function()
         loadstring(game:HttpGet("https://pastebin.com/raw/FWwdST5Y"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Anti-bang",
+    Name = "s / Anti-bang",
     Callback = function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-Bang-Script-39958"))()
     end
@@ -1542,23 +1550,9 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Bring items | no key",
-    Callback = function()
-local v0=game.Players.LocalPlayer.Character.HumanoidRootPart;local v1=Workspace:FindFirstChild("Items");if  not v1 then return;end for _,Item in v1:GetChildren() do if Item:IsA("PVInstance") then Item:PivotTo(v0.CFrame + Vector3.new((0 -0) -(1422 -(378 + 1044)) ,1427 -((893 -515) + 1044) ,0 -(0 -0) ) );end end
-    end
-})
-
-MainSection:AddButton({
     Name = "H4XScripts | no key",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua", true))()
-    end
-})
-
-MainSection:AddButton({
-    Name = "eF Hub | no key",
-    Callback = function()
-loadstring(game:HttpGet('https://api.exploitingis.fun/loader', true))()
     end
 })
 
@@ -1579,21 +1573,21 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "Orca hub",
+    Name = "s / Orca hub",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Sirius",
+    Name = "s / Sirius",
     Callback = function()
     loadstring(game:HttpGet('https://sirius.menu/sirius'))()
     end
 })
 
 MainSection:AddButton({
-    Name = "wisl universal",
+    Name = "s / wisl universal",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/wisl884/wisl-i-Universal-Project1/refs/heads/main/Wisl'i%20Universal%20Project%20new%20UI.lua", true))()
     end
@@ -1629,13 +1623,6 @@ MainSection:AddButton({
     end
 })
 
-MainSection:AddButton({
-    Name = "s / Advanced Fling",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/GoldenCheats/natural-disaster-script/refs/heads/main/Natural%20Disaster%20Survival%20Script", true))()
-    end
-})
-
 
 
 ----=========Tab15=========----
@@ -1666,7 +1653,7 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "s / Redz hub",
+    Name = "s / Redz hub (down)",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))()
 
