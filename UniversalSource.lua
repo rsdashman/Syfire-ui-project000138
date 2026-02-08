@@ -49,7 +49,7 @@ end)
 
 
 
-print("V.1.2.10")
+print("V.1.2.15")
 
 
 
@@ -251,13 +251,13 @@ MainSection:AddToggle({
     Callback = function(enabled)
         _G.NoClipEnabled = enabled
 
-        -- Parar qualquer loop anterior
+
         if _G._NoClipLoop then
             _G._NoClipLoop:Disconnect()
             _G._NoClipLoop = nil
         end
 
-        -- Ativar noclip
+
         if enabled then
             local RunService = game:GetService("RunService")
 
@@ -272,7 +272,7 @@ MainSection:AddToggle({
                 end
             end)
         else
-            -- Restaurar colisão
+				
             local character = game.Players.LocalPlayer.Character
             if character then
                 for _, part in pairs(character:GetDescendants()) do
@@ -374,7 +374,6 @@ MainSection:AddToggle({
                 local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
                 if not myHRP then return end
 
-                -- Procurar o jogador mais próximo
                 local closestDistance = math.huge
                 local closestHRP = nil
 
@@ -390,8 +389,8 @@ MainSection:AddToggle({
                 end
 
                 if closestHRP then
-                    local offset = -closestHRP.CFrame.LookVector * 2 -- distância atrás
-                    local targetPos = closestHRP.Position + offset + Vector3.new(0, 1.2, 0) -- levemente acima
+                    local offset = -closestHRP.CFrame.LookVector * 2 
+                    local targetPos = closestHRP.Position + offset + Vector3.new(0, 1.2, 0) 
                     myHRP.CFrame = CFrame.new(targetPos, closestHRP.Position)
                 end
             end)
@@ -422,7 +421,6 @@ MainSection:AddToggle({
                 local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
                 if not myHRP then return end
 
-                -- Procurar o jogador mais próximo
                 local closestDistance = math.huge
                 local closestHRP = nil
 
@@ -438,8 +436,8 @@ MainSection:AddToggle({
                 end
 
                 if closestHRP then
-                    local offset = -closestHRP.CFrame.LookVector * 1 -- distância atrás
-                    local targetPos = closestHRP.Position + offset + Vector3.new(0, 0, 0) -- levemente acima
+                    local offset = -closestHRP.CFrame.LookVector * 1 -- 
+                    local targetPos = closestHRP.Position + offset + Vector3.new(0, 0, 0) -- 
                     myHRP.CFrame = CFrame.new(targetPos, closestHRP.Position)
                 end
             end)
@@ -658,7 +656,7 @@ MainSection:AddToggle({
 	end
 })
 
--- Slider de velocidade
+-- Slider
 MainSection:AddSlider({
 	Name = "AirWalk V2 Speed",
 	Min = -10,
@@ -790,7 +788,6 @@ local HoldingRightClick = false
 local AimbotFOV = 250
 local AimPart = "Head"
 
--- Função para pegar o jogador mais próximo do mouse
 local function GetClosestPlayer()
     local closestPlayer = nil
     local shortestDistance = AimbotFOV
@@ -812,7 +809,6 @@ local function GetClosestPlayer()
     return closestPlayer
 end
 
--- Mover a câmera suavemente para o alvo
 RunService.RenderStepped:Connect(function()
     if AimbotEnabled and HoldingRightClick then
         local target = GetClosestPlayer()
@@ -822,7 +818,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- Detecta quando botão direito é segurado
 UIS.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton2 then
         HoldingRightClick = true
@@ -1728,6 +1723,20 @@ MainSection:AddButton({
     end
 })
 
+----=========Tab19=========----
+local MainTab = Window:MakeTab({
+    Name = "Th4msHubs",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
 
+MainSection:AddButton({
+    Name = "SyfireUniversal project001 / SyfireUniversal project001",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/Syfire%20project001"))()
+    end
+})
 
 
