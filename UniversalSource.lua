@@ -1,4 +1,37 @@
 local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UIlibs/SecretFile'))()
+
+
+--<Modules>
+
+
+
+
+
+
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/uuuuuuu/refs/heads/main/FixShitChatSystem.lua"))()
+
+
+
+
+
+
+
+--<Modules/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 --script zone
 local HttpService = game:GetService("HttpService")
 local FAVORITOS_FILE = "myFav.txt"
@@ -49,7 +82,7 @@ end)
 
 
 
-print("V.1.2.15")
+print("V.1.2.20")
 
 
 
@@ -1739,4 +1772,18 @@ MainSection:AddButton({
     end
 })
 
+----=========Tab20=========----
+local MainTab = Window:MakeTab({
+    Name = "ChatScripts",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
 
+MainSection:AddButton({
+    Name = "ChatBot AI / ChatBot AI",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/paulooo15/chatbot/refs/heads/main/thisisannoying7811")) () 
+    end
+})
