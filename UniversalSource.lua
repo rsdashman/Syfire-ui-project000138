@@ -82,7 +82,7 @@ end)
 
 
 
-print("V.1.2.20")
+print("V.1.2.30")
 
 
 
@@ -1578,14 +1578,14 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "H4XScripts | no key",
+    Name = "s / H4XScripts | no key",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua", true))()
     end
 })
 
 MainSection:AddButton({
-    Name = "Ringta | no key",
+    Name = "s / Ringta | no key",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/wefwef127382/99daysloader.github.io/refs/heads/main/ringta.lua"))()
     end
@@ -1755,6 +1755,14 @@ MainSection:AddButton({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/FE-Backflip"))()
     end
 })
+
+MainSection:AddButton({
+    Name = "[FE] WeldingHub / [FE] WeldingHub",
+    Callback = function()
+        loadstring(game:HttpGet("https://luacrack.site/index.php/imaaan00bb/raw/WeldingHub"))()
+    end
+})
+
 
 ----=========Tab19=========----
 local MainTab = Window:MakeTab({
