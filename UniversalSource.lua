@@ -82,7 +82,7 @@ end)
 
 
 
-print("V.1.2.30")
+print("V.1.2.40")
 
 
 
@@ -1695,6 +1695,17 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/
 
     end
 })
+
+MainSection:AddButton({
+    Name = "s / BloxFruits script",
+    Callback = function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Anniecreate86/BloxFruits/refs/heads/main/BetaHub-BF"))()
+
+    end
+})
+
+
 ----=========Tab17=========----
 local MainTab = Window:MakeTab({
     Name = "Forsaken",
@@ -1795,3 +1806,21 @@ MainSection:AddButton({
 loadstring(game:HttpGet("https://raw.githubusercontent.com/paulooo15/chatbot/refs/heads/main/thisisannoying7811")) () 
     end
 })
+
+----=========Tab21=========----
+local MainTab = Window:MakeTab({
+    Name = "Scape Tsunami for Brainrots",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "CyrusHub / CyrusHub",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CyrusOffc/scriptcyrus/refs/heads/main/roblox/loader.lua"))()
+    end
+})
+
+
