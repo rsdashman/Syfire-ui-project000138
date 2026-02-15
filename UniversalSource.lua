@@ -82,7 +82,7 @@ end)
 
 
 
-print("V.1.2.40")
+print("V.1.2.41")
 
 
 
@@ -1704,6 +1704,16 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Anniecreate86/BloxFru
 
     end
 })
+
+MainSection:AddButton({
+    Name = "s / Blue X hub",
+    Callback = function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"))()
+
+    end
+})
+
 
 
 ----=========Tab17=========----
