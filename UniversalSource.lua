@@ -82,7 +82,7 @@ end)
 
 
 
-print("V.1.2.41")
+print("V.1.2.42")
 
 
 
@@ -1713,8 +1713,14 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/r
 
     end
 })
+MainSection:AddButton({
+    Name = "s / Solix Hub (Has a key system)",
+    Callback = function()
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/meobeo8/a/a/a"))()
 
+    end
+})
 
 ----=========Tab17=========----
 local MainTab = Window:MakeTab({
