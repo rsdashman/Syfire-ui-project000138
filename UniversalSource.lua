@@ -1756,35 +1756,35 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "[FE] Jerk off / [FE] Jerk off",
+    Name = "s / [FE] Jerk off",
     Callback = function()
 loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "[FE] Invisible / [FE] Invisible",
+    Name = "s / [FE] Invisible",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Gon900p/script/refs/heads/main/invisible"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "[Fe] Laser Arm [PalHair] / [Fe] Laser Arm [PalHair]",
+    Name = "s / [Fe] Laser Arm [PalHair]",
     Callback = function()
         loadstring(game:HttpGet("https://pastefy.app/b07Nxyh0/raw"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "[FE] BackFlip / [FE] BackFlip",
+    Name = "s / [FE] BackFlip",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/RdScript-s/refs/heads/main/FE-Backflip"))()
     end
 })
 
 MainSection:AddButton({
-    Name = "[FE] WeldingHub / [FE] WeldingHub",
+    Name = "sb / [FE] WeldingHub",
     Callback = function()
         loadstring(game:HttpGet("https://luacrack.site/index.php/imaaan00bb/raw/WeldingHub"))()
     end
@@ -1801,7 +1801,7 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "SyfireUniversal project001 / SyfireUniversal project001",
+    Name = "s / SyfireUniversal project001",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/Syfire%20project001"))()
     end
@@ -1817,7 +1817,7 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "ChatBot AI / ChatBot AI",
+    Name = "s / ChatBot AI",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/paulooo15/chatbot/refs/heads/main/thisisannoying7811")) () 
     end
@@ -1833,10 +1833,15 @@ local MainSection = MainTab:AddSection({
 })
 
 MainSection:AddButton({
-    Name = "CyrusHub / CyrusHub",
+    Name = "s / CyrusHub",
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/CyrusOffc/scriptcyrus/refs/heads/main/roblox/loader.lua"))()
     end
 })
-
+MainSection:AddButton({
+    Name = "s / SolixHub",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/meobeo8/a/a/a"))()
+    end
+})
 
