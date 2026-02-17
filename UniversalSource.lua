@@ -1845,3 +1845,9 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/meobeo8/a/a/a"))()
     end
 })
 
+MainSection:AddButton({
+    Name = "s / Luminhub",
+    Callback = function()
+loadstring(game:HttpGet("https://luminon.top/ALEX.lua"))()
+    end
+})
