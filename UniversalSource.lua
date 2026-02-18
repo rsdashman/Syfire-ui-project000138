@@ -1175,6 +1175,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/itsryp/roblox-scripts
     end
 })
 
+MainSection:AddButton({
+    Name = "s / Violent menu",
+    Callback = function()
+loadstring(game:HttpGet("https://vt-now.github.io/VIOLENT/vt.lua"))()
+    end
+})
+
 ----=========Tab5=========----
 local MainTab = Window:MakeTab({
     Name = "Devlopment",
