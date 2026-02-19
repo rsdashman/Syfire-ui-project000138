@@ -1791,12 +1791,39 @@ MainSection:AddButton({
 })
 
 MainSection:AddButton({
-    Name = "sb / [FE] WeldingHub",
+    Name = "s / [FE] WeldingHub",
     Callback = function()
         loadstring(game:HttpGet("https://luacrack.site/index.php/imaaan00bb/raw/WeldingHub"))()
     end
 })
 
+MainSection:AddButton({
+    Name = "s / [FE] WeldingHub",
+    Callback = function()
+        loadstring(game:HttpGet("https://luacrack.site/index.php/imaaan00bb/raw/WeldingHub"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "s / [FE] Animation hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://kbauu.neocities.org/animation-hub"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "s / [FE] Faker",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/qbYEH39m"))()
+    end
+})
+
+MainSection:AddButton({
+    Name = "s / [FE] Sandevistan",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/mahowaga51-cmd/FE-Scripts/refs/heads/main/FE%20Sandevistan%20V6"))()
+    end
+})
 
 ----=========Tab19=========----
 local MainTab = Window:MakeTab({
