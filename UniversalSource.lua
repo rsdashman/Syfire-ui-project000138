@@ -1858,3 +1858,20 @@ MainSection:AddButton({
 loadstring(game:HttpGet("https://luminon.top/ALEX.lua"))()
     end
 })
+
+----=========Tab22=========----
+local MainTab = Window:MakeTab({
+    Name = "Natural disaster survival",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+MainSection:AddButton({
+    Name = "s / Best Fling",
+    Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/GoldenCheats/natural-disaster-script/refs/heads/main/NATURAL%20DISASTER%20FLING%20V2"))()
+    end
+})
+
