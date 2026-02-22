@@ -1,15 +1,13 @@
 -- RBXLibrary - UI Library para Roblox (Estilo RBXScriptz)
--- Versão 2.0 - Com Drag, Avatar/Username e Execução de Scripts
+-- Versão 2.1 - CORRIGIDA
 
 local RBXLibrary = {}
 RBXLibrary.__index = RBXLibrary
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
 
 function RBXLibrary.new()
     local self = setmetatable({}, RBXLibrary)
@@ -25,59 +23,14 @@ function RBXLibrary.new()
     self.activeTab = "scripts"
     self.searchQuery = ""
     self.isDragging = false
-    self.dragStart = nil
-    self.startPos = nil
     
-    -- Scripts e suas callbacks
     self.scripts = {
-        {
-            name = "Teleport",
-            icon = "📍",
-            description = "Script de Teleporte",
-            callback = function()
-                print("Script Teleport executado!")
-            end
-        },
-        {
-            name = "Speed Hack",
-            icon = "⚡",
-            description = "Aumentar velocidade",
-            callback = function()
-                print("Script Speed Hack executado!")
-            end
-        },
-        {
-            name = "Jump Boost",
-            icon = "🚀",
-            description = "Pulo aumentado",
-            callback = function()
-                print("Script Jump Boost executado!")
-            end
-        },
-        {
-            name = "Fly",
-            icon = "🛸",
-            description = "Script de voo",
-            callback = function()
-                print("Script Fly executado!")
-            end
-        },
-        {
-            name = "Noclip",
-            icon = "👻",
-            description = "Atravessar paredes",
-            callback = function()
-                print("Script Noclip executado!")
-            end
-        },
-        {
-            name = "ESP",
-            icon = "👁️",
-            description = "Ver outros jogadores",
-            callback = function()
-                print("Script ESP executado!")
-            end
-        },
+        { name = "Teleport", icon = "📍", callback = function() print("Teleport executado!") end },
+        { name = "Speed Hack", icon = "⚡", callback = function() print("Speed Hack executado!") end },
+        { name = "Jump Boost", icon = "🚀", callback = function() print("Jump Boost executado!") end },
+        { name = "Fly", icon = "🛸", callback = function() print("Fly executado!") end },
+        { name = "Noclip", icon = "👻", callback = function() print("Noclip executado!") end },
+        { name = "ESP", icon = "👁️", callback = function() print("ESP executado!") end },
     }
     
     self:createUI()
@@ -93,7 +46,6 @@ function RBXLibrary:createUI()
     local mainContainer = Instance.new("Frame")
     mainContainer.Name = "MainContainer"
     mainContainer.Size = UDim2.new(1, 0, 1, 0)
-    mainContainer.Position = UDim2.new(0, 0, 0, 0)
     mainContainer.BackgroundColor3 = Color3.fromRGB(15, 23, 42)
     mainContainer.BorderSizePixel = 0
     mainContainer.Parent = screenGui
@@ -106,35 +58,32 @@ function RBXLibrary:createUI()
     local sidebar = Instance.new("Frame")
     sidebar.Name = "Sidebar"
     sidebar.Size = UDim2.new(0, 60, 1, 0)
-    sidebar.Position = UDim2.new(0, 0, 0, 0)
     sidebar.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
-    sidebar.BorderSizePixel = 1
     sidebar.BorderColor3 = Color3.fromRGB(88, 28, 135)
+    sidebar.BorderSizePixel = 1
     sidebar.Parent = mainContainer
     
     -- Logo
     local logoButton = Instance.new("TextButton")
     logoButton.Name = "Logo"
     logoButton.Size = UDim2.new(1, 0, 0, 60)
-    logoButton.Position = UDim2.new(0, 0, 0, 0)
     logoButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
     logoButton.TextColor3 = Color3.fromRGB(147, 51, 234)
     logoButton.Text = "📦"
     logoButton.Font = Enum.Font.GothamBold
     logoButton.TextSize = 24
-    logoButton.BorderSizePixel = 1
     logoButton.BorderColor3 = Color3.fromRGB(88, 28, 135)
+    logoButton.BorderSizePixel = 1
     logoButton.AutoButtonColor = false
     logoButton.Parent = sidebar
     
     -- Sidebar Items Container
-    local itemsContainer = Instance.new("ScrollingFrame")
+    local itemsContainer = Instance.new("Frame")
     itemsContainer.Name = "ItemsContainer"
-    itemsContainer.Size = UDim2.new(1, 0, 0, 300)
+    itemsContainer.Size = UDim2.new(1, 0, 0, 250)
     itemsContainer.Position = UDim2.new(0, 0, 0, 65)
     itemsContainer.BackgroundTransparency = 1
     itemsContainer.BorderSizePixel = 0
-    itemsContainer.ScrollBarThickness = 0
     itemsContainer.Parent = sidebar
     
     local itemsLayout = Instance.new("UIListLayout")
@@ -144,18 +93,17 @@ function RBXLibrary:createUI()
     
     -- Sidebar Items
     local sidebarItems = {
-        { icon = "📦", tooltip = "Scripts" },
-        { icon = "👥", tooltip = "Socials" },
-        { icon = "🔧", tooltip = "Utility" },
-        { icon = "⚙️", tooltip = "Settings" },
+        { icon = "📦", label = "Scripts" },
+        { icon = "👥", label = "Socials" },
+        { icon = "🔧", label = "Utility" },
+        { icon = "⚙️", label = "Settings" },
     }
     
     for i, item in ipairs(sidebarItems) do
         local itemButton = Instance.new("TextButton")
-        itemButton.Name = item.tooltip
+        itemButton.Name = item.label
         itemButton.Size = UDim2.new(0.8, 0, 0, 45)
-        itemButton.Position = UDim2.new(0.1, 0, 0, 0)
-        itemButton.BackgroundColor3 = i == 1 and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(30, 41, 59)
+        itemButton.BackgroundColor3 = (i == 1) and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(30, 41, 59)
         itemButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         itemButton.Text = item.icon
         itemButton.Font = Enum.Font.GothamBold
@@ -169,72 +117,52 @@ function RBXLibrary:createUI()
         corner.CornerRadius = UDim.new(0, 6)
         corner.Parent = itemButton
         
-        -- Tooltip
-        local tooltip = Instance.new("TextLabel")
-        tooltip.Name = "Tooltip"
-        tooltip.Size = UDim2.new(0, 60, 0, 25)
-        tooltip.Position = UDim2.new(1, 10, 0.5, -12)
-        tooltip.BackgroundColor3 = Color3.fromRGB(50, 50, 80)
-        tooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
-        tooltip.Text = item.tooltip
-        tooltip.Font = Enum.Font.Gotham
-        tooltip.TextSize = 11
-        tooltip.BorderSizePixel = 1
-        tooltip.BorderColor3 = Color3.fromRGB(147, 51, 234)
-        tooltip.Visible = false
-        tooltip.Parent = itemButton
-        
-        local tooltipCorner = Instance.new("UICorner")
-        tooltipCorner.CornerRadius = UDim.new(0, 4)
-        tooltipCorner.Parent = tooltip
+        local itemIndex = i
+        local itemLabel = item.label
         
         itemButton.MouseEnter:Connect(function()
-            tooltip.Visible = true
-            if i ~= 1 then
+            if itemIndex ~= 1 then
                 itemButton.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
             end
         end)
         
         itemButton.MouseLeave:Connect(function()
-            tooltip.Visible = false
-            if i ~= 1 then
+            if itemIndex ~= 1 then
                 itemButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
             end
         end)
         
         itemButton.MouseButton1Click:Connect(function()
-            self.activeTab = item.tooltip:lower()
-            
-            -- Atualizar botão ativo
+            self.activeTab = itemLabel:lower()
             for _, btn in ipairs(itemsContainer:GetChildren()) do
                 if btn:IsA("TextButton") then
-                    btn.BackgroundColor3 = btn.Name == item.tooltip and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(30, 41, 59)
+                    btn.BackgroundColor3 = (btn.Name == itemLabel) and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(30, 41, 59)
                 end
             end
-            
-            self:refreshContent()
+            if itemLabel == "Settings" then
+                self:showSettings()
+            else
+                self:refreshContent()
+            end
         end)
     end
-    
-    -- Settings Frame (será mostrado quando clicar em Settings)
-    self.settingsFrame = nil
     
     -- Divider
     local divider = Instance.new("Frame")
     divider.Size = UDim2.new(0.8, 0, 0, 1)
-    divider.Position = UDim2.new(0.1, 0, 0, 375)
+    divider.Position = UDim2.new(0.1, 0, 0, 330)
     divider.BackgroundColor3 = Color3.fromRGB(88, 28, 135)
     divider.BorderSizePixel = 0
     divider.Parent = sidebar
     
-    -- Bottom Buttons
-    local bottomButtonsContainer = Instance.new("Frame")
-    bottomButtonsContainer.Name = "BottomButtonsContainer"
-    bottomButtonsContainer.Size = UDim2.new(1, 0, 0, 165)
-    bottomButtonsContainer.Position = UDim2.new(0, 0, 1, -165)
-    bottomButtonsContainer.BackgroundTransparency = 1
-    bottomButtonsContainer.BorderSizePixel = 0
-    bottomButtonsContainer.Parent = sidebar
+    -- Bottom Section
+    local bottomContainer = Instance.new("Frame")
+    bottomContainer.Name = "BottomContainer"
+    bottomContainer.Size = UDim2.new(1, 0, 0, 150)
+    bottomContainer.Position = UDim2.new(0, 0, 1, -150)
+    bottomContainer.BackgroundTransparency = 1
+    bottomContainer.BorderSizePixel = 0
+    bottomContainer.Parent = sidebar
     
     -- Shop Button
     local shopButton = Instance.new("TextButton")
@@ -248,7 +176,7 @@ function RBXLibrary:createUI()
     shopButton.TextSize = 18
     shopButton.BorderSizePixel = 0
     shopButton.AutoButtonColor = false
-    shopButton.Parent = bottomButtonsContainer
+    shopButton.Parent = bottomContainer
     
     local shopCorner = Instance.new("UICorner")
     shopCorner.CornerRadius = UDim.new(0, 6)
@@ -262,11 +190,11 @@ function RBXLibrary:createUI()
         shopButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
     end)
     
-    -- User Profile
+    -- Profile Button
     local profileButton = Instance.new("TextButton")
     profileButton.Name = "Profile"
     profileButton.Size = UDim2.new(0.8, 0, 0, 50)
-    profileButton.Position = UDim2.new(0.1, 0, 0, 55)
+    profileButton.Position = UDim2.new(0.1, 0, 0, 50)
     profileButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
     profileButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     profileButton.Text = "U"
@@ -274,11 +202,17 @@ function RBXLibrary:createUI()
     profileButton.TextSize = 20
     profileButton.BorderSizePixel = 0
     profileButton.AutoButtonColor = false
-    profileButton.Parent = bottomButtonsContainer
+    profileButton.Parent = bottomContainer
     
     local profileCorner = Instance.new("UICorner")
     profileCorner.CornerRadius = UDim.new(0, 6)
     profileCorner.Parent = profileButton
+    
+    local userId = player.UserId
+    pcall(function()
+        profileButton.BackgroundImage = "rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=150&h=150"
+        profileButton.Text = ""
+    end)
     
     profileButton.MouseEnter:Connect(function()
         profileButton.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
@@ -286,19 +220,6 @@ function RBXLibrary:createUI()
     
     profileButton.MouseLeave:Connect(function()
         profileButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
-    end)
-    
-    -- Tentar carregar o avatar do jogador
-    local userId = player.UserId
-    local humanoidDescription = character:FindFirstChild("Humanoid"):Clone()
-    
-    pcall(function()
-        profileButton.BackgroundImage = "rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=150&h=150"
-        profileButton.Text = ""
-    end)
-    
-    profileButton.MouseButton1Click:Connect(function()
-        self:showSettings()
     end)
     
     -- ===== MAIN CONTENT =====
@@ -316,11 +237,12 @@ function RBXLibrary:createUI()
     local header = Instance.new("Frame")
     header.Name = "Header"
     header.Size = UDim2.new(1, 0, 0, 90)
-    header.Position = UDim2.new(0, 0, 0, 0)
     header.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
-    header.BorderSizePixel = 1
     header.BorderColor3 = Color3.fromRGB(88, 28, 135)
+    header.BorderSizePixel = 1
     header.Parent = contentContainer
+    
+    self.header = header
     
     -- Search Bar
     local searchContainer = Instance.new("Frame")
@@ -328,8 +250,8 @@ function RBXLibrary:createUI()
     searchContainer.Size = UDim2.new(0, 250, 0, 35)
     searchContainer.Position = UDim2.new(0, 10, 0, 8)
     searchContainer.BackgroundColor3 = Color3.fromRGB(15, 23, 42)
-    searchContainer.BorderSizePixel = 1
     searchContainer.BorderColor3 = Color3.fromRGB(88, 28, 135)
+    searchContainer.BorderSizePixel = 1
     searchContainer.Parent = header
     
     local searchCorner = Instance.new("UICorner")
@@ -390,8 +312,8 @@ function RBXLibrary:createUI()
     favButton.Text = "⭐"
     favButton.Font = Enum.Font.GothamBold
     favButton.TextSize = 14
-    favButton.BorderSizePixel = 1
     favButton.BorderColor3 = Color3.fromRGB(88, 28, 135)
+    favButton.BorderSizePixel = 1
     favButton.AutoButtonColor = false
     favButton.Parent = header
     
@@ -422,9 +344,9 @@ function RBXLibrary:createUI()
         local tabButton = Instance.new("TextButton")
         tabButton.Name = tabName
         tabButton.Size = UDim2.new(0, 100, 0, 30)
-        tabButton.Position = UDim2.new(0, (i-1) * 105, 0, 0)
+        tabButton.Position = UDim2.new(0, (i - 1) * 105, 0, 0)
         tabButton.BackgroundTransparency = 1
-        tabButton.TextColor3 = i == 1 and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(107, 114, 128)
+        tabButton.TextColor3 = (i == 1) and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(107, 114, 128)
         tabButton.Text = tabName
         tabButton.Font = Enum.Font.GothamBold
         tabButton.TextSize = 12
@@ -442,8 +364,11 @@ function RBXLibrary:createUI()
             underline.Parent = tabButton
         end
         
+        local tabButtonIndex = i
+        local tabButtonName = tabName
+        
         tabButton.MouseButton1Click:Connect(function()
-            self.activeTab = tabName:lower()
+            self.activeTab = tabButtonName:lower()
             
             for _, btn in ipairs(tabsContainer:GetChildren()) do
                 if btn:IsA("TextButton") then
@@ -500,29 +425,26 @@ end
 function RBXLibrary:refreshContent()
     local scroll = self.contentScroll
     
-    -- Limpar conteúdo anterior
     for _, child in ipairs(scroll:GetChildren()) do
         if child:IsA("Frame") and child.Name == "ScriptCard" then
             child:Destroy()
         end
     end
     
-    -- Mostrar scripts filtrados
     for _, script in ipairs(self.scripts) do
         if script.name:lower():find(self.searchQuery) or self.searchQuery == "" then
             local scriptCard = Instance.new("Frame")
             scriptCard.Name = "ScriptCard"
             scriptCard.Size = UDim2.new(0, 140, 0, 140)
             scriptCard.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
-            scriptCard.BorderSizePixel = 2
             scriptCard.BorderColor3 = Color3.fromRGB(34, 211, 238)
+            scriptCard.BorderSizePixel = 2
             scriptCard.Parent = scroll
             
             local corner = Instance.new("UICorner")
             corner.CornerRadius = UDim.new(0, 6)
             corner.Parent = scriptCard
             
-            -- Icon
             local iconLabel = Instance.new("TextLabel")
             iconLabel.Name = "Icon"
             iconLabel.Size = UDim2.new(1, 0, 0, 50)
@@ -535,7 +457,6 @@ function RBXLibrary:refreshContent()
             iconLabel.BorderSizePixel = 0
             iconLabel.Parent = scriptCard
             
-            -- Name
             local nameLabel = Instance.new("TextLabel")
             nameLabel.Name = "Name"
             nameLabel.Size = UDim2.new(1, -4, 0, 25)
@@ -549,7 +470,6 @@ function RBXLibrary:refreshContent()
             nameLabel.BorderSizePixel = 0
             nameLabel.Parent = scriptCard
             
-            -- Play Button
             local playButton = Instance.new("TextButton")
             playButton.Name = "PlayButton"
             playButton.Size = UDim2.new(0.8, 0, 0, 25)
@@ -567,9 +487,10 @@ function RBXLibrary:refreshContent()
             playCorner.CornerRadius = UDim.new(0, 4)
             playCorner.Parent = playButton
             
+            local scriptCallback = script.callback
+            
             playButton.MouseEnter:Connect(function()
                 playButton.BackgroundColor3 = Color3.fromRGB(168, 85, 247)
-                scriptCard.BorderColor3 = Color3.fromRGB(34, 211, 238)
             end)
             
             playButton.MouseLeave:Connect(function()
@@ -577,13 +498,11 @@ function RBXLibrary:refreshContent()
             end)
             
             playButton.MouseButton1Click:Connect(function()
-                if script.callback then
-                    script.callback()
+                if scriptCallback then
+                    scriptCallback()
                 end
-                print("Executando: " .. script.name)
             end)
             
-            -- Hover efeito no card
             scriptCard.MouseEnter:Connect(function()
                 scriptCard.BorderColor3 = Color3.fromRGB(52, 211, 153)
             end)
@@ -596,14 +515,12 @@ function RBXLibrary:refreshContent()
 end
 
 function RBXLibrary:showSettings()
-    -- Remover settings anterior se existir
     if self.settingsFrame then
         self.settingsFrame:Destroy()
         self.settingsFrame = nil
         return
     end
     
-    -- Criar settings frame
     self.settingsFrame = Instance.new("Frame")
     self.settingsFrame.Name = "SettingsFrame"
     self.settingsFrame.Size = UDim2.new(1, 0, 1, -90)
@@ -612,14 +529,13 @@ function RBXLibrary:showSettings()
     self.settingsFrame.BorderSizePixel = 0
     self.settingsFrame.Parent = self.contentContainer
     
-    -- Avatar
     local avatarFrame = Instance.new("Frame")
     avatarFrame.Name = "AvatarFrame"
     avatarFrame.Size = UDim2.new(0, 80, 0, 80)
     avatarFrame.Position = UDim2.new(0.5, -40, 0, 20)
     avatarFrame.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
-    avatarFrame.BorderSizePixel = 2
     avatarFrame.BorderColor3 = Color3.fromRGB(147, 51, 234)
+    avatarFrame.BorderSizePixel = 2
     avatarFrame.Parent = self.settingsFrame
     
     local avatarCorner = Instance.new("UICorner")
@@ -632,38 +548,34 @@ function RBXLibrary:showSettings()
     avatarImage.BackgroundTransparency = 1
     avatarImage.Parent = avatarFrame
     
-    -- Tentar carregar o avatar
     pcall(function()
-        avatarImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. Players.LocalPlayer.UserId .. "&w=150&h=150"
+        avatarImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. player.UserId .. "&w=150&h=150"
     end)
     
-    -- Username
     local usernameLabel = Instance.new("TextLabel")
     usernameLabel.Name = "UsernameLabel"
     usernameLabel.Size = UDim2.new(1, 0, 0, 30)
     usernameLabel.Position = UDim2.new(0, 0, 0, 110)
     usernameLabel.BackgroundTransparency = 1
     usernameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    usernameLabel.Text = "Player: " .. Players.LocalPlayer.Name
+    usernameLabel.Text = "Player: " .. player.Name
     usernameLabel.Font = Enum.Font.GothamBold
     usernameLabel.TextSize = 14
     usernameLabel.BorderSizePixel = 0
     usernameLabel.Parent = self.settingsFrame
     
-    -- User ID
     local userIdLabel = Instance.new("TextLabel")
     userIdLabel.Name = "UserIdLabel"
     userIdLabel.Size = UDim2.new(1, 0, 0, 25)
     userIdLabel.Position = UDim2.new(0, 0, 0, 145)
     userIdLabel.BackgroundTransparency = 1
     userIdLabel.TextColor3 = Color3.fromRGB(148, 163, 184)
-    userIdLabel.Text = "ID: " .. tostring(Players.LocalPlayer.UserId)
+    userIdLabel.Text = "ID: " .. tostring(player.UserId)
     userIdLabel.Font = Enum.Font.Gotham
     userIdLabel.TextSize = 12
     userIdLabel.BorderSizePixel = 0
     userIdLabel.Parent = self.settingsFrame
     
-    -- Divider
     local divider = Instance.new("Frame")
     divider.Size = UDim2.new(0.8, 0, 0, 1)
     divider.Position = UDim2.new(0.1, 0, 0, 185)
@@ -671,7 +583,6 @@ function RBXLibrary:showSettings()
     divider.BorderSizePixel = 0
     divider.Parent = self.settingsFrame
     
-    -- Settings Options
     local settingsLabel = Instance.new("TextLabel")
     settingsLabel.Name = "SettingsLabel"
     settingsLabel.Size = UDim2.new(1, 0, 0, 30)
@@ -684,47 +595,16 @@ function RBXLibrary:showSettings()
     settingsLabel.BorderSizePixel = 0
     settingsLabel.TextXAlignment = Enum.TextXAlignment.Left
     settingsLabel.Parent = self.settingsFrame
-    
-    -- Close Button
-    local closeButton = Instance.new("TextButton")
-    closeButton.Name = "CloseButton"
-    closeButton.Size = UDim2.new(0.3, 0, 0, 30)
-    closeButton.Position = UDim2.new(0.35, 0, 1, -50)
-    closeButton.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
-    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    closeButton.Text = "✕ Fechar"
-    closeButton.Font = Enum.Font.GothamBold
-    closeButton.TextSize = 11
-    closeButton.BorderSizePixel = 0
-    closeButton.AutoButtonColor = false
-    closeButton.Parent = self.settingsFrame
-    
-    local closeCorner = Instance.new("UICorner")
-    closeCorner.CornerRadius = UDim.new(0, 6)
-    closeCorner.Parent = closeButton
-    
-    closeButton.MouseEnter:Connect(function()
-        closeButton.BackgroundColor3 = Color3.fromRGB(168, 85, 247)
-    end)
-    
-    closeButton.MouseLeave:Connect(function()
-        closeButton.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
-    end)
-    
-    closeButton.MouseButton1Click:Connect(function()
-        self:showSettings()
-    end)
 end
 
 function RBXLibrary:setupDrag()
     local screenGui = self.screenGui
-    local header = screenGui:FindFirstChild("MainContainer"):FindFirstChild("ContentContainer"):FindFirstChild("Header")
+    local header = self.header
     
     local dragStart
     local startPos
     
     header.InputBegan:Connect(function(input, gameProcessed)
-        if gameProcessed then return end
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragStart = input.Position
             startPos = screenGui.Position
@@ -734,8 +614,10 @@ function RBXLibrary:setupDrag()
     
     UserInputService.InputChanged:Connect(function(input, gameProcessed)
         if self.isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local delta = input.Position - dragStart
-            screenGui.Position = startPos + UDim2.new(0, delta.X, 0, delta.Y)
+            if dragStart then
+                local delta = input.Position - dragStart
+                screenGui.Position = startPos + UDim2.new(0, delta.X, 0, delta.Y)
+            end
         end
     end)
     
@@ -746,11 +628,10 @@ function RBXLibrary:setupDrag()
     end)
 end
 
-function RBXLibrary:addScript(name, icon, description, callback)
+function RBXLibrary:addScript(name, icon, callback)
     table.insert(self.scripts, {
         name = name,
         icon = icon,
-        description = description,
         callback = callback
     })
     self:refreshContent()
