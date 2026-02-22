@@ -1,5 +1,5 @@
 -- RBXLibrary - UI Library para Roblox (Estilo RBXScriptz)
--- Versão 2.1 - CORRIGIDA
+-- Versão 2.3 - TOTALMENTE CORRIGIDA
 
 local RBXLibrary = {}
 RBXLibrary.__index = RBXLibrary
@@ -15,8 +15,6 @@ function RBXLibrary.new()
     self.screenGui = Instance.new("ScreenGui")
     self.screenGui.Name = "RBXLibrary"
     self.screenGui.ResetOnSpawn = false
-    self.screenGui.Size = UDim2.new(0, 580, 0, 650)
-    self.screenGui.Position = UDim2.new(0.5, -290, 0.5, -325)
     self.screenGui.Parent = player:WaitForChild("PlayerGui")
     
     self.sidebarOpen = false
@@ -45,7 +43,8 @@ function RBXLibrary:createUI()
     -- Main Container
     local mainContainer = Instance.new("Frame")
     mainContainer.Name = "MainContainer"
-    mainContainer.Size = UDim2.new(1, 0, 1, 0)
+    mainContainer.Size = UDim2.new(0, 580, 0, 650)
+    mainContainer.Position = UDim2.new(0.5, -290, 0.5, -325)
     mainContainer.BackgroundColor3 = Color3.fromRGB(15, 23, 42)
     mainContainer.BorderSizePixel = 0
     mainContainer.Parent = screenGui
@@ -53,6 +52,8 @@ function RBXLibrary:createUI()
     local mainCorner = Instance.new("UICorner")
     mainCorner.CornerRadius = UDim.new(0, 10)
     mainCorner.Parent = mainContainer
+    
+    self.mainContainer = mainContainer
     
     -- ===== SIDEBAR =====
     local sidebar = Instance.new("Frame")
@@ -598,7 +599,7 @@ function RBXLibrary:showSettings()
 end
 
 function RBXLibrary:setupDrag()
-    local screenGui = self.screenGui
+    local mainContainer = self.mainContainer
     local header = self.header
     
     local dragStart
@@ -607,7 +608,7 @@ function RBXLibrary:setupDrag()
     header.InputBegan:Connect(function(input, gameProcessed)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragStart = input.Position
-            startPos = screenGui.Position
+            startPos = mainContainer.Position
             self.isDragging = true
         end
     end)
@@ -616,7 +617,7 @@ function RBXLibrary:setupDrag()
         if self.isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             if dragStart then
                 local delta = input.Position - dragStart
-                screenGui.Position = startPos + UDim2.new(0, delta.X, 0, delta.Y)
+                mainContainer.Position = startPos + UDim2.new(0, delta.X, 0, delta.Y)
             end
         end
     end)
