@@ -1,0 +1,179 @@
+-- UI Library Avançada
+local UILib = {}
+
+function UILib:CreateWindow(title)
+    local player = game.Players.LocalPlayer
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Size = UDim2.new(0, 700, 0, 450)
+    mainFrame.Position = UDim2.new(0.5, -350, 0.5, -225)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    mainFrame.BackgroundTransparency = 0.2
+    mainFrame.Parent = screenGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)
+    corner.Parent = mainFrame
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Text = title
+    titleLabel.Size = UDim2.new(1, 0, 0, 40)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.TextColor3 = Color3.fromRGB(180, 120, 255)
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextScaled = true
+    titleLabel.Parent = mainFrame
+
+    local sidebar = Instance.new("Frame")
+    sidebar.Size = UDim2.new(0, 150, 1, -40)
+    sidebar.Position = UDim2.new(0, 0, 0, 40)
+    sidebar.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
+    sidebar.BackgroundTransparency = 0.3
+    sidebar.Parent = mainFrame
+
+    local tabs = {}
+
+    function UILib:CreateTab(name)
+        local button = Instance.new("TextButton")
+        button.Text = name
+        button.Size = UDim2.new(1, 0, 0, 40)
+        button.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
+        button.TextColor3 = Color3.new(1,1,1)
+        button.Font = Enum.Font.GothamBold
+        button.Parent = sidebar
+
+        local tabFrame = Instance.new("Frame")
+        tabFrame.Size = UDim2.new(1, -150, 1, -40)
+        tabFrame.Position = UDim2.new(0, 150, 0, 40)
+        tabFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 70)
+        tabFrame.BackgroundTransparency = 0.2
+        tabFrame.Visible = false
+        tabFrame.Parent = mainFrame
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 12)
+        corner.Parent = tabFrame
+
+        tabs[name] = tabFrame
+
+        button.MouseButton1Click:Connect(function()
+            for _, frame in pairs(tabs) do
+                frame.Visible = false
+            end
+            tabFrame.Visible = true
+        end)
+
+        return tabFrame
+    end
+
+    -- Botão que executa script
+    function UILib:CreateExecButton(tab, text, scriptFunc)
+        local button = Instance.new("TextButton")
+        button.Text = text
+        button.Size = UDim2.new(0, 220, 0, 40)
+        button.Position = UDim2.new(0, 20, 0, 20 + (#tab:GetChildren() * 50))
+        button.BackgroundColor3 = Color3.fromRGB(100, 60, 160)
+        button.TextColor3 = Color3.new(1,1,1)
+        button.Font = Enum.Font.GothamBold
+        button.Parent = tab
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = button
+
+        button.MouseButton1Click:Connect(function()
+            pcall(scriptFunc)
+        end)
+    end
+
+    -- Search bar que filtra scripts
+    function UILib:CreateSearchBar(tab, scriptsTable)
+        local searchBox = Instance.new("TextBox")
+        searchBox.PlaceholderText = "Search for scripts..."
+        searchBox.Size = UDim2.new(0, 300, 0, 40)
+        searchBox.Position = UDim2.new(0, 20, 0, 20)
+        searchBox.BackgroundColor3 = Color3.fromRGB(70, 70, 100)
+        searchBox.TextColor3 = Color3.new(1,1,1)
+        searchBox.Font = Enum.Font.Gotham
+        searchBox.Parent = tab
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = searchBox
+
+        local resultsFrame = Instance.new("Frame")
+        resultsFrame.Size = UDim2.new(0, 300, 0, 200)
+        resultsFrame.Position = UDim2.new(0, 20, 0, 70)
+        resultsFrame.BackgroundTransparency = 1
+        resultsFrame.Parent = tab
+
+        local function updateResults(query)
+            for _, child in pairs(resultsFrame:GetChildren()) do
+                child:Destroy()
+            end
+            for _, scriptData in pairs(scriptsTable) do
+                if string.find(string.lower(scriptData.Name), string.lower(query)) then
+                    local btn = Instance.new("TextButton")
+                    btn.Text = scriptData.Name
+                    btn.Size = UDim2.new(1, 0, 0, 30)
+                    btn.BackgroundColor3 = Color3.fromRGB(90, 90, 130)
+                    btn.TextColor3 = Color3.new(1,1,1)
+                    btn.Parent = resultsFrame
+
+                    btn.MouseButton1Click:Connect(function()
+                        pcall(scriptData.Func)
+                    end)
+                end
+            end
+        end
+
+        searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+            updateResults(searchBox.Text)
+        end)
+    end
+
+    -- Drag
+    function UILib:EnableDrag(frame)
+        local UIS = game:GetService("UserInputService")
+        local dragging, dragInput, dragStart, startPos
+
+        frame.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = true
+                dragStart = input.Position
+                startPos = frame.Position
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                    end
+                end)
+            end
+        end)
+
+        frame.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement then
+                dragInput = input
+            end
+        end)
+
+        UIS.InputChanged:Connect(function(input)
+            if input == dragInput and dragging then
+                local delta = input.Position - dragStart
+                frame.Position = UDim2.new(
+                    startPos.X.Scale,
+                    startPos.X.Offset + delta.X,
+                    startPos.Y.Scale,
+                    startPos.Y.Offset + delta.Y
+                )
+            end
+        end)
+    end
+
+    UILib:EnableDrag(mainFrame)
+
+    return UILib
+end
+
+return UILib
