@@ -1,4 +1,4 @@
--- UI Library Avançada
+-- UI Library Final
 local UILib = {}
 
 function UILib:CreateWindow(title)
@@ -7,10 +7,10 @@ function UILib:CreateWindow(title)
     screenGui.Parent = player:WaitForChild("PlayerGui")
 
     local mainFrame = Instance.new("Frame")
-    mainFrame.Size = UDim2.new(0, 700, 0, 450)
-    mainFrame.Position = UDim2.new(0.5, -350, 0.5, -225)
+    mainFrame.Size = UDim2.new(0, 750, 0, 500)
+    mainFrame.Position = UDim2.new(0.5, -375, 0.5, -250)
     mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-    mainFrame.BackgroundTransparency = 0.2
+    mainFrame.BackgroundTransparency = 0.25
     mainFrame.Parent = screenGui
 
     local corner = Instance.new("UICorner")
