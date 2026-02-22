@@ -1,81 +1,15 @@
--- RBXLibrary - UI Library para Roblox
--- Replicando o design do RBXScriptz
+-- RBXLibrary - UI Library para Roblox (Estilo RBXScriptz)
+-- Versão 2.0 - Com Drag, Avatar/Username e Execução de Scripts
 
 local RBXLibrary = {}
 RBXLibrary.__index = RBXLibrary
 
-local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
--- Funções auxiliares
-local function createTextLabel(parent, text, size, position, bgColor, textColor)
-    local label = Instance.new("TextLabel")
-    label.Parent = parent
-    label.Text = text
-    label.Size = size
-    label.Position = position
-    label.BackgroundColor3 = bgColor
-    label.TextColor3 = textColor
-    label.TextSize = 14
-    label.Font = Enum.Font.GothamBold
-    label.BorderSizePixel = 0
-    label.BackgroundTransparency = 1
-    return label
-end
-
-local function createButton(parent, text, size, position, bgColor, textColor, callback)
-    local button = Instance.new("TextButton")
-    button.Parent = parent
-    button.Text = text
-    button.Size = size
-    button.Position = position
-    button.BackgroundColor3 = bgColor
-    button.TextColor3 = textColor
-    button.TextSize = 14
-    button.Font = Enum.Font.GothamBold
-    button.BorderSizePixel = 0
-    button.AutoButtonColor = false
-    
-    button.MouseButton1Click:Connect(function()
-        if callback then callback() end
-    end)
-    
-    button.MouseEnter:Connect(function()
-        button.BackgroundColor3 = Color3.fromRGB(
-            math.min(bgColor.R * 255 + 20, 255) / 255,
-            math.min(bgColor.G * 255 + 20, 255) / 255,
-            math.min(bgColor.B * 255 + 20, 255) / 255
-        )
-    end)
-    
-    button.MouseLeave:Connect(function()
-        button.BackgroundColor3 = bgColor
-    end)
-    
-    return button
-end
-
-local function createFrame(parent, size, position, bgColor, transparency)
-    local frame = Instance.new("Frame")
-    frame.Parent = parent
-    frame.Size = size
-    frame.Position = position
-    frame.BackgroundColor3 = bgColor
-    frame.BackgroundTransparency = transparency or 0
-    frame.BorderSizePixel = 0
-    return frame
-end
-
--- Cores principais
-local COLORS = {
-    BG_DARK = Color3.fromRGB(15, 23, 42),      -- slate-950
-    BG_DARKER = Color3.fromRGB(30, 41, 59),    -- slate-900
-    PURPLE = Color3.fromRGB(147, 51, 234),     -- purple-600
-    CYAN = Color3.fromRGB(34, 211, 238),       -- cyan-400
-    GRAY = Color3.fromRGB(148, 163, 184),      -- gray-400
-    TEXT_WHITE = Color3.fromRGB(255, 255, 255),
-    TEXT_GRAY = Color3.fromRGB(107, 114, 128),
-}
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
 
 function RBXLibrary.new()
     local self = setmetatable({}, RBXLibrary)
@@ -83,227 +17,383 @@ function RBXLibrary.new()
     self.screenGui = Instance.new("ScreenGui")
     self.screenGui.Name = "RBXLibrary"
     self.screenGui.ResetOnSpawn = false
-    self.screenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+    self.screenGui.Size = UDim2.new(0, 580, 0, 650)
+    self.screenGui.Position = UDim2.new(0.5, -290, 0.5, -325)
+    self.screenGui.Parent = player:WaitForChild("PlayerGui")
     
     self.sidebarOpen = false
     self.activeTab = "scripts"
     self.searchQuery = ""
+    self.isDragging = false
+    self.dragStart = nil
+    self.startPos = nil
     
-    self.games = {
-        { name = "Break a Lucky Block!", icon = "🧱" },
-        { name = "Driving Empire", icon = "🚗" },
-        { name = "Star Fishing", icon = "⭐" },
-        { name = "Tycoon Simulator", icon = "💰" },
-        { name = "Obby Master", icon = "🏃" },
-        { name = "Pet Simulator", icon = "🐾" },
+    -- Scripts e suas callbacks
+    self.scripts = {
+        {
+            name = "Teleport",
+            icon = "📍",
+            description = "Script de Teleporte",
+            callback = function()
+                print("Script Teleport executado!")
+            end
+        },
+        {
+            name = "Speed Hack",
+            icon = "⚡",
+            description = "Aumentar velocidade",
+            callback = function()
+                print("Script Speed Hack executado!")
+            end
+        },
+        {
+            name = "Jump Boost",
+            icon = "🚀",
+            description = "Pulo aumentado",
+            callback = function()
+                print("Script Jump Boost executado!")
+            end
+        },
+        {
+            name = "Fly",
+            icon = "🛸",
+            description = "Script de voo",
+            callback = function()
+                print("Script Fly executado!")
+            end
+        },
+        {
+            name = "Noclip",
+            icon = "👻",
+            description = "Atravessar paredes",
+            callback = function()
+                print("Script Noclip executado!")
+            end
+        },
+        {
+            name = "ESP",
+            icon = "👁️",
+            description = "Ver outros jogadores",
+            callback = function()
+                print("Script ESP executado!")
+            end
+        },
     }
     
     self:createUI()
+    self:setupDrag()
     
     return self
 end
 
 function RBXLibrary:createUI()
-    -- Main container
-    local mainContainer = createFrame(self.screenGui, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), COLORS.BG_DARK, 0)
+    local screenGui = self.screenGui
+    
+    -- Main Container
+    local mainContainer = Instance.new("Frame")
     mainContainer.Name = "MainContainer"
+    mainContainer.Size = UDim2.new(1, 0, 1, 0)
+    mainContainer.Position = UDim2.new(0, 0, 0, 0)
+    mainContainer.BackgroundColor3 = Color3.fromRGB(15, 23, 42)
+    mainContainer.BorderSizePixel = 0
+    mainContainer.Parent = screenGui
+    
+    local mainCorner = Instance.new("UICorner")
+    mainCorner.CornerRadius = UDim.new(0, 10)
+    mainCorner.Parent = mainContainer
     
     -- ===== SIDEBAR =====
-    local sidebar = createFrame(mainContainer, UDim2.new(0, 80, 1, 0), UDim2.new(0, 0, 0, 0), COLORS.BG_DARKER, 0)
+    local sidebar = Instance.new("Frame")
     sidebar.Name = "Sidebar"
+    sidebar.Size = UDim2.new(0, 60, 1, 0)
+    sidebar.Position = UDim2.new(0, 0, 0, 0)
+    sidebar.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
     sidebar.BorderSizePixel = 1
     sidebar.BorderColor3 = Color3.fromRGB(88, 28, 135)
+    sidebar.Parent = mainContainer
     
-    local sidebarCorner = Instance.new("UICorner")
-    sidebarCorner.CornerRadius = UDim.new(0, 0)
-    sidebarCorner.Parent = sidebar
-    
-    -- Sidebar Logo
-    local logoFrame = createFrame(sidebar, UDim2.new(1, 0, 0, 60), UDim2.new(0, 0, 0, 0), COLORS.BG_DARKER, 0)
-    logoFrame.Name = "LogoFrame"
-    logoFrame.BorderSizePixel = 1
-    logoFrame.BorderColor3 = Color3.fromRGB(88, 28, 135)
-    
+    -- Logo
     local logoButton = Instance.new("TextButton")
-    logoButton.Parent = logoFrame
-    logoButton.Size = UDim2.new(0, 50, 0, 50)
-    logoButton.Position = UDim2.new(0.5, -25, 0.5, -25)
-    logoButton.BackgroundColor3 = COLORS.PURPLE
-    logoButton.TextColor3 = COLORS.TEXT_WHITE
-    logoButton.Text = "RBX"
+    logoButton.Name = "Logo"
+    logoButton.Size = UDim2.new(1, 0, 0, 60)
+    logoButton.Position = UDim2.new(0, 0, 0, 0)
+    logoButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
+    logoButton.TextColor3 = Color3.fromRGB(147, 51, 234)
+    logoButton.Text = "📦"
     logoButton.Font = Enum.Font.GothamBold
-    logoButton.TextSize = 16
-    logoButton.BorderSizePixel = 0
+    logoButton.TextSize = 24
+    logoButton.BorderSizePixel = 1
+    logoButton.BorderColor3 = Color3.fromRGB(88, 28, 135)
+    logoButton.AutoButtonColor = false
+    logoButton.Parent = sidebar
     
-    local logoCorner = Instance.new("UICorner")
-    logoCorner.CornerRadius = UDim.new(0, 8)
-    logoCorner.Parent = logoButton
-    
-    -- Sidebar Items
-    local sidebarItems = {
-        { icon = "📦", label = "Scripts" },
-        { icon = "👥", label = "Socials" },
-        { icon = "🔧", label = "Utility" },
-        { icon = "⚙️", label = "Config" },
-    }
-    
-    local itemsContainer = createFrame(sidebar, UDim2.new(1, 0, 0, 300), UDim2.new(0, 0, 0, 80), COLORS.BG_DARKER, 1)
+    -- Sidebar Items Container
+    local itemsContainer = Instance.new("ScrollingFrame")
     itemsContainer.Name = "ItemsContainer"
+    itemsContainer.Size = UDim2.new(1, 0, 0, 300)
+    itemsContainer.Position = UDim2.new(0, 0, 0, 65)
+    itemsContainer.BackgroundTransparency = 1
+    itemsContainer.BorderSizePixel = 0
+    itemsContainer.ScrollBarThickness = 0
+    itemsContainer.Parent = sidebar
     
     local itemsLayout = Instance.new("UIListLayout")
     itemsLayout.Parent = itemsContainer
     itemsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    itemsLayout.Padding = UDim.new(0, 8)
+    itemsLayout.Padding = UDim.new(0, 5)
+    
+    -- Sidebar Items
+    local sidebarItems = {
+        { icon = "📦", tooltip = "Scripts" },
+        { icon = "👥", tooltip = "Socials" },
+        { icon = "🔧", tooltip = "Utility" },
+        { icon = "⚙️", tooltip = "Settings" },
+    }
     
     for i, item in ipairs(sidebarItems) do
         local itemButton = Instance.new("TextButton")
-        itemButton.Parent = itemsContainer
-        itemButton.Size = UDim2.new(0.9, 0, 0, 45)
-        itemButton.BackgroundColor3 = i == 1 and COLORS.PURPLE or COLORS.BG_DARKER
-        itemButton.TextColor3 = COLORS.TEXT_WHITE
-        itemButton.Text = item.icon .. " " .. item.label
+        itemButton.Name = item.tooltip
+        itemButton.Size = UDim2.new(0.8, 0, 0, 45)
+        itemButton.Position = UDim2.new(0.1, 0, 0, 0)
+        itemButton.BackgroundColor3 = i == 1 and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(30, 41, 59)
+        itemButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        itemButton.Text = item.icon
         itemButton.Font = Enum.Font.GothamBold
-        itemButton.TextSize = 12
+        itemButton.TextSize = 18
         itemButton.BorderSizePixel = 0
+        itemButton.AutoButtonColor = false
         itemButton.LayoutOrder = i
+        itemButton.Parent = itemsContainer
         
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0, 6)
         corner.Parent = itemButton
         
+        -- Tooltip
+        local tooltip = Instance.new("TextLabel")
+        tooltip.Name = "Tooltip"
+        tooltip.Size = UDim2.new(0, 60, 0, 25)
+        tooltip.Position = UDim2.new(1, 10, 0.5, -12)
+        tooltip.BackgroundColor3 = Color3.fromRGB(50, 50, 80)
+        tooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tooltip.Text = item.tooltip
+        tooltip.Font = Enum.Font.Gotham
+        tooltip.TextSize = 11
+        tooltip.BorderSizePixel = 1
+        tooltip.BorderColor3 = Color3.fromRGB(147, 51, 234)
+        tooltip.Visible = false
+        tooltip.Parent = itemButton
+        
+        local tooltipCorner = Instance.new("UICorner")
+        tooltipCorner.CornerRadius = UDim.new(0, 4)
+        tooltipCorner.Parent = tooltip
+        
         itemButton.MouseEnter:Connect(function()
+            tooltip.Visible = true
             if i ~= 1 then
                 itemButton.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
             end
         end)
         
         itemButton.MouseLeave:Connect(function()
+            tooltip.Visible = false
             if i ~= 1 then
-                itemButton.BackgroundColor3 = COLORS.BG_DARKER
+                itemButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
             end
+        end)
+        
+        itemButton.MouseButton1Click:Connect(function()
+            self.activeTab = item.tooltip:lower()
+            
+            -- Atualizar botão ativo
+            for _, btn in ipairs(itemsContainer:GetChildren()) do
+                if btn:IsA("TextButton") then
+                    btn.BackgroundColor3 = btn.Name == item.tooltip and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(30, 41, 59)
+                end
+            end
+            
+            self:refreshContent()
         end)
     end
     
+    -- Settings Frame (será mostrado quando clicar em Settings)
+    self.settingsFrame = nil
+    
+    -- Divider
+    local divider = Instance.new("Frame")
+    divider.Size = UDim2.new(0.8, 0, 0, 1)
+    divider.Position = UDim2.new(0.1, 0, 0, 375)
+    divider.BackgroundColor3 = Color3.fromRGB(88, 28, 135)
+    divider.BorderSizePixel = 0
+    divider.Parent = sidebar
+    
+    -- Bottom Buttons
+    local bottomButtonsContainer = Instance.new("Frame")
+    bottomButtonsContainer.Name = "BottomButtonsContainer"
+    bottomButtonsContainer.Size = UDim2.new(1, 0, 0, 165)
+    bottomButtonsContainer.Position = UDim2.new(0, 0, 1, -165)
+    bottomButtonsContainer.BackgroundTransparency = 1
+    bottomButtonsContainer.BorderSizePixel = 0
+    bottomButtonsContainer.Parent = sidebar
+    
     -- Shop Button
     local shopButton = Instance.new("TextButton")
-    shopButton.Parent = sidebar
-    shopButton.Size = UDim2.new(1, 0, 0, 50)
-    shopButton.Position = UDim2.new(0, 0, 1, -110)
-    shopButton.BackgroundColor3 = COLORS.BG_DARKER
-    shopButton.BorderColor3 = Color3.fromRGB(88, 28, 135)
-    shopButton.BorderSizePixel = 1
-    shopButton.TextColor3 = Color3.fromRGB(147, 51, 234)
-    shopButton.Text = "🛒 Shop"
+    shopButton.Name = "Shop"
+    shopButton.Size = UDim2.new(0.8, 0, 0, 45)
+    shopButton.Position = UDim2.new(0.1, 0, 0, 0)
+    shopButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
+    shopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    shopButton.Text = "🛒"
     shopButton.Font = Enum.Font.GothamBold
-    shopButton.TextSize = 12
+    shopButton.TextSize = 18
+    shopButton.BorderSizePixel = 0
     shopButton.AutoButtonColor = false
+    shopButton.Parent = bottomButtonsContainer
+    
+    local shopCorner = Instance.new("UICorner")
+    shopCorner.CornerRadius = UDim.new(0, 6)
+    shopCorner.Parent = shopButton
     
     shopButton.MouseEnter:Connect(function()
         shopButton.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
     end)
     
     shopButton.MouseLeave:Connect(function()
-        shopButton.BackgroundColor3 = COLORS.BG_DARKER
+        shopButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
     end)
     
     -- User Profile
-    local profileFrame = createFrame(sidebar, UDim2.new(1, 0, 0, 60), UDim2.new(0, 0, 1, -60), COLORS.BG_DARKER, 0)
-    profileFrame.BorderSizePixel = 1
-    profileFrame.BorderColor3 = Color3.fromRGB(88, 28, 135)
-    
     local profileButton = Instance.new("TextButton")
-    profileButton.Parent = profileFrame
-    profileButton.Size = UDim2.new(0, 50, 0, 50)
-    profileButton.Position = UDim2.new(0.5, -25, 0.5, -25)
-    profileButton.BackgroundColor3 = Color3.fromRGB(168, 85, 247)
-    profileButton.TextColor3 = Color3.fromRGB(30, 30, 30)
+    profileButton.Name = "Profile"
+    profileButton.Size = UDim2.new(0.8, 0, 0, 50)
+    profileButton.Position = UDim2.new(0.1, 0, 0, 55)
+    profileButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
+    profileButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     profileButton.Text = "U"
     profileButton.Font = Enum.Font.GothamBold
-    profileButton.TextSize = 16
+    profileButton.TextSize = 20
     profileButton.BorderSizePixel = 0
+    profileButton.AutoButtonColor = false
+    profileButton.Parent = bottomButtonsContainer
     
     local profileCorner = Instance.new("UICorner")
-    profileCorner.CornerRadius = UDim.new(0, 8)
+    profileCorner.CornerRadius = UDim.new(0, 6)
     profileCorner.Parent = profileButton
     
+    profileButton.MouseEnter:Connect(function()
+        profileButton.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
+    end)
+    
+    profileButton.MouseLeave:Connect(function()
+        profileButton.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
+    end)
+    
+    -- Tentar carregar o avatar do jogador
+    local userId = player.UserId
+    local humanoidDescription = character:FindFirstChild("Humanoid"):Clone()
+    
+    pcall(function()
+        profileButton.BackgroundImage = "rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=150&h=150"
+        profileButton.Text = ""
+    end)
+    
+    profileButton.MouseButton1Click:Connect(function()
+        self:showSettings()
+    end)
+    
     -- ===== MAIN CONTENT =====
-    local contentContainer = createFrame(mainContainer, UDim2.new(1, -80, 1, 0), UDim2.new(0, 80, 0, 0), COLORS.BG_DARK, 1)
+    local contentContainer = Instance.new("Frame")
     contentContainer.Name = "ContentContainer"
+    contentContainer.Size = UDim2.new(1, -60, 1, 0)
+    contentContainer.Position = UDim2.new(0, 60, 0, 0)
+    contentContainer.BackgroundColor3 = Color3.fromRGB(15, 23, 42)
+    contentContainer.BorderSizePixel = 0
+    contentContainer.Parent = mainContainer
+    
+    self.contentContainer = contentContainer
     
     -- Header
-    local header = createFrame(contentContainer, UDim2.new(1, 0, 0, 140), UDim2.new(0, 0, 0, 0), COLORS.BG_DARKER, 0.5)
+    local header = Instance.new("Frame")
     header.Name = "Header"
+    header.Size = UDim2.new(1, 0, 0, 90)
+    header.Position = UDim2.new(0, 0, 0, 0)
+    header.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
     header.BorderSizePixel = 1
     header.BorderColor3 = Color3.fromRGB(88, 28, 135)
+    header.Parent = contentContainer
     
-    -- Search Bar Container
-    local searchContainer = createFrame(header, UDim2.new(1, -40, 0, 40), UDim2.new(0, 20, 0, 15), COLORS.BG_DARK, 0)
+    -- Search Bar
+    local searchContainer = Instance.new("Frame")
     searchContainer.Name = "SearchContainer"
+    searchContainer.Size = UDim2.new(0, 250, 0, 35)
+    searchContainer.Position = UDim2.new(0, 10, 0, 8)
+    searchContainer.BackgroundColor3 = Color3.fromRGB(15, 23, 42)
+    searchContainer.BorderSizePixel = 1
+    searchContainer.BorderColor3 = Color3.fromRGB(88, 28, 135)
+    searchContainer.Parent = header
     
     local searchCorner = Instance.new("UICorner")
     searchCorner.CornerRadius = UDim.new(0, 6)
     searchCorner.Parent = searchContainer
     
-    local searchStroke = Instance.new("UIStroke")
-    searchStroke.Parent = searchContainer
-    searchStroke.Color = Color3.fromRGB(88, 28, 135)
-    searchStroke.Thickness = 1
-    
     local searchBox = Instance.new("TextBox")
-    searchBox.Parent = searchContainer
-    searchBox.Size = UDim2.new(1, -40, 1, 0)
-    searchBox.Position = UDim2.new(0, 35, 0, 0)
+    searchBox.Name = "SearchBox"
+    searchBox.Size = UDim2.new(1, -30, 1, 0)
+    searchBox.Position = UDim2.new(0, 25, 0, 0)
     searchBox.BackgroundTransparency = 1
-    searchBox.TextColor3 = COLORS.TEXT_WHITE
-    searchBox.PlaceholderText = "Search for games..."
-    searchBox.PlaceholderColor3 = COLORS.TEXT_GRAY
-    searchBox.TextSize = 14
+    searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    searchBox.PlaceholderText = "Search..."
+    searchBox.PlaceholderColor3 = Color3.fromRGB(107, 114, 128)
+    searchBox.TextSize = 12
     searchBox.Font = Enum.Font.Gotham
     searchBox.BorderSizePixel = 0
+    searchBox.Parent = searchContainer
     
     searchBox.Changed:Connect(function()
         self.searchQuery = searchBox.Text:lower()
-        self:refreshGamesGrid()
+        self:refreshContent()
     end)
     
     -- Auto Execute Button
     local autoExecButton = Instance.new("TextButton")
-    autoExecButton.Parent = header
-    autoExecButton.Size = UDim2.new(0, 140, 0, 40)
-    autoExecButton.Position = UDim2.new(1, -200, 0, 15)
-    autoExecButton.BackgroundColor3 = COLORS.PURPLE
-    autoExecButton.TextColor3 = COLORS.TEXT_WHITE
-    autoExecButton.Text = "⚡ Auto Execute"
+    autoExecButton.Name = "AutoExecute"
+    autoExecButton.Size = UDim2.new(0, 120, 0, 35)
+    autoExecButton.Position = UDim2.new(0, 270, 0, 8)
+    autoExecButton.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    autoExecButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    autoExecButton.Text = "⚡ Auto"
     autoExecButton.Font = Enum.Font.GothamBold
-    autoExecButton.TextSize = 12
+    autoExecButton.TextSize = 11
     autoExecButton.BorderSizePixel = 0
     autoExecButton.AutoButtonColor = false
+    autoExecButton.Parent = header
     
-    local execCorner = Instance.new("UICorner")
-    execCorner.CornerRadius = UDim.new(0, 6)
-    execCorner.Parent = autoExecButton
+    local autoExecCorner = Instance.new("UICorner")
+    autoExecCorner.CornerRadius = UDim.new(0, 6)
+    autoExecCorner.Parent = autoExecButton
     
     autoExecButton.MouseEnter:Connect(function()
         autoExecButton.BackgroundColor3 = Color3.fromRGB(168, 85, 247)
     end)
     
     autoExecButton.MouseLeave:Connect(function()
-        autoExecButton.BackgroundColor3 = COLORS.PURPLE
+        autoExecButton.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
     end)
     
     -- Favorite Button
     local favButton = Instance.new("TextButton")
-    favButton.Parent = header
-    favButton.Size = UDim2.new(0, 40, 0, 40)
-    favButton.Position = UDim2.new(1, -40, 0, 15)
+    favButton.Name = "Favorite"
+    favButton.Size = UDim2.new(0, 35, 0, 35)
+    favButton.Position = UDim2.new(0, 400, 0, 8)
     favButton.BackgroundColor3 = Color3.fromRGB(50, 50, 80)
-    favButton.TextColor3 = COLORS.TEXT_WHITE
+    favButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     favButton.Text = "⭐"
     favButton.Font = Enum.Font.GothamBold
-    favButton.TextSize = 16
+    favButton.TextSize = 14
     favButton.BorderSizePixel = 1
     favButton.BorderColor3 = Color3.fromRGB(88, 28, 135)
     favButton.AutoButtonColor = false
+    favButton.Parent = header
     
     local favCorner = Instance.new("UICorner")
     favCorner.CornerRadius = UDim.new(0, 6)
@@ -318,208 +408,357 @@ function RBXLibrary:createUI()
     end)
     
     -- Tabs
-    local tabsContainer = createFrame(header, UDim2.new(0.5, 0, 0, 30), UDim2.new(0, 20, 0, 75), COLORS.BG_DARKER, 1)
+    local tabsContainer = Instance.new("Frame")
     tabsContainer.Name = "TabsContainer"
+    tabsContainer.Size = UDim2.new(1, 0, 0, 35)
+    tabsContainer.Position = UDim2.new(0, 0, 0, 50)
+    tabsContainer.BackgroundTransparency = 1
+    tabsContainer.BorderSizePixel = 0
+    tabsContainer.Parent = header
     
     local tabs = { "Scripts", "Socials", "Utility" }
-    local tabButtons = {}
     
     for i, tabName in ipairs(tabs) do
         local tabButton = Instance.new("TextButton")
-        tabButton.Parent = tabsContainer
-        tabButton.Size = UDim2.new(0, 100, 1, 0)
-        tabButton.Position = UDim2.new(0, (i-1) * 110, 0, 0)
+        tabButton.Name = tabName
+        tabButton.Size = UDim2.new(0, 100, 0, 30)
+        tabButton.Position = UDim2.new(0, (i-1) * 105, 0, 0)
         tabButton.BackgroundTransparency = 1
-        tabButton.TextColor3 = i == 1 and Color3.fromRGB(147, 51, 234) or COLORS.TEXT_GRAY
+        tabButton.TextColor3 = i == 1 and Color3.fromRGB(147, 51, 234) or Color3.fromRGB(107, 114, 128)
         tabButton.Text = tabName
         tabButton.Font = Enum.Font.GothamBold
         tabButton.TextSize = 12
         tabButton.BorderSizePixel = 0
+        tabButton.AutoButtonColor = false
+        tabButton.Parent = tabsContainer
         
-        -- Underline for active tab
         if i == 1 then
             local underline = Instance.new("Frame")
-            underline.Parent = tabButton
-            underline.Size = UDim2.new(0.8, 0, 0, 2)
-            underline.Position = UDim2.new(0.1, 0, 1, -3)
+            underline.Name = "Underline"
+            underline.Size = UDim2.new(0.7, 0, 0, 2)
+            underline.Position = UDim2.new(0.15, 0, 1, -2)
             underline.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
             underline.BorderSizePixel = 0
-            underline.Name = "Underline"
+            underline.Parent = tabButton
         end
         
         tabButton.MouseButton1Click:Connect(function()
             self.activeTab = tabName:lower()
-            for _, btn in ipairs(tabButtons) do
-                if btn:FindFirstChild("Underline") then
-                    btn:FindFirstChild("Underline"):Destroy()
+            
+            for _, btn in ipairs(tabsContainer:GetChildren()) do
+                if btn:IsA("TextButton") then
+                    btn.TextColor3 = Color3.fromRGB(107, 114, 128)
+                    if btn:FindFirstChild("Underline") then
+                        btn:FindFirstChild("Underline"):Destroy()
+                    end
                 end
-                btn.TextColor3 = COLORS.TEXT_GRAY
             end
             
+            tabButton.TextColor3 = Color3.fromRGB(147, 51, 234)
             local underline = Instance.new("Frame")
-            underline.Parent = tabButton
-            underline.Size = UDim2.new(0.8, 0, 0, 2)
-            underline.Position = UDim2.new(0.1, 0, 1, -3)
-            underline.BackgroundColor3 = COLORS.PURPLE
-            underline.BorderSizePixel = 0
             underline.Name = "Underline"
+            underline.Size = UDim2.new(0.7, 0, 0, 2)
+            underline.Position = UDim2.new(0.15, 0, 1, -2)
+            underline.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+            underline.BorderSizePixel = 0
+            underline.Parent = tabButton
             
-            tabButton.TextColor3 = COLORS.PURPLE
+            self:refreshContent()
         end)
-        
-        table.insert(tabButtons, tabButton)
     end
     
-    -- Games Grid
-    local gamesScroll = Instance.new("ScrollingFrame")
-    gamesScroll.Parent = contentContainer
-    gamesScroll.Size = UDim2.new(1, 0, 1, -140)
-    gamesScroll.Position = UDim2.new(0, 0, 0, 140)
-    gamesScroll.BackgroundTransparency = 1
-    gamesScroll.BorderSizePixel = 0
-    gamesScroll.ScrollBarThickness = 8
-    gamesScroll.ScrollBarImageColor3 = COLORS.PURPLE
+    -- Content Scroll
+    local contentScroll = Instance.new("ScrollingFrame")
+    contentScroll.Name = "ContentScroll"
+    contentScroll.Size = UDim2.new(1, 0, 1, -90)
+    contentScroll.Position = UDim2.new(0, 0, 0, 90)
+    contentScroll.BackgroundTransparency = 1
+    contentScroll.BorderSizePixel = 0
+    contentScroll.ScrollBarThickness = 6
+    contentScroll.ScrollBarImageColor3 = Color3.fromRGB(147, 51, 234)
+    contentScroll.Parent = contentContainer
     
     local gridLayout = Instance.new("UIGridLayout")
-    gridLayout.Parent = gamesScroll
-    gridLayout.CellSize = UDim2.new(0, 200, 0, 200)
-    gridLayout.CellPadding = UDim2.new(0, 20, 0, 20)
+    gridLayout.Parent = contentScroll
+    gridLayout.CellSize = UDim2.new(0, 140, 0, 140)
+    gridLayout.CellPadding = UDim2.new(0, 12, 0, 12)
     gridLayout.SortOrder = Enum.SortOrder.LayoutOrder
     gridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
     gridLayout.VerticalAlignment = Enum.VerticalAlignment.Top
     
     local padding = Instance.new("UIPadding")
-    padding.Parent = gamesScroll
-    padding.PaddingTop = UDim.new(0, 20)
-    padding.PaddingLeft = UDim.new(0, 20)
-    padding.PaddingRight = UDim.new(0, 20)
-    padding.PaddingBottom = UDim.new(0, 20)
+    padding.Parent = contentScroll
+    padding.PaddingTop = UDim.new(0, 12)
+    padding.PaddingLeft = UDim.new(0, 12)
+    padding.PaddingRight = UDim.new(0, 12)
+    padding.PaddingBottom = UDim.new(0, 12)
     
-    self.gamesScroll = gamesScroll
-    self.searchBox = searchBox
-    
-    self:refreshGamesGrid()
-    
-    -- Sidebar hover behavior
-    local mouseLocation
-    sidebar.MouseEnter:Connect(function()
-        self.sidebarOpen = true
-        self:updateSidebarSize()
-    end)
-    
-    sidebar.MouseLeave:Connect(function()
-        self.sidebarOpen = false
-        self:updateSidebarSize()
-    end)
+    self.contentScroll = contentScroll
+    self:refreshContent()
 end
 
-function RBXLibrary:updateSidebarSize()
-    local sidebar = self.screenGui:FindFirstChild("MainContainer"):FindFirstChild("Sidebar")
-    local contentContainer = self.screenGui:FindFirstChild("MainContainer"):FindFirstChild("ContentContainer")
+function RBXLibrary:refreshContent()
+    local scroll = self.contentScroll
     
-    local targetSize = self.sidebarOpen and 250 or 80
-    
-    local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
-    local tween = game:GetService("TweenService"):Create(sidebar, tweenInfo, {Size = UDim2.new(0, targetSize, 1, 0)})
-    tween:Play()
-    
-    local contentTween = game:GetService("TweenService"):Create(contentContainer, tweenInfo, {
-        Size = UDim2.new(1, -targetSize, 1, 0),
-        Position = UDim2.new(0, targetSize, 0, 0)
-    })
-    contentTween:Play()
-end
-
-function RBXLibrary:refreshGamesGrid()
-    local scroll = self.gamesScroll
-    
+    -- Limpar conteúdo anterior
     for _, child in ipairs(scroll:GetChildren()) do
-        if child:IsA("Frame") and child.Name ~= "UIGridLayout" and child.Name ~= "UIPadding" then
+        if child:IsA("Frame") and child.Name == "ScriptCard" then
             child:Destroy()
         end
     end
     
-    for _, game in ipairs(self.games) do
-        if game.name:lower():find(self.searchQuery) or self.searchQuery == "" then
-            local gameCard = Instance.new("Frame")
-            gameCard.Parent = scroll
-            gameCard.Size = UDim2.new(0, 200, 0, 200)
-            gameCard.BackgroundColor3 = COLORS.BG_DARKER
-            gameCard.BorderSizePixel = 2
-            gameCard.BorderColor3 = COLORS.CYAN
-            gameCard.Name = "GameCard"
+    -- Mostrar scripts filtrados
+    for _, script in ipairs(self.scripts) do
+        if script.name:lower():find(self.searchQuery) or self.searchQuery == "" then
+            local scriptCard = Instance.new("Frame")
+            scriptCard.Name = "ScriptCard"
+            scriptCard.Size = UDim2.new(0, 140, 0, 140)
+            scriptCard.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
+            scriptCard.BorderSizePixel = 2
+            scriptCard.BorderColor3 = Color3.fromRGB(34, 211, 238)
+            scriptCard.Parent = scroll
             
             local corner = Instance.new("UICorner")
             corner.CornerRadius = UDim.new(0, 6)
-            corner.Parent = gameCard
+            corner.Parent = scriptCard
             
-            local gameLabel = Instance.new("TextLabel")
-            gameLabel.Parent = gameCard
-            gameLabel.Size = UDim2.new(1, 0, 0, 60)
-            gameLabel.Position = UDim2.new(0, 0, 1, -60)
-            gameLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            gameLabel.BackgroundTransparency = 0.3
-            gameLabel.TextColor3 = COLORS.TEXT_WHITE
-            gameLabel.Text = game.icon .. " " .. game.name
-            gameLabel.Font = Enum.Font.GothamBold
-            gameLabel.TextSize = 12
-            gameLabel.TextWrapped = true
-            gameLabel.BorderSizePixel = 0
-            gameLabel.TextScaled = true
+            -- Icon
+            local iconLabel = Instance.new("TextLabel")
+            iconLabel.Name = "Icon"
+            iconLabel.Size = UDim2.new(1, 0, 0, 50)
+            iconLabel.Position = UDim2.new(0, 0, 0, 10)
+            iconLabel.BackgroundTransparency = 1
+            iconLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            iconLabel.Text = script.icon
+            iconLabel.Font = Enum.Font.GothamBold
+            iconLabel.TextSize = 28
+            iconLabel.BorderSizePixel = 0
+            iconLabel.Parent = scriptCard
             
-            gameCard.MouseEnter:Connect(function()
-                gameCard.BorderColor3 = COLORS.CYAN
-                gameLabel.BackgroundTransparency = 0.1
-                
-                local playButton = Instance.new("TextButton")
-                playButton.Parent = gameCard
-                playButton.Size = UDim2.new(0.7, 0, 0, 30)
-                playButton.Position = UDim2.new(0.15, 0, 1, -95)
-                playButton.BackgroundColor3 = COLORS.PURPLE
-                playButton.TextColor3 = COLORS.TEXT_WHITE
-                playButton.Text = "▶ Play"
-                playButton.Font = Enum.Font.GothamBold
-                playButton.TextSize = 12
-                playButton.BorderSizePixel = 0
-                playButton.Name = "PlayButton"
-                
-                local playCorner = Instance.new("UICorner")
-                playCorner.CornerRadius = UDim.new(0, 4)
-                playCorner.Parent = playButton
-                
-                playButton.MouseEnter:Connect(function()
-                    playButton.BackgroundColor3 = Color3.fromRGB(168, 85, 247)
-                end)
-                
-                playButton.MouseLeave:Connect(function()
-                    playButton.BackgroundColor3 = COLORS.PURPLE
-                end)
+            -- Name
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Name = "Name"
+            nameLabel.Size = UDim2.new(1, -4, 0, 25)
+            nameLabel.Position = UDim2.new(0, 2, 0, 55)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            nameLabel.Text = script.name
+            nameLabel.Font = Enum.Font.GothamBold
+            nameLabel.TextSize = 11
+            nameLabel.TextWrapped = true
+            nameLabel.BorderSizePixel = 0
+            nameLabel.Parent = scriptCard
+            
+            -- Play Button
+            local playButton = Instance.new("TextButton")
+            playButton.Name = "PlayButton"
+            playButton.Size = UDim2.new(0.8, 0, 0, 25)
+            playButton.Position = UDim2.new(0.1, 0, 1, -28)
+            playButton.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+            playButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+            playButton.Text = "▶ Play"
+            playButton.Font = Enum.Font.GothamBold
+            playButton.TextSize = 10
+            playButton.BorderSizePixel = 0
+            playButton.AutoButtonColor = false
+            playButton.Parent = scriptCard
+            
+            local playCorner = Instance.new("UICorner")
+            playCorner.CornerRadius = UDim.new(0, 4)
+            playCorner.Parent = playButton
+            
+            playButton.MouseEnter:Connect(function()
+                playButton.BackgroundColor3 = Color3.fromRGB(168, 85, 247)
+                scriptCard.BorderColor3 = Color3.fromRGB(34, 211, 238)
             end)
             
-            gameCard.MouseLeave:Connect(function()
-                gameCard.BorderColor3 = COLORS.CYAN
-                gameLabel.BackgroundTransparency = 0.3
-                if gameCard:FindFirstChild("PlayButton") then
-                    gameCard:FindFirstChild("PlayButton"):Destroy()
+            playButton.MouseLeave:Connect(function()
+                playButton.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+            end)
+            
+            playButton.MouseButton1Click:Connect(function()
+                if script.callback then
+                    script.callback()
                 end
+                print("Executando: " .. script.name)
+            end)
+            
+            -- Hover efeito no card
+            scriptCard.MouseEnter:Connect(function()
+                scriptCard.BorderColor3 = Color3.fromRGB(52, 211, 153)
+            end)
+            
+            scriptCard.MouseLeave:Connect(function()
+                scriptCard.BorderColor3 = Color3.fromRGB(34, 211, 238)
             end)
         end
     end
 end
 
-function RBXLibrary:addGame(name, icon)
-    table.insert(self.games, { name = name, icon = icon })
-    self:refreshGamesGrid()
+function RBXLibrary:showSettings()
+    -- Remover settings anterior se existir
+    if self.settingsFrame then
+        self.settingsFrame:Destroy()
+        self.settingsFrame = nil
+        return
+    end
+    
+    -- Criar settings frame
+    self.settingsFrame = Instance.new("Frame")
+    self.settingsFrame.Name = "SettingsFrame"
+    self.settingsFrame.Size = UDim2.new(1, 0, 1, -90)
+    self.settingsFrame.Position = UDim2.new(0, 0, 0, 90)
+    self.settingsFrame.BackgroundColor3 = Color3.fromRGB(15, 23, 42)
+    self.settingsFrame.BorderSizePixel = 0
+    self.settingsFrame.Parent = self.contentContainer
+    
+    -- Avatar
+    local avatarFrame = Instance.new("Frame")
+    avatarFrame.Name = "AvatarFrame"
+    avatarFrame.Size = UDim2.new(0, 80, 0, 80)
+    avatarFrame.Position = UDim2.new(0.5, -40, 0, 20)
+    avatarFrame.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
+    avatarFrame.BorderSizePixel = 2
+    avatarFrame.BorderColor3 = Color3.fromRGB(147, 51, 234)
+    avatarFrame.Parent = self.settingsFrame
+    
+    local avatarCorner = Instance.new("UICorner")
+    avatarCorner.CornerRadius = UDim.new(0, 8)
+    avatarCorner.Parent = avatarFrame
+    
+    local avatarImage = Instance.new("ImageLabel")
+    avatarImage.Name = "AvatarImage"
+    avatarImage.Size = UDim2.new(1, 0, 1, 0)
+    avatarImage.BackgroundTransparency = 1
+    avatarImage.Parent = avatarFrame
+    
+    -- Tentar carregar o avatar
+    pcall(function()
+        avatarImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. Players.LocalPlayer.UserId .. "&w=150&h=150"
+    end)
+    
+    -- Username
+    local usernameLabel = Instance.new("TextLabel")
+    usernameLabel.Name = "UsernameLabel"
+    usernameLabel.Size = UDim2.new(1, 0, 0, 30)
+    usernameLabel.Position = UDim2.new(0, 0, 0, 110)
+    usernameLabel.BackgroundTransparency = 1
+    usernameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    usernameLabel.Text = "Player: " .. Players.LocalPlayer.Name
+    usernameLabel.Font = Enum.Font.GothamBold
+    usernameLabel.TextSize = 14
+    usernameLabel.BorderSizePixel = 0
+    usernameLabel.Parent = self.settingsFrame
+    
+    -- User ID
+    local userIdLabel = Instance.new("TextLabel")
+    userIdLabel.Name = "UserIdLabel"
+    userIdLabel.Size = UDim2.new(1, 0, 0, 25)
+    userIdLabel.Position = UDim2.new(0, 0, 0, 145)
+    userIdLabel.BackgroundTransparency = 1
+    userIdLabel.TextColor3 = Color3.fromRGB(148, 163, 184)
+    userIdLabel.Text = "ID: " .. tostring(Players.LocalPlayer.UserId)
+    userIdLabel.Font = Enum.Font.Gotham
+    userIdLabel.TextSize = 12
+    userIdLabel.BorderSizePixel = 0
+    userIdLabel.Parent = self.settingsFrame
+    
+    -- Divider
+    local divider = Instance.new("Frame")
+    divider.Size = UDim2.new(0.8, 0, 0, 1)
+    divider.Position = UDim2.new(0.1, 0, 0, 185)
+    divider.BackgroundColor3 = Color3.fromRGB(88, 28, 135)
+    divider.BorderSizePixel = 0
+    divider.Parent = self.settingsFrame
+    
+    -- Settings Options
+    local settingsLabel = Instance.new("TextLabel")
+    settingsLabel.Name = "SettingsLabel"
+    settingsLabel.Size = UDim2.new(1, 0, 0, 30)
+    settingsLabel.Position = UDim2.new(0, 20, 0, 200)
+    settingsLabel.BackgroundTransparency = 1
+    settingsLabel.TextColor3 = Color3.fromRGB(147, 51, 234)
+    settingsLabel.Text = "⚙️ Settings"
+    settingsLabel.Font = Enum.Font.GothamBold
+    settingsLabel.TextSize = 13
+    settingsLabel.BorderSizePixel = 0
+    settingsLabel.TextXAlignment = Enum.TextXAlignment.Left
+    settingsLabel.Parent = self.settingsFrame
+    
+    -- Close Button
+    local closeButton = Instance.new("TextButton")
+    closeButton.Name = "CloseButton"
+    closeButton.Size = UDim2.new(0.3, 0, 0, 30)
+    closeButton.Position = UDim2.new(0.35, 0, 1, -50)
+    closeButton.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeButton.Text = "✕ Fechar"
+    closeButton.Font = Enum.Font.GothamBold
+    closeButton.TextSize = 11
+    closeButton.BorderSizePixel = 0
+    closeButton.AutoButtonColor = false
+    closeButton.Parent = self.settingsFrame
+    
+    local closeCorner = Instance.new("UICorner")
+    closeCorner.CornerRadius = UDim.new(0, 6)
+    closeCorner.Parent = closeButton
+    
+    closeButton.MouseEnter:Connect(function()
+        closeButton.BackgroundColor3 = Color3.fromRGB(168, 85, 247)
+    end)
+    
+    closeButton.MouseLeave:Connect(function()
+        closeButton.BackgroundColor3 = Color3.fromRGB(147, 51, 234)
+    end)
+    
+    closeButton.MouseButton1Click:Connect(function()
+        self:showSettings()
+    end)
 end
 
-function RBXLibrary:removeGame(index)
-    table.remove(self.games, index)
-    self:refreshGamesGrid()
+function RBXLibrary:setupDrag()
+    local screenGui = self.screenGui
+    local header = screenGui:FindFirstChild("MainContainer"):FindFirstChild("ContentContainer"):FindFirstChild("Header")
+    
+    local dragStart
+    local startPos
+    
+    header.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragStart = input.Position
+            startPos = screenGui.Position
+            self.isDragging = true
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input, gameProcessed)
+        if self.isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            screenGui.Position = startPos + UDim2.new(0, delta.X, 0, delta.Y)
+        end
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input, gameProcessed)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            self.isDragging = false
+        end
+    end)
 end
 
-function RBXLibrary:setActiveTab(tabName)
-    self.activeTab = tabName:lower()
-    self:refreshGamesGrid()
+function RBXLibrary:addScript(name, icon, description, callback)
+    table.insert(self.scripts, {
+        name = name,
+        icon = icon,
+        description = description,
+        callback = callback
+    })
+    self:refreshContent()
+end
+
+function RBXLibrary:removeScript(index)
+    table.remove(self.scripts, index)
+    self:refreshContent()
 end
 
 return RBXLibrary
