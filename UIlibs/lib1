@@ -1,4 +1,4 @@
--- UI Library Final
+-- RBXScriptz UI Lib Final
 local UILib = {}
 
 function UILib:CreateWindow(title)
@@ -7,8 +7,8 @@ function UILib:CreateWindow(title)
     screenGui.Parent = player:WaitForChild("PlayerGui")
 
     local mainFrame = Instance.new("Frame")
-    mainFrame.Size = UDim2.new(0, 750, 0, 500)
-    mainFrame.Position = UDim2.new(0.5, -375, 0.5, -250)
+    mainFrame.Size = UDim2.new(0, 800, 0, 500)
+    mainFrame.Position = UDim2.new(0.5, -400, 0.5, -250)
     mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     mainFrame.BackgroundTransparency = 0.25
     mainFrame.Parent = screenGui
@@ -26,6 +26,7 @@ function UILib:CreateWindow(title)
     titleLabel.TextScaled = true
     titleLabel.Parent = mainFrame
 
+    -- Sidebar
     local sidebar = Instance.new("Frame")
     sidebar.Size = UDim2.new(0, 150, 1, -40)
     sidebar.Position = UDim2.new(0, 0, 0, 40)
@@ -68,30 +69,10 @@ function UILib:CreateWindow(title)
         return tabFrame
     end
 
-    -- Botão que executa script
-    function UILib:CreateExecButton(tab, text, scriptFunc)
-        local button = Instance.new("TextButton")
-        button.Text = text
-        button.Size = UDim2.new(0, 220, 0, 40)
-        button.Position = UDim2.new(0, 20, 0, 20 + (#tab:GetChildren() * 50))
-        button.BackgroundColor3 = Color3.fromRGB(100, 60, 160)
-        button.TextColor3 = Color3.new(1,1,1)
-        button.Font = Enum.Font.GothamBold
-        button.Parent = tab
-
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 8)
-        corner.Parent = button
-
-        button.MouseButton1Click:Connect(function()
-            pcall(scriptFunc)
-        end)
-    end
-
-    -- Search bar que filtra scripts
+    -- Search bar
     function UILib:CreateSearchBar(tab, scriptsTable)
         local searchBox = Instance.new("TextBox")
-        searchBox.PlaceholderText = "Search for scripts..."
+        searchBox.PlaceholderText = "Search for games..."
         searchBox.Size = UDim2.new(0, 300, 0, 40)
         searchBox.Position = UDim2.new(0, 20, 0, 20)
         searchBox.BackgroundColor3 = Color3.fromRGB(70, 70, 100)
@@ -131,6 +112,26 @@ function UILib:CreateWindow(title)
 
         searchBox:GetPropertyChangedSignal("Text"):Connect(function()
             updateResults(searchBox.Text)
+        end)
+    end
+
+    -- Botão Auto Execute
+    function UILib:CreateExecButton(tab, text, scriptFunc)
+        local button = Instance.new("TextButton")
+        button.Text = text
+        button.Size = UDim2.new(0, 220, 0, 40)
+        button.Position = UDim2.new(0, 340, 0, 20)
+        button.BackgroundColor3 = Color3.fromRGB(100, 200, 120)
+        button.TextColor3 = Color3.new(1,1,1)
+        button.Font = Enum.Font.GothamBold
+        button.Parent = tab
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = button
+
+        button.MouseButton1Click:Connect(function()
+            pcall(scriptFunc)
         end)
     end
 
