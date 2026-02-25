@@ -124,7 +124,7 @@ OrionLib.FavoriteEvent.Event:Connect(handleFavorite)
 
 
 
-print("V.1.3.1")
+print("V.1.3.2")
 
 
 
@@ -1764,4 +1764,17 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/GoldenCheats/natural-
 
 CreateButton(MainSection, "s / Ultimate Fling", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/scripts/refs/heads/main/UFGUI", true))()
+    end)
+
+----=========Tab23=========----
+local MainTab = Window:MakeTab({
+    Name = "Rivals",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+CreateButton(MainSection, "s / idk hub", function()
+loadstring(game:HttpGet("https://pastefy.app/YiGY38uo/raw"))()
     end)
