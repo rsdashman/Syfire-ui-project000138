@@ -124,7 +124,7 @@ OrionLib.FavoriteEvent.Event:Connect(handleFavorite)
 
 
 
-print("V.1.3.0")
+print("V.1.3.1")
 
 
 
@@ -1507,8 +1507,8 @@ CreateButton(MainSection, "s / Orbit player", function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/long191910/all-my-roblox-script/refs/heads/main/orbit.lua"))()
     end)
 
-CreateButton(MainSection, "s / Advanced Fling", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/GoldenCheats/natural-disaster-script/refs/heads/main/Natural%20Disaster%20Survival%20Script", true))()
+CreateButton(MainSection, "s / Ultimate Fling", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/scripts/refs/heads/main/UFGUI", true))()
     end)
 
 
@@ -1760,4 +1760,8 @@ local MainSection = MainTab:AddSection({
 
 CreateButton(MainSection, "s / Best Fling", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/GoldenCheats/natural-disaster-script/refs/heads/main/NATURAL%20DISASTER%20FLING%20V2"))()
+    end)
+
+CreateButton(MainSection, "s / Ultimate Fling", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/scripts/refs/heads/main/UFGUI", true))()
     end)
