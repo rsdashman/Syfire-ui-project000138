@@ -137,7 +137,7 @@ local tpwalking = false
 local tpwalkConnection = nil
 
 --esp//
-==[[
+--[[
 
 local ESPEnabled = false
 local Highlights = {}
