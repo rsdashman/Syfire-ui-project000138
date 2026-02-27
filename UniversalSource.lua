@@ -137,7 +137,7 @@ local tpwalking = false
 local tpwalkConnection = nil
 
 --esp//
-
+==[[
 
 local ESPEnabled = false
 local Highlights = {}
@@ -188,7 +188,7 @@ end
 game.Players.PlayerRemoving:Connect(removeHighlight)
 
 
-
+]]
 --<esp/>
 
 
