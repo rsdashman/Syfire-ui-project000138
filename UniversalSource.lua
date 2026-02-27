@@ -33,6 +33,9 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/uuuuuu
 
 
 --script zone
+
+
+--[[
 local HttpService = game:GetService("HttpService")
 local FAVORITOS_FILE = "myFav.txt"
 local favoritos = {}
@@ -113,7 +116,7 @@ end
 -- Connect to OrionLib's favorite event
 OrionLib.FavoriteEvent.Event:Connect(handleFavorite)
 
-
+]]
 
 
 
@@ -212,14 +215,14 @@ local Window = OrionLib:MakeWindow({
 
 -- Create Favorites Tab FIRST (at the top)
 local FavoritasTab = Window:MakeTab({
-    Name = "⭐ Favoritas",
+    Name = "⭐ Soon",
     Icon = "star"
 })
 favoritosSection = FavoritasTab:AddSection({
     Name = "Meus Favoritos"
 })
 
--- Load saved favorites on startup
+--[[ Load saved favorites on startup
 for _, nome in ipairs(favoritos) do
     -- Add to favorites tab if the button exists
     local callback = allButtons[nome]
@@ -227,7 +230,7 @@ for _, nome in ipairs(favoritos) do
         addButtonToFavorites(nome, callback)
     end
 end
-
+]]
 local MainTab = Window:MakeTab({
     Name = "Main",
     Icon = "link"
@@ -235,7 +238,7 @@ local MainTab = Window:MakeTab({
 local MainSection = MainTab:AddSection({
     Name = "Scripts"
 })
-
+--[[
 -- Helper function to create buttons with favorite support
 local function CreateButton(section, name, callback)
     -- Store the callback for favorites
@@ -257,7 +260,7 @@ local function CreateButton(section, name, callback)
     
     return button
 end
-
+]]
 CreateButton(MainSection, "s / FLY Universal", function()
 loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
     end)
@@ -1702,6 +1705,43 @@ CreateButton(MainSection, "s / [FE] Faker", function()
 CreateButton(MainSection, "s / [FE] Sandevistan", function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/mahowaga51-cmd/FE-Scripts/refs/heads/main/FE%20Sandevistan%20V6"))()
     end)
+
+
+CreateButton(MainSection, "s / [FE] Flash", function()
+print("        --[[  ")
+print("            REVERSE FLASH SCRIPT - MULTIPLAYER VERSION")
+print("     ")
+ print("    PC CONTROLS:")
+ print("    Q = Speed Mode (Enable/Disable)")
+print("     C = Phase Mode (Enable/Disable)")
+print("     B = Angular Mirage (Enable/Disable)")
+print("     X = Disable All Effects")
+print("     ")
+print("     SPEEDSTER STATES & COLORS:")
+print("     RF          - Red Lightning (Reverse Flash)")
+print("     Zoom        - Blue Lightning (Zoom/Hunter Zolomon)")
+print("     KidFlash    - Yellow Lightning (Kid Flash/Wally West CW)")
+print("     GodOfSpeed  - White/Silver Lightning (Savitar/God of Speed)")
+print("     NWA         - Purple Lightning (Nora West Allen)")
+print("     Regular     - Orange Lightning (The Flash)")
+ print("   ")
+print("    CONFIGURATION:")
+print("--]]")
+
+_G.NightMode = false  -- Set to true for night mode, false for day mode
+_G.TODC = false       -- TimeOfDayChange: Set to false to not change the timeofday
+
+AllowedPlayers = {
+    ["Player1Username"] = "RF", -- change this to be your username
+    ["Player2Username"] = "Zoom", -- change this to be your friends username
+    ["Player3Username"] = "Regular" -- change this to be your username
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NetlessScripter/Reverse-Flash/refs/heads/main/Open%20Sourced%20Version"))()
+
+    end)
+
+
 
 ----=========Tab19=========----
 local MainTab = Window:MakeTab({
