@@ -1741,7 +1741,9 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NetlessScripter/Rever
 
     end)
 
-
+CreateButton(MainSection, "s / [FE] Emote R15", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/scripts/refs/heads/main/c15.lua",true))()
+    end)
 
 ----=========Tab19=========----
 local MainTab = Window:MakeTab({
