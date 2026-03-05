@@ -9,8 +9,6 @@ local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/rsda
 
 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/uuuuuuu/refs/heads/main/FixShitChatSystem.lua"))()
-
 
 
 
@@ -35,7 +33,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/uuuuuu
 --script zone
 
 
---[[
+
 local HttpService = game:GetService("HttpService")
 local FAVORITOS_FILE = "myFav.txt"
 local favoritos = {}
@@ -116,8 +114,6 @@ end
 -- Connect to OrionLib's favorite event
 OrionLib.FavoriteEvent.Event:Connect(handleFavorite)
 
-]]
-
 
 
 
@@ -140,7 +136,7 @@ local tpwalking = false
 local tpwalkConnection = nil
 
 --esp//
---[[
+
 
 local ESPEnabled = false
 local Highlights = {}
@@ -191,7 +187,6 @@ end
 game.Players.PlayerRemoving:Connect(removeHighlight)
 
 
-]]
 --<esp/>
 
 
@@ -215,14 +210,14 @@ local Window = OrionLib:MakeWindow({
 
 -- Create Favorites Tab FIRST (at the top)
 local FavoritasTab = Window:MakeTab({
-    Name = "⭐ Soon",
+    Name = "⭐ Favorites",
     Icon = "star"
 })
 favoritosSection = FavoritasTab:AddSection({
     Name = "Meus Favoritos"
 })
 
---[[ Load saved favorites on startup
+
 for _, nome in ipairs(favoritos) do
     -- Add to favorites tab if the button exists
     local callback = allButtons[nome]
@@ -230,7 +225,7 @@ for _, nome in ipairs(favoritos) do
         addButtonToFavorites(nome, callback)
     end
 end
-]]
+
 local MainTab = Window:MakeTab({
     Name = "Main",
     Icon = "link"
@@ -238,7 +233,7 @@ local MainTab = Window:MakeTab({
 local MainSection = MainTab:AddSection({
     Name = "Scripts"
 })
---[[
+
 -- Helper function to create buttons with favorite support
 local function CreateButton(section, name, callback)
     -- Store the callback for favorites
@@ -260,7 +255,7 @@ local function CreateButton(section, name, callback)
     
     return button
 end
-]]
+
 CreateButton(MainSection, "s / FLY Universal", function()
 loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/b96e031446d5a19d8495043a1c134837/raw/acce3da478a58b6345dace47161ca89b26b5d5c3/gistfile1.txt"))() 
     end)
