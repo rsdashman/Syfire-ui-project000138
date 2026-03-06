@@ -1489,8 +1489,8 @@ CreateButton(MainSection, "s / Hamster ball", function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
     end)
 
-CreateButton(MainSection, "s / Super ring [PATCHED]", function()
-        loadstring(game:HttpGet("https://rawscripts.net/raw/UQCYdXT16Xxzr1qCSVxxntce0-UYXmcqJ_aodkoq39Fv2E6f-No-chat-26899"))()
+CreateButton(MainSection, "s / Super ring [V7]", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/superringpartsv7bylukas"))()
     end)
 
 CreateButton(MainSection, "s / Fake lag", function()
