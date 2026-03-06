@@ -1489,7 +1489,7 @@ CreateButton(MainSection, "s / Hamster ball", function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/BallMode"))()
     end)
 
-CreateButton(MainSection, "s / Super ring", function()
+CreateButton(MainSection, "s / Super ring [PATCHED]", function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/UQCYdXT16Xxzr1qCSVxxntce0-UYXmcqJ_aodkoq39Fv2E6f-No-chat-26899"))()
     end)
 
@@ -1507,6 +1507,10 @@ CreateButton(MainSection, "s / Orbit player", function()
 
 CreateButton(MainSection, "s / Ultimate Fling", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/scripts/refs/heads/main/UFGUI", true))()
+    end)
+
+CreateButton(MainSection, "s / Skidring [V8]", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/skidringV8.lua", true))()
     end)
 
 
