@@ -1816,6 +1816,11 @@ CreateButton(MainSection, "s / idk hub", function()
 loadstring(game:HttpGet("https://pastefy.app/YiGY38uo/raw"))()
     end)
 
+CreateButton(MainSection, "s / FlowRivals hub", function()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/5946add9ab91f1e04cb005346a8b1968.lua"))()
+    end)
+
+
 ----=========Tab24=========----
 local MainTab = Window:MakeTab({
     Name = "Arsenal",
