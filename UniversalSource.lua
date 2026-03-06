@@ -1807,6 +1807,10 @@ CreateButton(MainSection, "s / Ultimate Fling", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/scripts/refs/heads/main/UFGUI", true))()
     end)
 
+CreateButton(MainSection, "s / Gravit Inverter", function()
+loadstring(game:HttpGet("https://pastebin.com/raw/96XzjEiK"))()
+    end)
+
 ----=========Tab23=========----
 local MainTab = Window:MakeTab({
     Name = "Rivals",
