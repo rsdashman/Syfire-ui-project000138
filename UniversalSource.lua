@@ -1816,7 +1816,7 @@ CreateButton(MainSection, "s / idk hub", function()
 loadstring(game:HttpGet("https://pastefy.app/YiGY38uo/raw"))()
     end)
 
-CreateButton(MainSection, "s / FlowRivals hub", function()
+CreateButton(MainSection, "s / FlowRivals hub [has a key system]", function()
 loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/5946add9ab91f1e04cb005346a8b1968.lua"))()
     end)
 
