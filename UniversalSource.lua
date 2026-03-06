@@ -1815,3 +1815,21 @@ local MainSection = MainTab:AddSection({
 CreateButton(MainSection, "s / idk hub", function()
 loadstring(game:HttpGet("https://pastefy.app/YiGY38uo/raw"))()
     end)
+
+----=========Tab24=========----
+local MainTab = Window:MakeTab({
+    Name = "Arsenal",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+CreateButton(MainSection, "s / unbond hub", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/samerop/unbound-hub/main/unbound-hub.lua"))()
+    end)
+
+
+
+
+
