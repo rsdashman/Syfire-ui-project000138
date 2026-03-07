@@ -123,7 +123,7 @@ OrionLib.FavoriteEvent.Event:Connect(handleFavorite)
 
 
 
-print("V.1.3.2")
+print("TH4MKZ.VIP VERSION: V.1.3.3")
 
 
 
@@ -197,7 +197,7 @@ game.Players.PlayerRemoving:Connect(removeHighlight)
 
 
 local Window = OrionLib:MakeWindow({
-    Name = "NTRF.VIP",
+    Name = "TH4MKZ.VIP",
     SearchBar = {
         Default = "🔍 Search...",
         ClearTextOnFocus = true
@@ -1624,7 +1624,7 @@ local MainSection = MainTab:AddSection({
     Name = "Scripts"
 })
 
-CreateButton(MainSection, "s / Redz hub (down)", function()
+CreateButton(MainSection, "s / Redz hub", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))()
     end)
 
@@ -1639,9 +1639,18 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Anniecreate86/BloxFru
 CreateButton(MainSection, "s / Blue X hub", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"))()
     end)
+
 CreateButton(MainSection, "s / Solix Hub (Has a key system)", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/meobeo8/a/a/a"))()
     end)
+
+
+CreateButton(MainSection, "s / Quantum hub", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()
+    end)
+
+
+
 
 ----=========Tab17=========----
 local MainTab = Window:MakeTab({
