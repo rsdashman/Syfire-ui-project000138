@@ -1,8 +1,8 @@
 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Settings.lua"))();
-local FuncsV3 = loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Main/main/Library/Example/FuncsV3"))();
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/mamafoni281/Speed-hub-x-V5.0-Library/refs/heads/main/Speed-Hub-X-5.0-Library-Source"))():CreateWindow({
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UIlibs/SpeedHubxlib/Settings.lua"))();
+local FuncsV3 = loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UIlibs/SpeedHubxlib/FuncsV3.lua"))();
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/UIlibs/SpeedHubxlib/Libary.lua"))():CreateWindow({
     ["Tab Width"] = 160,
     ["Description"] = "",
     ["Title"] = "Speed Hub X | Library"
