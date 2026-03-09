@@ -1476,6 +1476,10 @@ CreateButton(MainSection, "s / Dino game", function()
         loadstring(game:HttpGet("https://gist.githubusercontent.com/rsdashman/826a570a68894562bb121eee1d1c0d91/raw/47839dc45d0ffc6c20448880a2ec5a11a4150f73/gistfile1.txt"))()
     end)
 
+CreateButton(MainSection, "s / Atlas minigame", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/rsdashman/Syfire-ui-project000138/refs/heads/main/some%20scripts/AtlasMiniGame"))()
+    end)
+
 ----=========Tab8=========----
 local MainTab = Window:MakeTab({
     Name = "Misc",
