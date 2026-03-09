@@ -1,0 +1,1211 @@
+
+-- KEYBINDS (edit these two lines)
+--=====================================================
+local KEY_UNLOAD = Enum.KeyCode.L
+local KEY_TOGGLE_UI = Enum.KeyCode.N
+--=====================================================
+
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local LP = Players.LocalPlayer
+local PG = LP:WaitForChild("PlayerGui")
+
+-- =========================
+-- Runtime / Unload System
+-- =========================
+local Runtime = { alive = true, conns = {}, objs = {} }
+
+local function trackConn(c)
+	table.insert(Runtime.conns, c)
+	return c
+end
+
+local function trackObj(o)
+	table.insert(Runtime.objs, o)
+	return o
+end
+
+local function unload()
+	if not Runtime.alive then return end
+	Runtime.alive = false
+
+	-- save before clearing (if available)
+	pcall(function()
+		if saveClickerData then
+			clickerData.lastTimestamp = os.time()
+			saveClickerData()
+		end
+	end)
+
+	for _, c in ipairs(Runtime.conns) do
+		pcall(function() c:Disconnect() end)
+	end
+	table.clear(Runtime.conns)
+
+	for _, o in ipairs(Runtime.objs) do
+		pcall(function() o:Destroy() end)
+	end
+	table.clear(Runtime.objs)
+end
+
+-- If script re-executed, unload previous instance
+if getgenv then
+	local g = getgenv()
+	if g.__ATLAS_ARCADE_UNLOAD then
+		pcall(g.__ATLAS_ARCADE_UNLOAD)
+	end
+	g.__ATLAS_ARCADE_UNLOAD = unload
+end
+
+-- =========================
+-- UI Helpers
+-- =========================
+local function mk(className, props, parent)
+	local inst = Instance.new(className)
+	for k, v in pairs(props or {}) do
+		inst[k] = v
+	end
+	inst.Parent = parent
+	trackObj(inst)
+	return inst
+end
+
+local function mkButton(text, parent)
+	local b = mk("TextButton", {
+		Text = text,
+		Font = Enum.Font.GothamBold,
+		TextSize = 14,
+		TextColor3 = Color3.fromRGB(235,235,235),
+		BackgroundColor3 = Color3.fromRGB(35,35,40),
+		BorderSizePixel = 0,
+		AutoButtonColor = true,
+		Size = UDim2.new(1, -10, 0, 34),
+	}, parent)
+
+	mk("UICorner", { CornerRadius = UDim.new(0, 10) }, b)
+	mk("UIStroke", { Thickness = 1, Color = Color3.fromRGB(70,70,80), Transparency = 0.2 }, b)
+	return b
+end
+
+-- =========================
+-- Save / Persistence (works if executor provides file IO)
+-- =========================
+local HttpService = game:GetService("HttpService")
+local SAVE_FOLDER = "AtlasArcade"
+local SAVE_FILE = "clicker_save.json"
+local SAVE_PATH = SAVE_FOLDER .. "/" .. SAVE_FILE
+
+-- detect file-io functions (commonly available in executor environments)
+local has_writefile   = type(writefile) == "function"
+local has_readfile    = type(readfile) == "function"
+local has_isfile      = type(isfile) == "function"
+local has_isfolder    = type(isfolder) == "function"
+local has_makefolder  = type(makefolder) == "function"
+
+local defaultClickerData = {
+	score = 0,
+	clickPower = 1,   -- points per manual click
+	cps = 0,          -- points per second (passive)
+	autoClickers = 0, -- count
+	lastTimestamp = os.time()
+}
+
+local clickerData = table.clone(defaultClickerData)
+
+local function ensureSaveFolder()
+	if has_makefolder and has_isfolder then
+		if not isfolder(SAVE_FOLDER) then
+			pcall(makefolder, SAVE_FOLDER)
+		end
+	elseif has_makefolder and not has_isfolder then
+		-- try to make folder anyway (some executors only expose makefolder)
+		pcall(makefolder, SAVE_FOLDER)
+	end
+end
+
+local function saveClickerData()
+	if not has_writefile then
+		-- no file IO available â€” fallback to in-memory (no persistence)
+		return
+	end
+	-- ensure folder exists
+	ensureSaveFolder()
+	local ok, encoded = pcall(function() return HttpService:JSONEncode(clickerData) end)
+	if ok then
+		pcall(writefile, SAVE_PATH, encoded)
+	end
+end
+
+local function loadClickerData()
+	-- default into memory
+	clickerData = table.clone(defaultClickerData)
+
+	if has_readfile and has_isfile and has_writefile then
+		ensureSaveFolder()
+		if isfile(SAVE_PATH) then
+			local ok, content = pcall(readfile, SAVE_PATH)
+			if ok and content then
+				local ok2, decoded = pcall(function() return HttpService:JSONDecode(content) end)
+				if ok2 and type(decoded) == "table" then
+					-- merge, keep defaults for missing keys
+					for k, v in pairs(defaultClickerData) do
+						if decoded[k] ~= nil then
+							clickerData[k] = decoded[k]
+						else
+							clickerData[k] = v
+						end
+					end
+				end
+			end
+		else
+			-- create initial save
+			pcall(writefile, SAVE_PATH, HttpService:JSONEncode(clickerData))
+		end
+	end
+
+	-- offline earnings: if we have a lastTimestamp, add passive income
+	local now = os.time()
+	local last = clickerData.lastTimestamp or now
+	local secondsPassed = math.max(0, now - last)
+	if secondsPassed > 0 then
+		local earned = (clickerData.cps or 0) * secondsPassed
+		clickerData.score = (clickerData.score or 0) + earned
+	end
+	clickerData.lastTimestamp = now
+end
+
+-- load on script start
+loadClickerData()
+
+-- =========================
+-- Main GUI
+-- =========================
+local gui = mk("ScreenGui", {
+	Name = "AtlasArcade",
+	ResetOnSpawn = false,
+	ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+}, PG)
+
+local main = mk("Frame", {
+	AnchorPoint = Vector2.new(0.5, 0.5),
+	Position = UDim2.new(0.5, 0, 0.5, 0),
+	Size = UDim2.new(0, 760, 0, 420),
+	BackgroundColor3 = Color3.fromRGB(20,20,24),
+	BorderSizePixel = 0,
+}, gui)
+mk("UICorner", { CornerRadius = UDim.new(0, 14) }, main)
+mk("UIStroke", { Thickness = 2, Color = Color3.fromRGB(80,80,90), Transparency = 0.25 }, main)
+
+local top = mk("Frame", {
+	Size = UDim2.new(1, 0, 0, 44),
+	BackgroundTransparency = 1,
+}, main)
+
+local title = mk("TextLabel", {
+	BackgroundTransparency = 1,
+	Size = UDim2.new(1, -140, 1, 0),
+	Position = UDim2.new(0, 14, 0, 0),
+	TextXAlignment = Enum.TextXAlignment.Left,
+	Text = ("Atlas Arcade  â€¢  %s = Toggle  â€¢  %s = Unload")
+		:format(KEY_TOGGLE_UI.Name, KEY_UNLOAD.Name),
+	Font = Enum.Font.GothamBold,
+	TextSize = 16,
+	TextColor3 = Color3.fromRGB(240,240,240),
+}, top)
+
+local closeBtn = mk("TextButton", {
+	AnchorPoint = Vector2.new(1, 0.5),
+	Position = UDim2.new(1, -12, 0.5, 0),
+	Size = UDim2.new(0, 120, 0, 30),
+	Text = "UNLOAD",
+	Font = Enum.Font.GothamBold,
+	TextSize = 13,
+	TextColor3 = Color3.fromRGB(255,255,255),
+	BackgroundColor3 = Color3.fromRGB(120, 40, 40),
+	BorderSizePixel = 0,
+}, top)
+mk("UICorner", { CornerRadius = UDim.new(0, 10) }, closeBtn)
+
+local body = mk("Frame", {
+	Position = UDim2.new(0, 0, 0, 44),
+	Size = UDim2.new(1, 0, 1, -44),
+	BackgroundTransparency = 1,
+}, main)
+
+local sidebar = mk("Frame", {
+	Position = UDim2.new(0, 10, 0, 10),
+	Size = UDim2.new(0, 200, 1, -20),
+	BackgroundColor3 = Color3.fromRGB(16,16,19),
+	BorderSizePixel = 0,
+}, body)
+mk("UICorner", { CornerRadius = UDim.new(0, 14) }, sidebar)
+mk("UIStroke", { Thickness = 1, Color = Color3.fromRGB(70,70,80), Transparency = 0.3 }, sidebar)
+
+local sideList = mk("UIListLayout", {
+	Padding = UDim.new(0, 8),
+	SortOrder = Enum.SortOrder.LayoutOrder,
+}, sidebar)
+sideList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+mk("UIPadding", {
+	PaddingTop = UDim.new(0, 10),
+	PaddingBottom = UDim.new(0, 10),
+	PaddingLeft = UDim.new(0, 10),
+	PaddingRight = UDim.new(0, 10),
+}, sidebar)
+
+local stage = mk("Frame", {
+	Position = UDim2.new(0, 220, 0, 10),
+	Size = UDim2.new(1, -230, 1, -20),
+	BackgroundColor3 = Color3.fromRGB(16,16,19),
+	BorderSizePixel = 0,
+}, body)
+mk("UICorner", { CornerRadius = UDim.new(0, 14) }, stage)
+mk("UIStroke", { Thickness = 1, Color = Color3.fromRGB(70,70,80), Transparency = 0.3 }, stage)
+
+local function mkStageTitle(text)
+	return mk("TextLabel", {
+		BackgroundTransparency = 1,
+		Position = UDim2.new(0, 14, 0, 10),
+		Size = UDim2.new(1, -28, 0, 28),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		Text = text,
+		Font = Enum.Font.GothamBold,
+		TextSize = 18,
+		TextColor3 = Color3.fromRGB(240,240,240),
+	}, stage)
+end
+
+local function mkHint(text)
+	return mk("TextLabel", {
+		BackgroundTransparency = 1,
+		Position = UDim2.new(0, 14, 0, 38),
+		Size = UDim2.new(1, -28, 0, 22),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		Text = text,
+		Font = Enum.Font.Gotham,
+		TextSize = 13,
+		TextColor3 = Color3.fromRGB(200,200,210),
+	}, stage)
+end
+
+local function clearStage()
+	for _, child in ipairs(stage:GetChildren()) do
+		if child:IsA("GuiObject") and child.Name ~= "UIStroke" and child.Name ~= "UICorner" then
+			child:Destroy()
+		end
+	end
+end
+
+-- =========================
+-- Game Loop Manager
+-- =========================
+local activeGame = { stop = function() end }
+local function stopActiveGame()
+	pcall(activeGame.stop)
+	activeGame.stop = function() end
+end
+
+-- =========================
+-- Game 1: Clicker (incremental)
+-- =========================
+local function startClicker()
+	stopActiveGame()
+	clearStage()
+
+	mkStageTitle("Clicker â€” Incremental")
+	mkHint("Click the big button. Buy upgrades. Try to reach goals!")
+
+	-- display
+	local displayScore = mk("TextLabel", {
+		BackgroundTransparency = 1,
+		Position = UDim2.new(0, 14, 0, 68),
+		Size = UDim2.new(1, -28, 0, 24),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		Text = "Score: 0",
+		Font = Enum.Font.GothamBold,
+		TextSize = 16,
+		TextColor3 = Color3.fromRGB(255,255,255),
+	}, stage)
+
+	-- big click button
+	local btn = mk("TextButton", {
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.new(0.33, 0, 0.55, 0),
+		Size = UDim2.new(0, 260, 0, 120),
+		Text = "CLICK!",
+		Font = Enum.Font.GothamBlack,
+		TextSize = 34,
+		TextColor3 = Color3.fromRGB(255,255,255),
+		BackgroundColor3 = Color3.fromRGB(45, 70, 160),
+		BorderSizePixel = 0,
+	}, stage)
+	mk("UICorner", { CornerRadius = UDim.new(0, 18) }, btn)
+
+	-- upgrades panel (to the right)
+	local upgradesPanel = mk("Frame", {
+		Position = UDim2.new(0.58, 0, 0.35, 0),
+		Size = UDim2.new(0, 220, 0, 200),
+		BackgroundTransparency = 1,
+	}, stage)
+
+	local function updateDisplay()
+		displayScore.Text = ("Score: %d"):format(math.floor(clickerData.score or 0))
+	end
+
+	-- helper to compute upgrade prices
+	local function autoPrice(count)
+		return math.floor(50 * (1.5 ^ (count or 0)))
+	end
+	local function powerPrice(level)
+		return math.floor(30 * (1.4 ^ (level - 1)))
+	end
+
+	-- auto-clicker button
+	local autoBtn = mkButton(("Auto-Clicker\nCost: %d\nOwned: %d"):format(autoPrice(clickerData.autoClickers), clickerData.autoClickers), upgradesPanel)
+	autoBtn.Size = UDim2.new(1, 0, 0, 60)
+	autoBtn.Position = UDim2.new(0, 0, 0, 0)
+	autoBtn.TextScaled = false
+	autoBtn.TextWrapped = true
+
+	-- click power button
+	local powerBtn = mkButton(("Click Power +1\nCost: %d\nPower: %d"):format(powerPrice(clickerData.clickPower), clickerData.clickPower), upgradesPanel)
+	powerBtn.Size = UDim2.new(1, 0, 0, 60)
+	powerBtn.Position = UDim2.new(0, 0, 0, 72)
+	powerBtn.TextWrapped = true
+
+	-- small CPS label
+	local cpsLabel = mk("TextLabel", {
+		BackgroundTransparency = 1,
+		Position = UDim2.new(0, 0, 0, 144),
+		Size = UDim2.new(1, 0, 0, 22),
+		Text = ("CPS: %.2f"):format(clickerData.cps or 0),
+		Font = Enum.Font.Gotham,
+		TextSize = 14,
+		TextColor3 = Color3.fromRGB(240,240,240),
+	}, upgradesPanel)
+
+	-- internal state
+	local stopped = false
+	local fractional = 0
+
+	-- clicking handler
+	local clickConn = trackConn(btn.MouseButton1Click:Connect(function()
+		if stopped then return end
+		clickerData.score = (clickerData.score or 0) + (clickerData.clickPower or 1)
+		updateDisplay()
+		-- update text on buttons
+		autoBtn.Text = ("Auto-Clicker\nCost: %d\nOwned: %d"):format(autoPrice(clickerData.autoClickers), clickerData.autoClickers)
+		powerBtn.Text = ("Click Power +1\nCost: %d\nPower: %d"):format(powerPrice(clickerData.clickPower), clickerData.clickPower)
+		-- quick save
+		saveClickerData()
+	end))
+
+	-- buy auto-clicker
+	local autoConn = trackConn(autoBtn.MouseButton1Click:Connect(function()
+		local price = autoPrice(clickerData.autoClickers)
+		if math.floor(clickerData.score or 0) >= price then
+			clickerData.score = clickerData.score - price
+			clickerData.autoClickers = (clickerData.autoClickers or 0) + 1
+			-- each auto-clicker gives +1 cps (tweakable)
+			clickerData.cps = (clickerData.cps or 0) + 1
+			autoBtn.Text = ("Auto-Clicker\nCost: %d\nOwned: %d"):format(autoPrice(clickerData.autoClickers), clickerData.autoClickers)
+			cpsLabel.Text = ("CPS: %.2f"):format(clickerData.cps or 0)
+			updateDisplay()
+			saveClickerData()
+		end
+	end))
+
+	-- buy click power
+	local powerConn = trackConn(powerBtn.MouseButton1Click:Connect(function()
+		local price = powerPrice(clickerData.clickPower)
+		if math.floor(clickerData.score or 0) >= price then
+			clickerData.score = clickerData.score - price
+			clickerData.clickPower = (clickerData.clickPower or 1) + 1
+			powerBtn.Text = ("Click Power +1\nCost: %d\nPower: %d"):format(powerPrice(clickerData.clickPower), clickerData.clickPower)
+			updateDisplay()
+			saveClickerData()
+		end
+	end))
+
+	-- passive income via RunService (fractional accumulation)
+	local hbConn = trackConn(RunService.Heartbeat:Connect(function(dt)
+		if stopped then return end
+		-- add fractional cps
+		local cps = clickerData.cps or 0
+		if cps > 0 then
+			fractional = fractional + cps * dt
+			if fractional >= 1 then
+				local add = math.floor(fractional)
+				clickerData.score = (clickerData.score or 0) + add
+				fractional = fractional - add
+				updateDisplay()
+			end
+		end
+	end))
+
+	-- periodic autosave every 10 seconds
+	local autosaveTimer = 0
+	local autosaveConn = trackConn(RunService.Heartbeat:Connect(function(dt)
+		if stopped then return end
+		autosaveTimer = autosaveTimer + dt
+		if autosaveTimer >= 10 then
+			clickerData.lastTimestamp = os.time()
+			saveClickerData()
+			autosaveTimer = 0
+		end
+	end))
+
+	-- expose stop
+	activeGame.stop = function()
+		stopped = true
+		-- disconnect connections (they are tracked)
+		pcall(function() clickConn:Disconnect() end)
+		pcall(function() autoConn:Disconnect() end)
+		pcall(function() powerConn:Disconnect() end)
+		pcall(function() hbConn:Disconnect() end)
+		pcall(function() autosaveConn:Disconnect() end)
+		-- final save
+		clickerData.lastTimestamp = os.time()
+		saveClickerData()
+	end
+
+	-- initial UI refresh
+	updateDisplay()
+	cpsLabel.Text = ("CPS: %.2f"):format(clickerData.cps or 0)
+	autoBtn.Text = ("Auto-Clicker\nCost: %d\nOwned: %d"):format(autoPrice(clickerData.autoClickers), clickerData.autoClickers)
+	powerBtn.Text = ("Click Power +1\nCost: %d\nPower: %d"):format(powerPrice(clickerData.clickPower), clickerData.clickPower)
+end
+
+-- =========================
+-- Game 2: Flappy (simplified)
+-- =========================
+local function startFlappy()
+	stopActiveGame()
+	clearStage()
+
+	mkStageTitle("Flappy (UI Edition)")
+	mkHint("Press SPACE to flap. Avoid pipes. Click in the stage to focus.")
+
+	local play = mk("Frame", {
+		Position = UDim2.new(0, 14, 0, 70),
+		Size = UDim2.new(1, -28, 1, -84),
+		BackgroundColor3 = Color3.fromRGB(30,30,36),
+		BorderSizePixel = 0,
+	}, stage)
+	mk("UICorner", { CornerRadius = UDim.new(0, 12) }, play)
+
+	local bird = mk("Frame", {
+		Size = UDim2.new(0, 22, 0, 22),
+		Position = UDim2.new(0, 90, 0.5, 0),
+		BackgroundColor3 = Color3.fromRGB(255, 210, 60),
+		BorderSizePixel = 0,
+	}, play)
+	mk("UICorner", { CornerRadius = UDim.new(1, 0) }, bird)
+
+	local score = 0
+	local scoreLabel = mk("TextLabel", {
+		BackgroundTransparency = 1,
+		Position = UDim2.new(0, 18, 0, 6),
+		Size = UDim2.new(0, 200, 0, 22),
+		Text = "Score: 0",
+		Font = Enum.Font.GothamBold,
+		TextSize = 14,
+		TextColor3 = Color3.fromRGB(240,240,240),
+	}, play)
+
+	local y = play.AbsoluteSize.Y * 0.5
+	local vel = 0
+	local gravity = 1200
+	local flap = -360
+	local speed = 220
+
+	local pipes = {}
+	local function spawnPipe()
+		local gap = 110
+		local w = 54
+		local px = play.AbsoluteSize.X + 20
+		local topH = math.random(40, math.max(60, play.AbsoluteSize.Y - gap - 60))
+		local bottomY = topH + gap
+
+		local topPipe = mk("Frame", {
+			Size = UDim2.new(0, w, 0, topH),
+			Position = UDim2.new(0, px, 0, 0),
+			BackgroundColor3 = Color3.fromRGB(70, 200, 90),
+			BorderSizePixel = 0,
+		}, play)
+
+		local bottomPipe = mk("Frame", {
+			Size = UDim2.new(0, w, 0, play.AbsoluteSize.Y - bottomY),
+			Position = UDim2.new(0, px, 0, bottomY),
+			BackgroundColor3 = Color3.fromRGB(70, 200, 90),
+			BorderSizePixel = 0,
+		}, play)
+
+		local passed = false
+		table.insert(pipes, { top = topPipe, bottom = bottomPipe, passed = function() return passed end, setPassed = function(v) passed=v end })
+	end
+
+	local function rectsOverlap(aPos, aSize, bPos, bSize)
+		return aPos.X < bPos.X + bSize.X and
+			   aPos.X + aSize.X > bPos.X and
+			   aPos.Y < bPos.Y + bSize.Y and
+			   aPos.Y + aSize.Y > bPos.Y
+	end
+
+	local running = true
+	local lastSpawn = 0
+	local spawnEvery = 1.2
+	local focused = true
+
+	local focusBtn = mk("TextButton", {
+		BackgroundTransparency = 1,
+		Size = UDim2.new(1, 0, 1, 0),
+		Text = "",
+	}, play)
+
+	local keyConn = trackConn(UIS.InputBegan:Connect(function(input, gp)
+		if gp then return end
+		if not running or not focused then return end
+		if input.KeyCode == Enum.KeyCode.Space then
+			vel = flap
+		end
+	end))
+
+	local clickConn = trackConn(focusBtn.MouseButton1Click:Connect(function()
+		focused = true
+	end))
+
+	local function gameOver()
+		if not running then return end
+		running = false
+		mk("TextLabel", {
+			BackgroundTransparency = 1,
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.new(0.5, 0, 0.5, 0),
+			Size = UDim2.new(1, -40, 0, 60),
+			Text = ("GAME OVER\nFinal Score: %d\n(Restart Flappy or pick another game)"):format(score),
+			Font = Enum.Font.GothamBlack,
+			TextSize = 18,
+			TextColor3 = Color3.fromRGB(255,255,255),
+			TextWrapped = true,
+		}, play)
+	end
+
+	local hbConn
+	hbConn = trackConn(RunService.Heartbeat:Connect(function(dt)
+		if not Runtime.alive or not running then return end
+
+		lastSpawn += dt
+		if lastSpawn >= spawnEvery then
+			lastSpawn = 0
+			spawnPipe()
+		end
+
+		vel += gravity * dt
+		y += vel * dt
+
+		if y < 0 then y = 0; vel = 0 end
+		if y > play.AbsoluteSize.Y - 22 then
+			y = play.AbsoluteSize.Y - 22
+			gameOver()
+		end
+
+		bird.Position = UDim2.new(0, 90, 0, math.floor(y))
+
+		local birdPos = Vector2.new(bird.AbsolutePosition.X, bird.AbsolutePosition.Y)
+		local birdSize = Vector2.new(bird.AbsoluteSize.X, bird.AbsoluteSize.Y)
+
+		for i = #pipes, 1, -1 do
+			local p = pipes[i]
+			if p.top.Parent == nil or p.bottom.Parent == nil then
+				table.remove(pipes, i)
+				continue
+			end
+
+			local xNow = p.top.Position.X.Offset - speed * dt
+			p.top.Position = UDim2.new(0, xNow, 0, 0)
+			p.bottom.Position = UDim2.new(0, xNow, 0, p.bottom.Position.Y.Offset)
+
+			if not p.passed() and (xNow + p.top.AbsoluteSize.X) < 90 then
+				p.setPassed(true)
+				score += 1
+				scoreLabel.Text = "Score: " .. score
+			end
+
+			local topPos = Vector2.new(p.top.AbsolutePosition.X, p.top.AbsolutePosition.Y)
+			local topSize = Vector2.new(p.top.AbsoluteSize.X, p.top.AbsoluteSize.Y)
+			local botPos = Vector2.new(p.bottom.AbsolutePosition.X, p.bottom.AbsolutePosition.Y)
+			local botSize = Vector2.new(p.bottom.AbsoluteSize.X, p.bottom.AbsoluteSize.Y)
+
+			if rectsOverlap(birdPos, birdSize, topPos, topSize) or rectsOverlap(birdPos, birdSize, botPos, botSize) then
+				gameOver()
+			end
+
+			if xNow < -100 then
+				pcall(function() p.top:Destroy() end)
+				pcall(function() p.bottom:Destroy() end)
+				table.remove(pipes, i)
+			end
+		end
+	end))
+
+	activeGame.stop = function()
+		running = false
+		pcall(function() hbConn:Disconnect() end)
+		pcall(function() keyConn:Disconnect() end)
+		pcall(function() clickConn:Disconnect() end)
+	end
+end
+
+-- =========================
+-- Game 3: Pong
+-- =========================
+local function startPong()
+	stopActiveGame()
+	clearStage()
+
+	mkStageTitle("Pong")
+	mkHint("W/S = left paddle. Up/Down = right paddle. First to 7.")
+
+	local play = mk("Frame", {
+		Position = UDim2.new(0, 14, 0, 70),
+		Size = UDim2.new(1, -28, 1, -84),
+		BackgroundColor3 = Color3.fromRGB(30,30,36),
+		BorderSizePixel = 0,
+	}, stage)
+	mk("UICorner", { CornerRadius = UDim.new(0, 12) }, play)
+
+	local scoreL, scoreR = 0, 0
+	local scoreLabel = mk("TextLabel", {
+		BackgroundTransparency = 1,
+		Position = UDim2.new(0, 0, 0, 8),
+		Size = UDim2.new(1, 0, 0, 24),
+		Text = "0   :   0",
+		Font = Enum.Font.GothamBlack,
+		TextSize = 18,
+		TextColor3 = Color3.fromRGB(240,240,240),
+	}, play)
+
+	local paddleH = 90
+	local paddleW = 12
+	local p1y, p2y = 120, 120
+	local pSpeed = 420
+
+	local p1 = mk("Frame", {
+		Size = UDim2.new(0, paddleW, 0, paddleH),
+		Position = UDim2.new(0, 18, 0, p1y),
+		BackgroundColor3 = Color3.fromRGB(230,230,235),
+		BorderSizePixel = 0,
+	}, play)
+
+	local p2 = mk("Frame", {
+		Size = UDim2.new(0, paddleW, 0, paddleH),
+		Position = UDim2.new(1, -18 - paddleW, 0, p2y),
+		BackgroundColor3 = Color3.fromRGB(230,230,235),
+		BorderSizePixel = 0,
+	}, play)
+
+	local ball = mk("Frame", {
+		Size = UDim2.new(0, 14, 0, 14),
+		BackgroundColor3 = Color3.fromRGB(255, 210, 60),
+		BorderSizePixel = 0,
+	}, play)
+	mk("UICorner", { CornerRadius = UDim.new(1, 0) }, ball)
+
+	local function resetBall(dir)
+		local cx = play.AbsoluteSize.X/2
+		local cy = play.AbsoluteSize.Y/2
+		ball.Position = UDim2.new(0, cx, 0, cy)
+		return Vector2.new(dir * 320, math.random(-160,160))
+	end
+
+	local vel = resetBall(math.random(0,1)==1 and 1 or -1)
+	local running = true
+	local keys = { W=false, S=false, Up=false, Down=false }
+
+	local inConnBegan = trackConn(UIS.InputBegan:Connect(function(i, gp)
+		if gp then return end
+		if i.KeyCode == Enum.KeyCode.W then keys.W=true end
+		if i.KeyCode == Enum.KeyCode.S then keys.S=true end
+		if i.KeyCode == Enum.KeyCode.Up then keys.Up=true end
+		if i.KeyCode == Enum.KeyCode.Down then keys.Down=true end
+	end))
+	local inConnEnd = trackConn(UIS.InputEnded:Connect(function(i)
+		if i.KeyCode == Enum.KeyCode.W then keys.W=false end
+		if i.KeyCode == Enum.KeyCode.S then keys.S=false end
+		if i.KeyCode == Enum.KeyCode.Up then keys.Up=false end
+		if i.KeyCode == Enum.KeyCode.Down then keys.Down=false end
+	end))
+
+	local function rectOverlap(ax, ay, aw, ah, bx, by, bw, bh)
+		return ax < bx + bw and ax + aw > bx and ay < by + bh and ay + ah > by
+	end
+
+	local hbConn
+	hbConn = trackConn(RunService.Heartbeat:Connect(function(dt)
+		if not running then return end
+
+		if keys.W then p1y -= pSpeed*dt end
+		if keys.S then p1y += pSpeed*dt end
+		if keys.Up then p2y -= pSpeed*dt end
+		if keys.Down then p2y += pSpeed*dt end
+
+		local maxY = play.AbsoluteSize.Y - paddleH
+		p1y = math.clamp(p1y, 0, maxY)
+		p2y = math.clamp(p2y, 0, maxY)
+
+		p1.Position = UDim2.new(0, 18, 0, p1y)
+		p2.Position = UDim2.new(1, -18 - paddleW, 0, p2y)
+
+		local bx = ball.Position.X.Offset + vel.X * dt
+		local by = ball.Position.Y.Offset + vel.Y * dt
+
+		if by < 30 then by = 30; vel = Vector2.new(vel.X, -vel.Y) end
+		if by > play.AbsoluteSize.Y - 14 then by = play.AbsoluteSize.Y - 14; vel = Vector2.new(vel.X, -vel.Y) end
+
+		local p1x = 18
+		local p2x = play.AbsoluteSize.X - 18 - paddleW
+
+		if rectOverlap(bx, by, 14, 14, p1x, p1y, paddleW, paddleH) and vel.X < 0 then
+			vel = Vector2.new(-vel.X * 1.03, vel.Y + (by - (p1y + paddleH/2)) * 4)
+		end
+		if rectOverlap(bx, by, 14, 14, p2x, p2y, paddleW, paddleH) and vel.X > 0 then
+			vel = Vector2.new(-vel.X * 1.03, vel.Y + (by - (p2y + paddleH/2)) * 4)
+		end
+
+		if bx < -20 then
+			scoreR += 1
+			vel = resetBall(1)
+		elseif bx > play.AbsoluteSize.X + 20 then
+			scoreL += 1
+			vel = resetBall(-1)
+		end
+
+		scoreLabel.Text = ("%d   :   %d"):format(scoreL, scoreR)
+
+		if scoreL >= 7 or scoreR >= 7 then
+			running = false
+			mk("TextLabel", {
+				BackgroundTransparency = 1,
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.new(0.5, 0, 0.5, 0),
+				Size = UDim2.new(1, -40, 0, 50),
+				Text = (scoreL > scoreR) and "LEFT WINS!" or "RIGHT WINS!",
+				Font = Enum.Font.GothamBlack,
+				TextSize = 28,
+				TextColor3 = Color3.fromRGB(255,255,255),
+			}, play)
+		end
+
+		ball.Position = UDim2.new(0, bx, 0, by)
+	end))
+
+	activeGame.stop = function()
+		running = false
+		pcall(function() hbConn:Disconnect() end)
+		pcall(function() inConnBegan:Disconnect() end)
+		pcall(function() inConnEnd:Disconnect() end)
+	end
+end
+
+-- =========================
+-- Game 4: Snake
+-- =========================
+local function startSnake()
+	stopActiveGame()
+	clearStage()
+
+	mkStageTitle("Snake")
+	mkHint("Arrow keys. Eat food. Don't hit walls or yourself.")
+
+	local play = mk("Frame", {
+		Position = UDim2.new(0, 14, 0, 70),
+		Size = UDim2.new(1, -28, 1, -84),
+		BackgroundColor3 = Color3.fromRGB(30,30,36),
+		BorderSizePixel = 0,
+	}, stage)
+	mk("UICorner", { CornerRadius = UDim.new(0, 12) }, play)
+
+	local cell = 18
+	local cols = math.floor((play.AbsoluteSize.X) / cell)
+	local rows = math.floor((play.AbsoluteSize.Y) / cell)
+
+	local score = 0
+	local scoreLabel = mk("TextLabel", {
+		BackgroundTransparency = 1,
+		Position = UDim2.new(0, 10, 0, 6),
+		Size = UDim2.new(0, 200, 0, 22),
+		Text = "Score: 0",
+		Font = Enum.Font.GothamBold,
+		TextSize = 14,
+		TextColor3 = Color3.fromRGB(240,240,240),
+	}, play)
+
+	local dir = Vector2.new(1,0)
+	local pendingDir = dir
+	local snake = { Vector2.new(math.floor(cols/2), math.floor(rows/2)) }
+	local grow = 0
+	local food = Vector2.new(math.random(2, cols-2), math.random(2, rows-2))
+
+	local cells = {}
+	local function drawCell(pos, color)
+		local key = pos.X..","..pos.Y
+		local f = cells[key]
+		if not f then
+			f = mk("Frame", {
+				Size = UDim2.new(0, cell-2, 0, cell-2),
+				BackgroundColor3 = color,
+				BorderSizePixel = 0,
+			}, play)
+			cells[key] = f
+		end
+		f.BackgroundColor3 = color
+		f.Position = UDim2.new(0, pos.X*cell, 0, pos.Y*cell)
+		f.Visible = true
+	end
+
+	local function clearCells()
+		for _, f in pairs(cells) do
+			f.Visible = false
+		end
+	end
+
+	local function isOnSnake(p)
+		for _, s in ipairs(snake) do
+			if s.X == p.X and s.Y == p.Y then return true end
+		end
+		return false
+	end
+
+	local function newFood()
+		local p
+		repeat
+			p = Vector2.new(math.random(1, cols-2), math.random(1, rows-2))
+		until not isOnSnake(p)
+		food = p
+	end
+
+	local running = true
+	local keyConn = trackConn(UIS.InputBegan:Connect(function(i, gp)
+		if gp then return end
+		if i.KeyCode == Enum.KeyCode.W and dir.Y ~= 1 then pendingDir = Vector2.new(0,-1) end
+		if i.KeyCode == Enum.KeyCode.S and dir.Y ~= -1 then pendingDir = Vector2.new(0,1) end
+		if i.KeyCode == Enum.KeyCode.A and dir.X ~= 1 then pendingDir = Vector2.new(-1,0) end
+		if i.KeyCode == Enum.KeyCode.D and dir.X ~= -1 then pendingDir = Vector2.new(1,0) end
+	end))
+
+	local step = 0
+	local stepEvery = 0.12
+
+	local hbConn
+	hbConn = trackConn(RunService.Heartbeat:Connect(function(dt)
+		if not running then return end
+
+		step += dt
+		if step < stepEvery then
+			clearCells()
+			for _, s in ipairs(snake) do
+				drawCell(s, Color3.fromRGB(60, 200, 120))
+			end
+			drawCell(food, Color3.fromRGB(255, 90, 90))
+			return
+		end
+		step = 0
+
+		dir = pendingDir
+		local head = snake[1]
+		local nextHead = Vector2.new(head.X + dir.X, head.Y + dir.Y)
+
+		if nextHead.X < 0 or nextHead.Y < 0 or nextHead.X > cols-1 or nextHead.Y > rows-1 then
+			running = false
+		end
+		if running and isOnSnake(nextHead) then
+			running = false
+		end
+
+		if not running then
+			mk("TextLabel", {
+				BackgroundTransparency = 1,
+				AnchorPoint = Vector2.new(0.5,0.5),
+				Position = UDim2.new(0.5,0,0.5,0),
+				Size = UDim2.new(1,-40,0,60),
+				Text = ("GAME OVER\nScore: %d"):format(score),
+				Font = Enum.Font.GothamBlack,
+				TextSize = 22,
+				TextColor3 = Color3.fromRGB(255,255,255),
+				TextWrapped = true,
+			}, play)
+			return
+		end
+
+		table.insert(snake, 1, nextHead)
+
+		if nextHead.X == food.X and nextHead.Y == food.Y then
+			score += 1
+			scoreLabel.Text = "Score: " .. score
+			grow += 2
+			newFood()
+		end
+
+		if grow > 0 then
+			grow -= 1
+		else
+			table.remove(snake, #snake)
+		end
+	end))
+
+	activeGame.stop = function()
+		running = false
+		pcall(function() hbConn:Disconnect() end)
+		pcall(function() keyConn:Disconnect() end)
+	end
+end
+
+-- =========================
+-- Game 5: Memory Match
+-- =========================
+local function startMemory()
+	stopActiveGame()
+	clearStage()
+
+	mkStageTitle("Memory Match")
+	mkHint("Flip cards and match pairs. 2x4 grid.")
+
+	local play = mk("Frame", {
+		Position = UDim2.new(0, 14, 0, 70),
+		Size = UDim2.new(1, -28, 1, -84),
+		BackgroundColor3 = Color3.fromRGB(30,30,36),
+		BorderSizePixel = 0,
+	}, stage)
+	mk("UICorner", { CornerRadius = UDim.new(0, 12) }, play)
+
+	local emojis = { "â˜…","â—†","â—","â–²" }
+	local deck = {}
+	for _, e in ipairs(emojis) do
+		table.insert(deck, e)
+		table.insert(deck, e)
+	end
+	for i = #deck, 2, -1 do
+		local j = math.random(1, i)
+		deck[i], deck[j] = deck[j], deck[i]
+	end
+
+	local flips, matched = 0, 0
+	local lock = false
+	local first = nil
+
+	local label = mk("TextLabel", {
+		BackgroundTransparency = 1,
+		Position = UDim2.new(0, 10, 0, 6),
+		Size = UDim2.new(1, -20, 0, 22),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		Text = "Flips: 0",
+		Font = Enum.Font.GothamBold,
+		TextSize = 14,
+		TextColor3 = Color3.fromRGB(240,240,240),
+	}, play)
+
+	local grid = mk("Frame", {
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.new(0.5, 0, 0.55, 0),
+		Size = UDim2.new(0, 420, 0, 240),
+		BackgroundTransparency = 1,
+	}, play)
+	mk("UIGridLayout", {
+		CellPadding = UDim2.new(0, 10, 0, 10),
+		CellSize = UDim2.new(0, 95, 0, 105),
+	}, grid)
+
+	local cards = {}
+	for idx = 1, 8 do
+		local btn = mk("TextButton", {
+			Text = "?",
+			Font = Enum.Font.GothamBlack,
+			TextSize = 34,
+			TextColor3 = Color3.fromRGB(255,255,255),
+			BackgroundColor3 = Color3.fromRGB(55,55,65),
+			BorderSizePixel = 0,
+			AutoButtonColor = true,
+		}, grid)
+		mk("UICorner", { CornerRadius = UDim.new(0, 14) }, btn)
+
+		cards[idx] = { btn = btn, value = deck[idx], revealed = false, done = false }
+
+		trackConn(btn.MouseButton1Click:Connect(function()
+			if lock then return end
+			local c = cards[idx]
+			if c.done or c.revealed then return end
+
+			c.revealed = true
+			c.btn.Text = c.value
+			c.btn.BackgroundColor3 = Color3.fromRGB(65, 85, 140)
+
+			flips += 1
+			label.Text = "Flips: " .. flips
+
+			if not first then
+				first = idx
+				return
+			end
+
+			lock = true
+			local a = cards[first]
+			local b = c
+
+			task.delay(0.45, function()
+				if not Runtime.alive then return end
+
+				if a.value == b.value then
+					a.done = true; b.done = true
+					a.btn.BackgroundColor3 = Color3.fromRGB(70, 160, 110)
+					b.btn.BackgroundColor3 = Color3.fromRGB(70, 160, 110)
+					matched += 1
+					if matched >= 4 then
+						mk("TextLabel", {
+							BackgroundTransparency = 1,
+							AnchorPoint = Vector2.new(0.5, 0),
+							Position = UDim2.new(0.5, 0, 0, 34),
+							Size = UDim2.new(1, -40, 0, 40),
+							Text = "YOU WON!",
+							Font = Enum.Font.GothamBlack,
+							TextSize = 26,
+							TextColor3 = Color3.fromRGB(255,255,255),
+						}, play)
+					end
+				else
+					a.revealed = false; b.revealed = false
+					a.btn.Text = "?"
+					b.btn.Text = "?"
+					a.btn.BackgroundColor3 = Color3.fromRGB(55,55,65)
+					b.btn.BackgroundColor3 = Color3.fromRGB(55,55,65)
+				end
+
+				first = nil
+				lock = false
+			end)
+		end))
+	end
+
+	activeGame.stop = function()
+		lock = true
+	end
+end
+
+---
+---DRAG SISTEM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- =========================
+-- Drag (arrastar UI com mouse)
+-- =========================
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+trackConn(top.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = main.Position
+	end
+end))
+
+trackConn(top.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+	end
+end))
+
+trackConn(UIS.InputChanged:Connect(function(input)
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+		local delta = input.Position - dragStart
+		main.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+---
+
+-- =========================
+-- Sidebar Buttons
+-- =========================
+local btnClicker = mkButton("Clicker", sidebar)
+local btnFlappy  = mkButton("Flappy", sidebar)
+local btnPong    = mkButton("Pong", sidebar)
+local btnSnake   = mkButton("Snake", sidebar)
+local btnMemory  = mkButton("Memory Match", sidebar)
+
+mk("TextLabel", {
+	BackgroundTransparency = 1,
+	Size = UDim2.new(1, -10, 0, 90),
+	TextWrapped = true,
+	TextYAlignment = Enum.TextYAlignment.Top,
+	TextXAlignment = Enum.TextXAlignment.Left,
+	Text = ("Tip:\nâ€¢ %s toggles window\nâ€¢ %s unloads everything\n\nPick a game on the left.")
+		:format(KEY_TOGGLE_UI.Name, KEY_UNLOAD.Name),
+	Font = Enum.Font.Gotham,
+	TextSize = 12,
+	TextColor3 = Color3.fromRGB(190,190,205),
+}, sidebar)
+
+trackConn(btnClicker.MouseButton1Click:Connect(startClicker))
+trackConn(btnFlappy.MouseButton1Click:Connect(startFlappy))
+trackConn(btnPong.MouseButton1Click:Connect(startPong))
+trackConn(btnSnake.MouseButton1Click:Connect(startSnake))
+trackConn(btnMemory.MouseButton1Click:Connect(startMemory))
+
+-- Start on Clicker
+startClicker()
+
+-- =========================
+-- Global hotkeys
+-- =========================
+trackConn(closeBtn.MouseButton1Click:Connect(unload))
+
+trackConn(UIS.InputBegan:Connect(function(input, gp)
+	if gp then return end
+	if input.KeyCode == KEY_UNLOAD then
+		unload()
+	elseif input.KeyCode == KEY_TOGGLE_UI then
+		main.Visible = not main.Visible
+	end
+end))
