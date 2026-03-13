@@ -1855,6 +1855,18 @@ CreateButton(MainSection, "s / unbond hub", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/samerop/unbound-hub/main/unbound-hub.lua"))()
     end)
 
+----=========Tab25=========----
+local MainTab = Window:MakeTab({
+    Name = "Murder Mystery 2",
+    Icon = "link"
+})
+local MainSection = MainTab:AddSection({
+    Name = "Scripts"
+})
+
+CreateButton(MainSection, "s / idk hub", function()
+loadstring(game:HttpGet('https://rawscripts.net/raw/Universal-Script-BZhOFNPFbgykbvx-138371'))()
+    end)
 
 
 
